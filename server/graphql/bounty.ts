@@ -1,4 +1,11 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import {
+  GraphQLNonNull,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLBoolean,
+} from "graphql";
 import GraphQLJSON, { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
 import Bounty from "../models/Bounty.model";
@@ -29,6 +36,58 @@ const BountyQueries = {
     },
     resolve: async (parent, args, ctx, info) => {
       return await Bounty.findByPk(args.id);
+    },
+  },
+
+  bounties: {
+    type: new GraphQLList(BountyType),
+    args: {
+      limit: {
+        type: GraphQLInt,
+      },
+      order: {
+        type: GraphQLString,
+      },
+      onlyMine: {
+        type: GraphQLBoolean,
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      const params = {
+        limit: args.limit,
+        order: args.order,
+      };
+      if (args.onlyMine) {
+        params["where"] = {
+          user_id: ctx.state.user.id,
+        };
+      }
+      return await Bounty.findAll(params);
+    },
+  },
+
+  bounties_by_user: {
+    type: new GraphQLList(BountyType),
+    args: {
+      id: {
+        description: "uuid of the user",
+        type: new GraphQLNonNull(GraphQLString),
+      },
+      limit: {
+        type: GraphQLInt,
+      },
+      order: {
+        type: GraphQLString,
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      return await Bounty.findAll({
+        where: {
+          user_id: args.id,
+        },
+        limit: args.limit,
+        order: args.order,
+      });
     },
   },
 };
