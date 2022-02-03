@@ -80,7 +80,7 @@ abstract contract Treasury {
         return true;
     }
 
-    function nextMilestone() public onlyBy(owner) returns (bool success) {
+    function nextMilestone() private returns (bool success) {
         if (votingOn < bonusTargets.length - 1) {
             votingOn += 1;
         }
@@ -97,7 +97,7 @@ abstract contract Treasury {
         return false;
     }
 
-    function failAndWithdraw() internal onlyBy(owner) returns (bool success) {
+    function failAndWithdraw() internal returns (bool success) {
         // the amount about to be disbursed among all equity holders
         uint256 disbursement = totalContribution
             .mul(bonusTargets[votingOn])
@@ -115,7 +115,7 @@ abstract contract Treasury {
         return nextMilestone();
     }
 
-    function approveAndPay() internal onlyBy(owner) returns (bool success) {
+    function approveAndPay() internal returns (bool success) {
         if (bonusTargets[votingOn] < 0) {
             revert AlreadyPaid();
         }
@@ -133,7 +133,6 @@ abstract contract Treasury {
 
     function adjustBalances(uint256 disbursement)
         private
-        onlyBy(owner)
         returns (bool success)
     {
         // calc the % to adjust downward
