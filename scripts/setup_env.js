@@ -23,6 +23,10 @@ const env = {
   UPLOAD_REGION: "",
   ENCODE_SECRET: "SOMERANDOMSECRET",
   ENCODE_IV: "SOMERANDOMIV",
+  ETH_GETH_URL: 'https://polygon-mumbai.infura.io/v3/6e8de34c8cc345048eb9ae413c5a3699',
+  ETH_KEY: 'REPLACETHIS',
+  PINATA_KEY: '104240e89029222db175',
+  PINATA_SECRET: 'd0f08882bd4d1f75be3b5bf7dd971906992cc9dd618d9c996b44b3ab8323ab6d',
   TWITTER_CONSUMER_KEY: 'asdf',
   TWITTER_CONSUMER_SECRET: 'asdf',
   TWITTER_CALLBACK_URL: 'http://localhost:8080/auth/twitter/callback'
