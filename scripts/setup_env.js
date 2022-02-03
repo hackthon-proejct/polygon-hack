@@ -23,6 +23,9 @@ const env = {
   UPLOAD_REGION: "",
   ENCODE_SECRET: "SOMERANDOMSECRET",
   ENCODE_IV: "SOMERANDOMIV",
+  TWITTER_CONSUMER_KEY: 'asdf',
+  TWITTER_CONSUMER_SECRET: 'asdf',
+  TWITTER_CALLBACK_URL: 'http://localhost:8080/auth/twitter/callback'
 };
 
 const envFilePath = currDir + "/.env";
