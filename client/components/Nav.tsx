@@ -1,8 +1,13 @@
 import { Flex, CSSObject } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
+import MetaMaskButton from "./MetamaskButton";
 
 function StickyHeader({}: PropsWithChildren<{}>) {
-  return <Flex sx={styles.sticky}></Flex>;
+  return (
+    <Flex sx={styles.sticky}>
+      <MetaMaskButton />
+    </Flex>
+  );
 }
 
 const styles = {
