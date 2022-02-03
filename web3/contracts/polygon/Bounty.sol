@@ -151,6 +151,7 @@ abstract contract Treasury {
 contract Bounty is Treasury {
     using SafeMath for uint256;
 
+    mapping(address => bool) votedThisRound; // whether this address has already voted
     uint64 public mustBeClaimedTime; // the time epoch at which this bounty expires if unclaimed
     uint256 public maxValue; // the max value this bounty could be
     uint64 public timeLimit; // the time limit in seconds that this bounty must be completed in
@@ -159,6 +160,7 @@ contract Bounty is Treasury {
     uint32 public currentVotesCast; // number of discrete votes cast for the current bonus
 
     error VoteOver();
+    error AlreadyVoted();
 
     constructor(
         address payable _creatorWallet,
@@ -243,6 +245,9 @@ contract Bounty is Treasury {
         if (_milestone != votingOn) {
             revert VoteOver();
         }
+        if (votedThisRound[msg.sender]) {
+            revert AlreadyVoted();
+        }
         uint256 amount = equityOf(msg.sender);
         if (_vote) {
             currentYeas += amount;
@@ -250,6 +255,7 @@ contract Bounty is Treasury {
             currentNays += amount;
         }
         currentVotesCast += 1;
+        votedThisRound[msg.sender] = true;
 
         emit Vote(msg.sender, _vote);
 

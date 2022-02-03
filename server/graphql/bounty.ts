@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import GraphQLJSON, { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
-import Bounty from "../models/Bounty.model";
+import Bounty, { BountyStatus } from "../models/Bounty.model";
 import Profile from "../models/Profile.model";
 import User from "../models/User.model";
 
@@ -22,6 +22,10 @@ const BountyType = new GraphQLObjectType({
     metadata: {
       type: GraphQLJSONObject,
       description: "The metadata attached to this bounty",
+    },
+    address: {
+      type: GraphQLString,
+      description: "The contract address for this bounty",
     },
   },
 });
@@ -124,7 +128,20 @@ const BountyMutations = {
         metadata: args.metadata,
         user_id: ctx.state.user.id,
         board_id: boardId,
+        status: BountyStatus.DRAFT,
       });
+    },
+    publishBounty: {
+      type: BountyType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (parent, args, ctx, info) => {
+        const bounty = await Bounty.findByPk(args.id);
+        return await bounty.publish();
+      },
     },
   },
 };

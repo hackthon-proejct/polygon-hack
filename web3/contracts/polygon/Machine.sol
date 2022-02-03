@@ -26,7 +26,7 @@ contract Machine {
                 _bonusFailureThresholds,
                 _mustBeClaimedTime,
                 _timeLimit,
-                owner
+                payable(owner)
             )
         );
         emit Create(config, msg.sender);
