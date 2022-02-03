@@ -51,6 +51,14 @@ const Config = {
     SECRET: env.ENCODE_SECRET,
     IV: env.ENCODE_IV,
   },
+  eth: {
+    KEY: env.ETH_KEY,
+    GETH_URL: env.ETH_GETH_URL,
+  },
+  pinata: {
+    KEY: env.PINATA_KEY,
+    SECRET: env.PINATA_SECRET,
+  },
 };
 
 export default Config;

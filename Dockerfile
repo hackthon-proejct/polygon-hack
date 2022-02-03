@@ -19,7 +19,7 @@ RUN yarn install
 COPY . /usr/src/app/
 RUN yarn run build
 
-RUN echo 'alias sync="rsync -avzu --exclude=node_modules --exclude=database /src/* /usr/src/app"' >> ~/.bashrc
+RUN echo 'alias sync="rsync -avzu --exclude=node_modules --exclude=database --exclude=client /src/* /usr/src/app"' >> ~/.bashrc
 RUN echo 'alias mysqlsh="mysql --host=$MYSQL_HOST --user=$MYSQL_USER --port=$MYSQL_PORT --password=$MYSQL_PASSWORD $MYSQL_DATABASE"' >> ~/.bashrc
 RUN echo 'alias redissh="redis-cli -h $REDIS_HOST -p $REDIS_PORT"' >> ~/.bashrc
 CMD yarn run start && yarn run dev
