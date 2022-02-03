@@ -2,13 +2,19 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-
+import {
+  Button,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react";
 import { withCookieAuth } from "@utils/auth";
 import Layout from "@layouts/Layout";
 import { NextPageWithLayout } from "types/types";
 import Home from "@components/pages/Home";
 
-const HomePage: NextPageWithLayout = () => {
+const LinkPage: NextPageWithLayout = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -17,7 +23,15 @@ const HomePage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <Home />
+        <FormLabel htmlFor="twitter">Link your Twitter account</FormLabel>
+        <InputGroup>
+          <InputLeftElement pointerEvents="none">@</InputLeftElement>
+          <Input id="twitter" placeholder="@username" />
+        </InputGroup>
+
+        <Button loadingText="Submitting" colorScheme="teal" variant="outline">
+          Link
+        </Button>
       </main>
       <footer className={styles.footer}>
         <a
@@ -35,8 +49,8 @@ const HomePage: NextPageWithLayout = () => {
   );
 };
 
-HomePage.getLayout = function getLayout(page) {
+LinkPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default withCookieAuth(HomePage);
+export default withCookieAuth(LinkPage);
