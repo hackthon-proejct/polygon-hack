@@ -2,6 +2,7 @@
   "name": "bounty-client",
   "private": true,
   "scripts": {
+    "postinstall": "node ./scripts/setup_env.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
