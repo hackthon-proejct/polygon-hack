@@ -7,6 +7,7 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function getOrCreateUser(key: string, signature: Buffer) {
+  console.log("getting or creating");
   const resp = await APIClient().post("/auth/create", {
     key: key,
     password: signature,

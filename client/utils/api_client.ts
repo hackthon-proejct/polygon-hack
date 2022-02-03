@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { IS_SERVER } from "./constants";
 
 export function getLocalStorageKey(): string {
   return `${process.env.REACT_APP_JWT_KEY}-${process.env.NODE_ENV}`;
@@ -10,14 +11,16 @@ const axiosClient = axios.create({
     "X-Requested-With": "XMLHttpRequest",
   },
 });
-loadJWT();
+if (!IS_SERVER) {
+  loadJWT();
+}
 
 export function loadJWT() {
-  // const jwt = localStorage.getItem(getLocalStorageKey());
-  // if (jwt) {
-  //   // @ts-ignore
-  //   axiosClient.defaults.headers["Authorization"] = `Bearer ${jwt}`;
-  // }
+  const jwt = localStorage.getItem(getLocalStorageKey());
+  if (jwt) {
+    // @ts-ignore
+    axiosClient.defaults.headers["Authorization"] = `Bearer ${jwt}`;
+  }
 }
 
 export const APIClient = (): AxiosInstance => {

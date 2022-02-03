@@ -63,6 +63,7 @@ export default function MetaMaskButton() {
               "Open sesame!",
               accounts[0]
             );
+            console.log("hello", accounts[0]);
             await getOrCreateUser(accounts[0], signature);
 
             const user = await currentUser();
