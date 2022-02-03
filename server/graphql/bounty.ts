@@ -27,6 +27,9 @@ const BountyType = new GraphQLObjectType({
       type: GraphQLString,
       description: "The contract address for this bounty",
     },
+    status: {
+      type: new GraphQLNonNull(GraphQLInt),
+    },
   },
 });
 
@@ -131,17 +134,17 @@ const BountyMutations = {
         status: BountyStatus.DRAFT,
       });
     },
-    publishBounty: {
-      type: BountyType,
-      args: {
-        id: {
-          type: new GraphQLNonNull(GraphQLString),
-        },
+  },
+  publishBounty: {
+    type: BountyType,
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLString),
       },
-      resolve: async (parent, args, ctx, info) => {
-        const bounty = await Bounty.findByPk(args.id);
-        return await bounty.publish();
-      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      const bounty = await Bounty.findByPk(args.id);
+      return await bounty.publish();
     },
   },
 };

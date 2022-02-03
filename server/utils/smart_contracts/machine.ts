@@ -1,7 +1,7 @@
 import { web3 } from "./web3";
 import configJSON from "../../../web3/build/polygon-contracts/Machine.json";
 
-export const address = "0x60699E5BC448480C6683d9FC5156a657e65D9732";
+export const address = "0xc36DF1d692a03cb9CaD352C5ffa30a5F5cF0612B";
 
 const abi = configJSON.abi;
 

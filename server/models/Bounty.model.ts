@@ -15,7 +15,6 @@ import User from "./User.model";
 import Board from "./Board.model";
 import { createBounty } from "../utils/smart_contracts/toolbox/bounty";
 import { BountyData } from "../utils/smart_contracts/toolbox/types";
-import Web3PublicKey from "./Web3PublicKey.model";
 
 export enum BountyStatus {
   UNKNOWN = 0,
@@ -49,7 +48,7 @@ export default class Bounty extends Model {
   status: BountyStatus;
 
   @Column(DataType.JSON)
-  metadata: any;
+  metadata: BountyData;
 
   @Column(DataType.STRING)
   address: string;

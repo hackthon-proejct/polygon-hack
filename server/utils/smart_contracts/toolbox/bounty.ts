@@ -15,8 +15,7 @@ export async function createBounty(
     data.bonusPctYeasNeeded,
     data.bonusFailureThresholds,
     data.mustBeClaimedTime,
-    data.timeLimit,
-    account.address
+    data.timeLimit
   );
 
   const tx = {
