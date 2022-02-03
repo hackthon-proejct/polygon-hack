@@ -16,13 +16,13 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@utils/*": ["utils/*"],
-      "@styles/*": ["styles/*"],
-      "@graphql/*": ["graphql/*"],
-      "@gqlt/*": ["graphql/__generated__/*"],
-      "@components/*": ["components/*"],
-      "@layouts/*": ["components/layouts/*"],
-      "@redux/*": ["redux/*"]
+      "@utils/*": ["src/utils/*"],
+      "@styles/*": ["src/styles/*"],
+      "@gql/*": ["src/graphql/*"],
+      "@gqlt/*": ["src/graphql/__generated__/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/components/layouts/*"],
+      "@redux/*": ["src/redux/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

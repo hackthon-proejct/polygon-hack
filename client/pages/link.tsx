@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from "@styles/Home.module.css";
 import {
   Button,
   FormLabel,
@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { withCookieAuth } from "@utils/auth";
 import Layout from "@layouts/Layout";
-import { NextPageWithLayout } from "types/types";
+import { NextPageWithLayout } from "@utils/types";
 import Home from "@components/pages/Home";
 
 const LinkPage: NextPageWithLayout = () => {

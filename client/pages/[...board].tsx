@@ -2,16 +2,17 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from "@styles/Home.module.css";
 
 import { withCookieAuth } from "@utils/auth";
 import Layout from "@layouts/Layout";
-import { NextPageWithLayout } from "types/types";
+import { NextPageWithLayout } from "@utils/types";
 import Board from "@components/pages/Board";
 
 const BoardPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { board } = router?.query;
+  // fetch the user info and their bounties from graphql
   return (
     <div className={styles.container}>
       <Head>

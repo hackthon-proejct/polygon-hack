@@ -1,9 +1,9 @@
-import "../styles/globals.css";
+import "@styles/globals.css";
 import type { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import GraphQLClient from "@graphql/GraphQLClient";
-import { NextPageWithLayout } from "types/types";
+import GraphQLClient from "@gql/GraphQLClient";
+import { NextPageWithLayout } from "@utils/types";
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
