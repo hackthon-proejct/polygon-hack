@@ -4,6 +4,8 @@ import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import GraphQLClient from "@graphql/GraphQLClient";
 import { NextPageWithLayout } from "types/types";
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
 
 type AppPropsWithLayout = AppProps & {
@@ -25,9 +27,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout || ((page) => page);
   return (
-    <ApolloProvider client={GraphQLClient}>
-      <ChakraProvider>{getLayout(<Component {...pageProps} />)}</ChakraProvider>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={GraphQLClient}>
+        <ChakraProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </ChakraProvider>
+      </ApolloProvider>
+    </Provider>
   );
 }
 
