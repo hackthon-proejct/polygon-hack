@@ -44,21 +44,19 @@ passport.use(
     }
   )
 );
-// passport.use(
-//   "twitter",
-//   new PassportTwitter(
-//     {
-//       consumerKey: config.auth.TWITTER.CONSUMER_KEY,
-//       consumerSecret: config.auth.TWITTER.CONSUMER_SECRET,
-//       callbackURL: config.auth.TWITTER.CALLBACK_URL,
-//     },
-//     (token, tokenSecret, profile, cb) => {
-//      profile.id }, function (err, user) {
-//         return cb(err, user);
-//       });
-//     }
-//   )
-// );
+passport.use(
+  "twitter",
+  new PassportTwitter(
+    {
+      consumerKey: config.auth.TWITTER.CONSUMER_KEY,
+      consumerSecret: config.auth.TWITTER.CONSUMER_SECRET,
+      callbackURL: config.auth.TWITTER.CALLBACK_URL,
+    },
+    (token, tokenSecret, profile, cb) => {
+      cb(null, profile.username);
+    }
+  )
+);
 passport.serializeUser((account: User, done) => {
   done(null, account.id);
 });

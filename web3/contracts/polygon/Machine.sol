@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Bounty.sol";
 
 contract Machine {
-    using SafeMath for uint256;
     address public owner = msg.sender;
 
     event Create(address indexed configAddress, address indexed sender);
@@ -17,8 +15,7 @@ contract Machine {
         uint8[] memory _bonusPctYeasNeeded,
         uint8[] memory _bonusFailureThresholds,
         uint64 _mustBeClaimedTime,
-        uint64 _timeLimit,
-        address payable _owner
+        uint64 _timeLimit
     ) public returns (address configAddress) {
         address config = address(
             new Bounty(
@@ -29,7 +26,7 @@ contract Machine {
                 _bonusFailureThresholds,
                 _mustBeClaimedTime,
                 _timeLimit,
-                _owner
+                owner
             )
         );
         emit Create(config, msg.sender);

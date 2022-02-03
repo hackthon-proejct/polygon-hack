@@ -1,15 +1,14 @@
 "use strict";
 import Router, { RouterContext } from "koa-router";
-import nacl from "tweetnacl";
-import Base58 from "base-58";
-import { TextEncoder } from "util";
+import { Next } from "koa";
 
 import passport from "../utils/passport";
 import { setJwtHeaderOnLogin } from "../utils/jwt";
-import { Next } from "koa";
 import User from "../models/User.model";
+import { web3 } from "../utils/smart_contracts/web3";
 import Web3PublicKey from "../models/Web3PublicKey.model";
 import logger from "../utils/logger";
+import Profile from "../models/Profile.model";
 
 const authRouter = new Router({
   prefix: "/auth",
@@ -45,27 +44,32 @@ authRouter.get("/current_user", async (ctx, next) => {
 authRouter.post("/create", async (ctx, next) => {
   // password is a Buffer, key is a base58 encoded string
   const { password, key } = ctx.request.body;
-  const enc = new TextEncoder();
-  if (
-    nacl.sign.detached.verify(
-      enc.encode(ENCRYPTED_MSG),
-      new Uint8Array(password.data),
-      Base58.decode(key)
-    )
-  ) {
+  const decryptedKey = await web3.eth.accounts.recover(ENCRYPTED_MSG, password);
+  if (decryptedKey.toLowerCase() === key.toLowerCase()) {
     try {
       return await Web3PublicKey.findByPk(key).then(async (account) => {
+        let existing;
         if (account) {
-          return _authFunc("local")(ctx, next);
+          existing = await User.findByPk(account.user_id, {
+            include: Profile,
+          });
         } else {
           // Create account object
-          const newUser = await User.create();
+          existing = await User.create();
           await Web3PublicKey.create({
             key: key,
-            user_id: newUser.id,
+            user_id: existing.id,
           });
-          return _authFunc("local")(ctx, next);
         }
+        if (!existing.profile) {
+          await Profile.create({
+            image_url:
+              "https://badger-uploads-staging.s3.us-west-1.amazonaws.com/neopet.png",
+            fullname: "Anonymous",
+            user_id: existing.id,
+          });
+        }
+        return _authFunc("local")(ctx, next);
       });
     } catch (err) {
       logger.error("/create", [err]);
@@ -74,13 +78,37 @@ authRouter.post("/create", async (ctx, next) => {
     ctx.throw(401);
   }
 });
-authRouter.post("/facebook", _authFunc("facebook-token"));
-authRouter.get(
-  "/auth/facebook",
-  passport.authenticate("facebook", {
-    scope: ["email"],
-  })
-);
-authRouter.get("/facebook/callback", _authFunc("facebook"));
+authRouter.get("/twitter/callback", async (ctx: RouterContext, next: Next) => {
+  return passport.authenticate(
+    "twitter",
+    async (err: Error, handle: string) => {
+      let maybeProfile = await Profile.findOne({
+        where: {
+          twitter_handle: handle,
+        },
+      });
+      if (!maybeProfile) {
+        const user = await User.findByPk(ctx.state.user.id, {
+          include: Profile,
+        });
+        if (user.profile) {
+          maybeProfile = user.profile;
+          maybeProfile.twitter_handle = handle;
+          await maybeProfile.save();
+        } else {
+          maybeProfile = await Profile.create({
+            user_id: ctx.state.user.id,
+            twitter_handle: handle,
+          });
+        }
+      } else if (!maybeProfile.user_id) {
+        maybeProfile.user_id = ctx.state.user.id;
+        await maybeProfile.save();
+      }
+      ctx.status = 200;
+      return;
+    }
+  )(ctx, next);
+});
 
 export default authRouter;

@@ -36,7 +36,7 @@ module.exports = {
           },
           key: "id",
         },
-        allowNull: false,
+        allowNull: true,
       },
       image_url: Sequelize.DataTypes.STRING,
       twitter_handle: Sequelize.DataTypes.STRING,
