@@ -1,17 +1,12 @@
 import { getLocalStorageKey, APIClient, loadJWT } from "./api_client";
 
-export async function loginUser(email: string, password: string) {
-  const resp = await APIClient().post("/auth/create", { email, password });
-  localStorage.setItem(getLocalStorageKey(), resp.data.access_token);
-  loadJWT();
-}
-
 export async function getOrCreateUser(key: string, signature: Buffer) {
   console.log("getting or creating");
   const resp = await APIClient().post("/auth/create", {
     key: key,
     password: signature,
   });
+  console.log("hello", resp);
   localStorage.setItem(getLocalStorageKey(), resp.data.access_token);
   loadJWT();
 }

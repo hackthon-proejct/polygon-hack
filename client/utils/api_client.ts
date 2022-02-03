@@ -2,11 +2,11 @@ import axios, { AxiosInstance } from "axios";
 import { IS_SERVER } from "./constants";
 
 export function getLocalStorageKey(): string {
-  return `${process.env.REACT_APP_JWT_KEY}-${process.env.NODE_ENV}`;
+  return `${process.env.NEXT_PUBLIC_REACT_APP_JWT_KEY}`;
 }
 
 const axiosClient = axios.create({
-  baseURL: `${process.env.REACT_APP_SERV_PROTOCOL}${process.env.REACT_APP_SERV_HOSTNAME}/api`,
+  baseURL: `${process.env.NEXT_PUBLIC_REACT_APP_SERV_PROTOCOL}${process.env.NEXT_PUBLIC_REACT_APP_SERV_HOSTNAME}/api`,
   headers: {
     "X-Requested-With": "XMLHttpRequest",
   },
