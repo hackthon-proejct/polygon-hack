@@ -21,7 +21,8 @@
       "@graphql/*": ["graphql/*"],
       "@gqlt/*": ["graphql/__generated__/*"],
       "@components/*": ["components/*"],
-      "@layouts/*": ["components/layouts/*"]
+      "@layouts/*": ["components/layouts/*"],
+      "@redux/*": ["redux/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
