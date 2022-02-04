@@ -14,3 +14,18 @@ export const USER = gql`
     }
   }
 `;
+
+export const CURRENT_USER = gql`
+  query CurrentUserQuery {
+    currentUser {
+      id
+      board {
+        id
+        bounties {
+          id
+          metadata
+        }
+      }
+    }
+  }
+`;
