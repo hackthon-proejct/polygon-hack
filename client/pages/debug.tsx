@@ -6,9 +6,10 @@ import bountyContract, {
   joinBounty,
   vote,
 } from "@utils/bounty";
-import { web3 } from "@utils/constants";
+import { IS_SERVER, web3 } from "@utils/constants";
 
-const contract = bountyContract("0x3f8f8fc7482f21022fae303bf18a9f00f82110e3");
+const contract =
+  !IS_SERVER && bountyContract("0x3f8f8fc7482f21022fae303bf18a9f00f82110e3");
 const getStatus = async () => {
   const result = await getVotingStatus(contract);
   console.log("result", result);
@@ -33,7 +34,7 @@ const DebugPage: NextPageWithLayout = () => {
       <main>
         <div>{"hello"}</div>
         <button onClick={getStatus}>Status</button>
-        <button onClick={() => join("10000000")}>Join</button>
+        <button onClick={() => join("10000000000000000")}>Join</button>
         <button onClick={() => voteBounty(0, true)}>Vote</button>
       </main>
     </div>

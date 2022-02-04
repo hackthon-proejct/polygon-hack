@@ -89,7 +89,7 @@ abstract contract Treasury {
 
     // Called by server at time of expiry - should check whether this vote
     // actually succeeded and auto fail/withdraw/move on otherwise
-    function failMilestone() public onlyBy(owner) returns (bool success) {
+    function failMilestone() internal returns (bool success) {
         bonusFailures[votingOn] += 1;
         if (bonusFailures[votingOn] == bonusFailureThresholds[votingOn]) {
             return failAndWithdraw();
@@ -224,6 +224,24 @@ contract Bounty is Treasury {
         return true;
     }
 
+    function checkVote() public onlyBy(owner) returns (bool success) {
+        uint8 status = checkVoteMarginMet();
+        if (status != 0) {
+            bool result;
+            if (status == 1) {
+                result = approveAndPay();
+            } else if (status == 2) {
+                result = failMilestone();
+            }
+            // result is true if we took a step forward, otherwise false
+            if (result) {
+                // Wipe the state if either of these things happens
+                wipeStateForBonus();
+            }
+            return result;
+        }
+    }
+
     // Returns 0 if not a done vote yet, 1 if passed, 2 if failed
     function checkVoteMarginMet() private view returns (uint8 met) {
         uint256 yeasNeeded = totalContribution
@@ -289,7 +307,7 @@ contract Bounty is Treasury {
         return true;
     }
 
-    function wipeStateForBonus() private onlyBy(owner) returns (bool success) {
+    function wipeStateForBonus() private returns (bool success) {
         currentYeas = 0;
         currentNays = 0;
         currentVotesCast = 0;

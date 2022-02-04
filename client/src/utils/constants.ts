@@ -1,5 +1,4 @@
 import Web3 from "web3";
-import detectEthereumProvider from "@metamask/detect-provider";
 
 export const IS_SERVER = typeof window === "undefined";
 
@@ -9,10 +8,7 @@ if (!IS_SERVER) {
   eth = window?.ethereum;
   // @ts-ignore
   eth?.enable();
-  const provider = detectEthereumProvider();
-  if (provider) {
-    // @ts-ignore
-    web3 = new Web3(provider);
-  }
+  // @ts-ignore
+  web3 = new Web3(window.web3?.currentProvider);
 }
 export { eth, web3 };
