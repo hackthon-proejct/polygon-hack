@@ -9,6 +9,10 @@
 
 export interface UserQuery_user_board_bounties {
   __typename: "Bounty";
+  /**
+   * The creator who can claim this bounty
+   */
+  creator_id: string;
   id: string;
   /**
    * The metadata attached to this bounty

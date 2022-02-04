@@ -14,6 +14,10 @@ export interface Bounties_bounties {
    * The metadata attached to this bounty
    */
   metadata: any | null;
+  /**
+   * The creator who can claim this bounty
+   */
+  creator_id: string;
 }
 
 export interface Bounties {

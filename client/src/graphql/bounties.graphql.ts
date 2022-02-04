@@ -4,6 +4,7 @@ export const BOUNTIES_BY_USER = gql`
     bounties_by_user(id: $id) {
       id
       metadata
+      creator_id
     }
   }
 `;
@@ -13,6 +14,7 @@ export const BOUNTIES = gql`
     bounties {
       id
       metadata
+      creator_id
     }
   }
 `;
