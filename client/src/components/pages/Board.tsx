@@ -2,7 +2,6 @@ import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
 import { USER } from "@gql/users.graphql";
-import styles from "@styles/Home.module.css";
 
 import {
   UserQuery as UserQueryType,
@@ -10,6 +9,7 @@ import {
   UserQuery_user,
 } from "@gqlt/UserQuery";
 import { Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import BoardView from "@components/BoardView";
 
 type Props = { boardId: string };
 
@@ -25,15 +25,16 @@ function Board({ boardId }: Props) {
       },
     }
   );
-  console.log("data", data);
 
-  const bounties = data?.user?.board?.bounties || [];
+  const user = data?.user || null;
 
-  return (
+  const { id: userId, board } = user || {};
+  const { bounties = [] } = board || {};
+  return userId != null ? (
     <>
-      <Heading>{boardId}&apos;s Board</Heading>
+      <Heading>{userId}&apos;s Board</Heading>
       <Text>Bounties</Text>
-      {bounties.length ? (
+      {bounties?.length ? (
         <Grid sx={styles.bountyGrid} templateColumns="repeat(5, 1fr)" gap={6}>
           {bounties.map((bounty) =>
             bounty ? (
@@ -45,6 +46,8 @@ function Board({ boardId }: Props) {
         <Text>No bounties found</Text>
       )}
     </>
+  ) : (
+    <Text>No user found.</Text>
   );
 }
 

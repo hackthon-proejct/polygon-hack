@@ -8,10 +8,15 @@ import { withCookieAuth } from "@utils/auth";
 import Layout from "@layouts/Layout";
 import { NextPageWithLayout } from "@utils/types";
 import Board from "@components/pages/Board";
+import { IS_SERVER } from "@utils/constants";
+import { getLocalStorageKey } from "@utils/api_client";
+import Me from "@components/pages/Me";
 
 const BoardPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { board } = router?.query;
+
+  let user_id = board && board[0];
 
   return (
     <div className={styles.container}>
@@ -21,8 +26,12 @@ const BoardPage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {board && board[0] ? (
-          <Board boardId={board && board[0]} />
+        {user_id ? (
+          user_id === "me" ? (
+            <Me />
+          ) : (
+            <Board boardId={user_id} />
+          )
         ) : (
           <>No board was specified.</>
         )}
