@@ -9,7 +9,6 @@ import {
   UserQuery_user,
 } from "@gqlt/UserQuery";
 import { Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import BoardView from "@components/BoardView";
 import { BountyPreview } from "@components/BountyPreview";
 
 type Props = { userId: string };
