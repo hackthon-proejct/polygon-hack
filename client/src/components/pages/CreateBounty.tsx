@@ -103,7 +103,7 @@ function CreateBounty({ userId }: Props) {
   const [pitch, setPitch] = useState("");
   const [resX, setResX] = useState(2000);
   const [resY, setResY] = useState(2000);
-  const [max, setMax] = useState(0);
+  const [max, setMax] = useState(100);
 
   return loading ? (
     <Text>Loading...</Text>
@@ -142,6 +142,7 @@ function CreateBounty({ userId }: Props) {
       <FormLabel htmlFor="bountyResX">Resolution (Width)</FormLabel>
       <Input
         id="bountyResX"
+        type="number"
         placeholder="2000"
         value={resX}
         onChange={(e) => {
@@ -152,6 +153,7 @@ function CreateBounty({ userId }: Props) {
       <FormLabel htmlFor="bountyResY">Resolution (Height)</FormLabel>
       <Input
         id="bountyResY"
+        type="number"
         placeholder="2000"
         value={resY}
         onChange={(e) => {
@@ -162,6 +164,7 @@ function CreateBounty({ userId }: Props) {
       <FormLabel htmlFor="bountyMax">MaxBounty</FormLabel>
       <Input
         id="bountyMax"
+        type="number"
         placeholder="15ETH"
         value={max}
         onChange={(e) => {
@@ -212,7 +215,8 @@ function CreateBounty({ userId }: Props) {
                   resY,
                 },
                 maxValue: max,
-                mustBeClaimedTime: Math.floor(Date.now() / 100) + expiration,
+                mustBeClaimedTime:
+                  Math.floor(Date.now() / 100) + timeMap[expiration],
                 timeLimit: timeMap[deadline],
               },
             },
