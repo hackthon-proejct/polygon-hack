@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "@styles/Home.module.css";
@@ -6,13 +7,15 @@ import styles from "@styles/Home.module.css";
 import { withCookieAuth } from "@utils/auth";
 import Layout from "@layouts/Layout";
 import { NextPageWithLayout } from "@utils/types";
-import CreateBounty from "@components/pages/CreateBounty";
-import { useRouter } from "next/router";
+import Board from "@components/pages/Board";
+import { IS_SERVER } from "@utils/constants";
+import { getLocalStorageKey } from "@utils/api_client";
+import Me from "@components/pages/Me";
 
-const CreatePage: NextPageWithLayout = () => {
+const BoardPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { board } = router?.query;
-  console.log(router?.query);
+  const { user_id } = router?.query;
+
   return (
     <div className={styles.container}>
       <Head>
@@ -21,7 +24,15 @@ const CreatePage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <CreateBounty userId={board} />
+        {user_id ? (
+          user_id === "me" ? (
+            <Me />
+          ) : (
+            <Board userId={user_id as string} />
+          )
+        ) : (
+          <>No board was specified.</>
+        )}
       </main>
       <footer className={styles.footer}>
         <a
@@ -39,8 +50,8 @@ const CreatePage: NextPageWithLayout = () => {
   );
 };
 
-CreatePage.getLayout = function getLayout(page) {
+BoardPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default withCookieAuth(CreatePage);
+export default withCookieAuth(BoardPage);

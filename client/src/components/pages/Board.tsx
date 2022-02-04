@@ -11,9 +11,9 @@ import {
 import { Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 import BoardView from "@components/BoardView";
 
-type Props = { boardId: string };
+type Props = { userId: string };
 
-function Board({ boardId }: Props) {
+function Board({ userId }: Props) {
   // fetch the user info and their bounties from graphql
 
   const { data, loading, error } = useQuery<UserQueryType, UserQueryVariables>(
@@ -21,14 +21,14 @@ function Board({ boardId }: Props) {
     {
       fetchPolicy: "network-only",
       variables: {
-        id: boardId,
+        id: userId,
       },
     }
   );
 
   const user = data?.user || null;
 
-  const { id: userId, board } = user || {};
+  const { board } = user || {};
   const { bounties = [] } = board || {};
   return userId != null ? (
     <>

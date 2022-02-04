@@ -1,22 +1,18 @@
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "@styles/Home.module.css";
+import { Text } from "@chakra-ui/react";
 
 import { withCookieAuth } from "@utils/auth";
 import Layout from "@layouts/Layout";
 import { NextPageWithLayout } from "@utils/types";
-import Board from "@components/pages/Board";
-import { IS_SERVER } from "@utils/constants";
-import { getLocalStorageKey } from "@utils/api_client";
-import Me from "@components/pages/Me";
+import CreateBounty from "@components/pages/CreateBounty";
+import { useRouter } from "next/router";
 
-const BoardPage: NextPageWithLayout = () => {
+const CreatePage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { board } = router?.query;
-
-  let user_id = board;
+  const { user_id } = router?.query;
 
   return (
     <div className={styles.container}>
@@ -26,14 +22,10 @@ const BoardPage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {user_id ? (
-          user_id === "me" ? (
-            <Me />
-          ) : (
-            <Board boardId={user_id} />
-          )
+        {user_id != null ? (
+          <CreateBounty userId={user_id as string} />
         ) : (
-          <>No board was specified.</>
+          <Text>Unable to find user and board</Text>
         )}
       </main>
       <footer className={styles.footer}>
@@ -52,8 +44,8 @@ const BoardPage: NextPageWithLayout = () => {
   );
 };
 
-BoardPage.getLayout = function getLayout(page) {
+CreatePage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default withCookieAuth(BoardPage);
+export default withCookieAuth(CreatePage);
