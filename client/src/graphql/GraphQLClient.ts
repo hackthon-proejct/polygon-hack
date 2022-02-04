@@ -30,6 +30,23 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  // TODO: update this to proper auth
+  let token = "";
+  if (IS_SERVER) {
+  } else {
+    token = localStorage.getItem(getLocalStorageKey()) || "";
+  }
+  // return the headers to the context so terminating link can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
 let link = IS_SERVER
   ? new HttpLink({
       uri: `${process.env.NEXT_PUBLIC_REACT_APP_WS_PROTOCOL}${process.env.NEXT_PUBLIC_REACT_APP_SERV_HOSTNAME}/graphql`,
@@ -53,7 +70,7 @@ const splitLink = split(
     );
   },
   link,
-  from([errorLink, uploadLink])
+  from([errorLink, authLink, uploadLink])
 );
 
 let client = new ApolloClient({
