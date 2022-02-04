@@ -9,6 +9,7 @@ import { web3 } from "../utils/smart_contracts/web3";
 import Web3PublicKey from "../models/Web3PublicKey.model";
 import logger from "../utils/logger";
 import Profile from "../models/Profile.model";
+import Board from "../models/Board.model";
 
 const authRouter = new Router({
   prefix: "/auth",
@@ -58,6 +59,11 @@ authRouter.post("/create", async (ctx, next) => {
           existing = await User.create();
           await Web3PublicKey.create({
             key: key,
+            user_id: existing.id,
+          });
+
+          // auto create a board for this new user
+          await Board.create({
             user_id: existing.id,
           });
         }
