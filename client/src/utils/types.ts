@@ -12,3 +12,19 @@ export type TimeType =
   | "1 month"
   | "2 months"
   | "3 months";
+
+export type BountyDataType = {
+  id: string;
+  metadata: {
+    title: string;
+    description: string;
+    pitch?: string;
+    specs: {
+      resX: number;
+      resY: number;
+    };
+    maxValue: number;
+    mustBeClaimedTime: number;
+    timeLimit: number;
+  };
+};

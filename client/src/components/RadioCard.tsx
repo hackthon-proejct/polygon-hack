@@ -2,7 +2,6 @@ import { Box, useRadio, UseRadioProps } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 
 type Props = {};
-// 1. Create a component that consumes the `useRadio` hook
 export function RadioCard(props: PropsWithChildren<Props & UseRadioProps>) {
   const { getInputProps, getCheckboxProps } = useRadio(props);
 

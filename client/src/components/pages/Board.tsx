@@ -8,8 +8,9 @@ import {
   UserQueryVariables,
   UserQuery_user,
 } from "@gqlt/UserQuery";
-import { Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import { Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import BoardView from "@components/BoardView";
+import { BountyPreview } from "@components/BountyPreview";
 
 type Props = { userId: string };
 
@@ -35,13 +36,15 @@ function Board({ userId }: Props) {
       <Heading>{userId}&apos;s Board</Heading>
       <Text>Bounties</Text>
       {bounties?.length ? (
-        <Grid sx={styles.bountyGrid} templateColumns="repeat(5, 1fr)" gap={6}>
+        <Wrap sx={styles.bountyWrap} spacing="30px">
           {bounties.map((bounty) =>
             bounty ? (
-              <GridItem key={bounty.id} w="100%" h="10" bg="blue.500" />
+              <WrapItem key={bounty.id}>
+                <BountyPreview bounty={bounty} />
+              </WrapItem>
             ) : null
           )}
-        </Grid>
+        </Wrap>
       ) : (
         <Text>No bounties found</Text>
       )}
@@ -52,7 +55,7 @@ function Board({ userId }: Props) {
 }
 
 const styles = {
-  bountyGrid: {
+  bountyWrap: {
     width: "100%",
   },
 };
