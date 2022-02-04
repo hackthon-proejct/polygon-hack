@@ -1,4 +1,14 @@
 import { gql } from "@apollo/client";
+export const BOUNTY = gql`
+  query BountyQuery($id: String!) {
+    bounty(id: $id) {
+      id
+      metadata
+      creator_id
+    }
+  }
+`;
+
 export const BOUNTIES_BY_USER = gql`
   query BountiesByUser($id: String!) {
     bounties_by_user(id: $id) {
