@@ -16,3 +16,19 @@ export const BOUNTIES = gql`
     }
   }
 `;
+
+export const CREATE_BOUNTY = gql`
+  mutation CreateBounty(
+    $metadata: JSONObject!
+    $board_id: String
+    $twitter_handle: String
+  ) {
+    createBounty(
+      metadata: $metadata
+      board_id: $board_id
+      twitter_handle: $twitter_handle
+    ) {
+      id
+    }
+  }
+`;
