@@ -5,11 +5,13 @@ import bountyContract, {
   getVotingStatus,
   joinBounty,
   vote,
+  getEquity,
+  getBalance,
 } from "@utils/bounty";
 import { IS_SERVER, web3 } from "@utils/constants";
 
 const contract =
-  !IS_SERVER && bountyContract("0x3f8f8fc7482f21022fae303bf18a9f00f82110e3");
+  !IS_SERVER && bountyContract("0x9f9a5d65af4de28041cde91a4e2f31f1eb509ee0");
 const getStatus = async () => {
   const result = await getVotingStatus(contract);
   console.log("result", result);
@@ -27,15 +29,58 @@ const voteBounty = async (milestone: number, yeaOrNay: boolean) => {
   console.log("result", result);
   return result;
 };
+const _getEquity = async () => {
+  const accounts = await web3.eth.getAccounts();
+  const result = await getEquity(contract, accounts[0]);
+  return result;
+};
+
+const _getBalance = async () => {
+  const accounts = await web3.eth.getAccounts();
+  const result = await getBalance(contract, accounts[0]);
+  return result;
+};
 
 const DebugPage: NextPageWithLayout = () => {
+  //   contract &&
+  //     contract.events.Debug(
+  //       {
+  //         fromBlock: 24591965,
+  //         toBlock: "latest",
+  //       },
+  //       function (err: any, event: any) {
+  //         const r = web3.eth.abi.decodeLog(
+  //           [{ type: "string", name: "msg", indexed: true }],
+  //           event.raw.data,
+  //           event.raw.topics[1]
+  //         );
+  //         console.log("r", r);
+  //         console.log("event", event);
+  //         console.log("err", err);
+  //       }
+  //     );
   return (
     <div>
       <main>
         <div>{"hello"}</div>
-        <button onClick={getStatus}>Status</button>
-        <button onClick={() => join("10000000000000000")}>Join</button>
-        <button onClick={() => voteBounty(0, true)}>Vote</button>
+        <div>
+          <button onClick={getStatus}>Status</button>
+        </div>
+        <div>
+          <button onClick={() => join("10000000000000000")}>Join</button>
+        </div>
+        <div>
+          <button onClick={() => voteBounty(0, true)}>Vote Yes</button>
+        </div>
+        <div>
+          <button onClick={() => voteBounty(1, false)}>Vote No</button>
+        </div>
+        <div>
+          <button onClick={_getEquity}>Equity</button>
+        </div>
+        <div>
+          <button onClick={_getBalance}>Balance</button>
+        </div>
       </main>
     </div>
   );

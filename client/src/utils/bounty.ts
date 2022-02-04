@@ -31,6 +31,18 @@ export async function getVotingStatus(contract: any) {
   };
 }
 
+export async function getEquity(contract: any, account: any): Promise<string> {
+  const result = await contract.methods.equityOf(account).call();
+  console.log("result", result);
+  return result;
+}
+
+export async function getBalance(contract: any, account: any): Promise<string> {
+  const result = await contract.methods.balanceOf(account).call();
+  console.log("result", result);
+  return result;
+}
+
 export async function joinBounty(contract: any, stake: string, account: any) {
   const result = await contract.methods.join().send({
     from: account,
