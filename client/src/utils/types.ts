@@ -15,6 +15,7 @@ export type TimeType =
 
 export type BountyDataType = {
   id: string;
+  creator_id: string;
   metadata: {
     title: string;
     description: string;

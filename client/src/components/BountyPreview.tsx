@@ -1,6 +1,6 @@
 import { Text, Box, Flex, Link } from "@chakra-ui/react";
 import { BountyDataType } from "@utils/types";
-import { getImageUrlFromYoutubeEmbed } from "@utils/youtube";
+import { getImageUrlFromYoutube } from "@utils/youtube";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
@@ -9,13 +9,12 @@ type Props = {
 };
 
 export function BountyPreview({ bounty }: Props) {
-  console.log(bounty.metadata.pitch);
   const { title, pitch, description } = bounty.metadata;
   return (
     <Flex direction="column" sx={styles.container}>
-      <NextLink href="/">
+      <NextLink href={`/${bounty.creator_id}/${bounty.id}`}>
         <Link>
-          <img src={getImageUrlFromYoutubeEmbed(pitch)} />
+          <img src={getImageUrlFromYoutube(pitch)} />
         </Link>
       </NextLink>
       <Flex direction="column" sx={styles.metadata}>
