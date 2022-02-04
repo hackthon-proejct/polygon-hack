@@ -128,6 +128,7 @@ function CreateBounty({ userId }: Props) {
       </HStack>
 
       <Button
+        isLoading={isCreatingBounty}
         loadingText="Submitting"
         colorScheme="teal"
         variant="outline"
@@ -145,7 +146,7 @@ function CreateBounty({ userId }: Props) {
           });
         }}
       >
-        Create
+        {isCreatingBounty ? "Creating..." : "Create"}
       </Button>
     </Flex>
   ) : (
