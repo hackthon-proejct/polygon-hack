@@ -32,6 +32,14 @@ const BountyType = new GraphQLObjectType({
     status: {
       type: new GraphQLNonNull(GraphQLInt),
     },
+    initiator_id: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "The funder that initiated this bounty",
+      resolve: async (parent, args, ctx, info) => {
+        const user = await parent.$get("user");
+        return user.id;
+      },
+    },
     creator_id: {
       type: new GraphQLNonNull(GraphQLString),
       description: "The creator who can claim this bounty",

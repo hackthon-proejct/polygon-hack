@@ -10,6 +10,10 @@
 export interface UserQuery_user_board_bounties {
   __typename: "Bounty";
   /**
+   * The funder that initiated this bounty
+   */
+  initiator_id: string;
+  /**
    * The creator who can claim this bounty
    */
   creator_id: string;

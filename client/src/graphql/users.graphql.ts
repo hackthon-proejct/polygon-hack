@@ -7,6 +7,7 @@ export const USER = gql`
       board {
         id
         bounties {
+          initiator_id
           creator_id
           id
           metadata
@@ -23,6 +24,7 @@ export const CURRENT_USER = gql`
       board {
         id
         bounties {
+          initiator_id
           creator_id
           id
           metadata

@@ -15,6 +15,10 @@ export interface BountyQuery_bounty {
    */
   metadata: any | null;
   /**
+   * The funder that initiated this bounty
+   */
+  initiator_id: string;
+  /**
    * The creator who can claim this bounty
    */
   creator_id: string;
