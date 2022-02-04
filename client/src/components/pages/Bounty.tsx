@@ -8,18 +8,22 @@ import {
   UserQueryVariables,
   UserQuery_user,
 } from "@gqlt/UserQuery";
-import { Heading, Link, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import { BountyPreview } from "@components/BountyPreview";
+import { Button, Heading, Link, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import { BountyPreview } from "@components/bounty/BountyPreview";
 import { BOUNTY } from "@gql/bounties.graphql";
 import {
   BountyQuery,
   BountyQueryVariables,
 } from "@gql/__generated__/BountyQuery";
 import { getEmbedUrlFromYoutube } from "@utils/youtube";
+import { useAppSelector } from "@redux/hooks";
+import { selectUserId } from "@redux/slices/userSlice";
+import BountyJoin from "@components/bounty/BountyJoin";
 
 type Props = { bountyId: string };
 
 function Bounty({ bountyId }: Props) {
+  const userId = useAppSelector(selectUserId);
   // fetch the user info and their bounties from graphql
 
   const { data, loading, error } = useQuery<BountyQuery, BountyQueryVariables>(
@@ -36,6 +40,10 @@ function Bounty({ bountyId }: Props) {
   const { metadata, id, creator_id } = bounty || {};
 
   const embedURL = getEmbedUrlFromYoutube(metadata?.pitch);
+
+  // TODO: add checks for if you're a funder in smart contract
+  const hasJoinedBounty = false;
+  // const hasJoinedBounty = userId === bounty?.initiator_id;
 
   return bounty != null ? (
     <>
@@ -60,6 +68,8 @@ function Bounty({ bountyId }: Props) {
       <Text>max: {metadata.maxValue}</Text>
       <Text>expiration: {metadata.mustBeClaimedTime}</Text>
       <Text>deadline: {metadata.timeLimit}</Text>
+
+      {!hasJoinedBounty ? <BountyJoin /> : null}
     </>
   ) : (
     <Text>No bounty found.</Text>

@@ -9,7 +9,7 @@ import {
   UserQuery_user,
 } from "@gqlt/UserQuery";
 import { Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import { BountyPreview } from "@components/BountyPreview";
+import { BountyPreview } from "@components/bounty/BountyPreview";
 
 type Props = { userId: string };
 
