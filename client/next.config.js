@@ -5,8 +5,8 @@ const nextConfig = {
   // see https://github.com/near/near-explorer/pull/873, there's an issue
   // with circular imports, happens when using apollo
   experimental: {
-    esmExternals: false
-  }
-}
+    esmExternals: false,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -31,7 +31,7 @@ export async function getVotingStatus(contract: any) {
   };
 }
 
-export async function joinBounty(contract: any, stake: number, account: any) {
+export async function joinBounty(contract: any, stake: string, account: any) {
   const result = await contract.methods.join().send({
     from: account,
     value: web3.utils.toBN(stake),
@@ -43,10 +43,10 @@ export async function joinBounty(contract: any, stake: number, account: any) {
 export async function vote(
   contract: any,
   milestone: number,
-  vote: boolean,
+  yeaOrNay: boolean,
   account: any
 ) {
-  const result = await contract.methods.vote(milestone, vote).send({
+  const result = await contract.methods.vote(milestone, yeaOrNay).send({
     from: account,
   });
   console.log("vote", result);
