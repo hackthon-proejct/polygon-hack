@@ -11,6 +11,8 @@ import Board from "../models/Board.model";
 import Bounty, { BountyStatus } from "../models/Bounty.model";
 import Profile from "../models/Profile.model";
 import User from "../models/User.model";
+import { BoardType } from "./board";
+import { UserType } from "./user";
 
 const BountyType = new GraphQLObjectType({
   name: "Bounty",
@@ -29,6 +31,14 @@ const BountyType = new GraphQLObjectType({
     },
     status: {
       type: new GraphQLNonNull(GraphQLInt),
+    },
+    creator_id: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "The creator who can claim this bounty",
+      resolve: async (parent, args, ctx, info) => {
+        const board = await parent.$get("board");
+        return board.user_id;
+      },
     },
   },
 });
