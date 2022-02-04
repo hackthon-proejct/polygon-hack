@@ -6,8 +6,6 @@ import {
   FormLabel,
   HStack,
   Input,
-  InputGroup,
-  InputLeftElement,
   Textarea,
   useRadioGroup,
 } from "@chakra-ui/react";
@@ -22,15 +20,16 @@ import {
   UserQuery as UserQueryType,
   UserQueryVariables,
 } from "@gql/__generated__/UserQuery";
-import { useAppSelector } from "@redux/hooks";
-import { selectUserId } from "@redux/slices/userSlice";
-import Board from "./Board";
+import { TimeType } from "@utils/types";
+import { useState } from "react";
 
 type Props = {
   userId: string;
 };
-const expirationOptions = ["48 hours", "7 days", "14 days"];
-const deadlineOptions = [
+
+const expirationOptions: TimeType[] = ["48 hours", "1 week", "2 weeks"];
+
+const deadlineOptions: TimeType[] = [
   "48 hours",
   "1 week",
   "2 weeks",
@@ -39,22 +38,37 @@ const deadlineOptions = [
   "3 months",
 ];
 
+const timeMap = {
+  "48 hours": 172800,
+  "1 week": 604800,
+  "2 weeks": 1209600,
+  "1 month": 2629746,
+  "2 months": 5259492,
+  "3 months": 7889238,
+};
+
 function CreateBounty({ userId }: Props) {
+  const [expiration, setExpiration] = useState<TimeType>("48 hours");
+  const [deadline, setDeadline] = useState<TimeType>("1 week");
   const {
     getRootProps: getExpirationRootProps,
     getRadioProps: getExpirationRadioProps,
   } = useRadioGroup({
     name: "expiration",
-    defaultValue: "48 hours",
-    onChange: console.log,
+    value: expiration,
+    onChange: (val) => {
+      setExpiration(val as TimeType);
+    },
   });
   const {
     getRootProps: getDeadlineRootProps,
     getRadioProps: getDeadlineRadioProps,
   } = useRadioGroup({
     name: "deadlineOptions",
-    defaultValue: "48 hours",
-    onChange: console.log,
+    value: deadline,
+    onChange: (val) => {
+      setDeadline(val as TimeType);
+    },
   });
   const expirationGroup = getExpirationRootProps();
   const deadlineGroup = getDeadlineRootProps();
@@ -84,31 +98,83 @@ function CreateBounty({ userId }: Props) {
     twitter_handle = null;
   }
 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [pitch, setPitch] = useState("");
+  const [resX, setResX] = useState(2000);
+  const [resY, setResY] = useState(2000);
+  const [max, setMax] = useState(0);
+
   return loading ? (
     <Text>Loading...</Text>
   ) : board_id != null ? (
     <Flex direction="column">
       <FormLabel htmlFor="bountyTitle">Title</FormLabel>
-      <Input id="bountyTitle" placeholder="Title of Bounty" />
+      <Input
+        id="bountyTitle"
+        placeholder="Title of Bounty"
+        value={title}
+        onChange={(e) => {
+          setTitle(e.currentTarget.value);
+        }}
+      />
 
       <FormLabel htmlFor="bountyDescription">Description</FormLabel>
-      <Textarea id="bountyDescription" placeholder="Description of Bounty" />
+      <Textarea
+        id="bountyDescription"
+        placeholder="Description of Bounty"
+        value={description}
+        onChange={(e) => {
+          setDescription(e.currentTarget.value);
+        }}
+      />
+
       <FormLabel htmlFor="bountyPitch">Pitch</FormLabel>
-      <Input id="bountyPitch" placeholder="youtube link" />
+      <Input
+        id="bountyPitch"
+        placeholder="youtube link"
+        value={pitch}
+        onChange={(e) => {
+          setPitch(e.currentTarget.value);
+        }}
+      />
 
       <FormLabel htmlFor="bountyResX">Resolution (Width)</FormLabel>
-      <Input id="bountyResX" placeholder="2000" />
+      <Input
+        id="bountyResX"
+        placeholder="2000"
+        value={resX}
+        onChange={(e) => {
+          setResX(e.currentTarget.valueAsNumber);
+        }}
+      />
+
       <FormLabel htmlFor="bountyResY">Resolution (Height)</FormLabel>
-      <Input id="bountyResY" placeholder="2000" />
+      <Input
+        id="bountyResY"
+        placeholder="2000"
+        value={resY}
+        onChange={(e) => {
+          setResY(e.currentTarget.valueAsNumber);
+        }}
+      />
+
       <FormLabel htmlFor="bountyMax">MaxBounty</FormLabel>
-      <Input id="bountyMax" placeholder="15ETH" />
+      <Input
+        id="bountyMax"
+        placeholder="15ETH"
+        value={max}
+        onChange={(e) => {
+          setMax(e.currentTarget.valueAsNumber);
+        }}
+      />
 
       <FormLabel htmlFor="bountyResY">Expiration Date</FormLabel>
       <HStack {...expirationGroup}>
         {expirationOptions.map((value) => {
           const radio = getExpirationRadioProps({ value });
           return (
-            <RadioCard key={value} {...radio}>
+            <RadioCard key={value} value={expiration} {...radio}>
               {value}
             </RadioCard>
           );
@@ -120,7 +186,7 @@ function CreateBounty({ userId }: Props) {
         {deadlineOptions.map((value) => {
           const radio = getDeadlineRadioProps({ value });
           return (
-            <RadioCard key={value} {...radio}>
+            <RadioCard key={value} value={deadline} {...radio}>
               {value}
             </RadioCard>
           );
@@ -138,9 +204,16 @@ function CreateBounty({ userId }: Props) {
               board_id,
               twitter_handle,
               metadata: {
-                maxValue: 100000000,
-                mustBeClaimedTime: 1643949932,
-                timeLimit: 86400,
+                title,
+                description,
+                pitch,
+                specs: {
+                  resX,
+                  resY,
+                },
+                maxValue: max,
+                mustBeClaimedTime: Math.floor(Date.now() / 100) + expiration,
+                timeLimit: timeMap[deadline],
               },
             },
           });
