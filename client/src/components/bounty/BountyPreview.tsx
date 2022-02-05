@@ -2,6 +2,7 @@ import { Text, Box, Flex, Link } from "@chakra-ui/react";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import { BountyDataType } from "@utils/types";
 import { getImageUrlFromYoutube } from "@utils/youtube";
+import Image from "next/image";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
@@ -11,11 +12,12 @@ type Props = {
 
 export function BountyPreview({ bounty }: Props) {
   const { title, pitch, description } = bounty.metadata;
+  const imageUrl = getImageUrlFromYoutube(pitch);
   return (
     <Flex direction="column" sx={styles.container}>
       <NextLink href={`/${bounty.creator_id}/${bounty.id}`}>
         <Link>
-          <img src={getImageUrlFromYoutube(pitch)} />
+          <Image alt="" src={imageUrl!} />
         </Link>
       </NextLink>
       <Flex direction="column" sx={styles.metadata}>

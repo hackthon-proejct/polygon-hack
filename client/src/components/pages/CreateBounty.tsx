@@ -214,6 +214,8 @@ function CreateBounty({ userId }: Props) {
                   resX,
                   resY,
                 },
+              },
+              block_metadata: {
                 maxValue: max,
                 mustBeClaimedTime:
                   Math.floor(Date.now() / 100) + timeMap[expiration],
