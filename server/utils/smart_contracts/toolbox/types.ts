@@ -1,7 +1,7 @@
 export interface BountyData {
   creatorWallet: string;
-  maxValue: string;
-  reservePrice: string;
+  maxValue: number;
+  reservePrice: number;
   bonusTargets: number[];
   bonusPctYeasNeeded: number[];
   bonusFailureThresholds: number[];

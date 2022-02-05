@@ -31,9 +31,9 @@ const styles = {
   container: { maxWidth: "320px" },
   // TODO: hardcoded to webkit
   description: {
-    display: "-webkit-box",
-    "-webkit-line-clamp": "3",
-    "-webkit-box-orient": "vertical",
+    display: "WebkitBox",
+    WebkitLineClamp: "3",
+    WebkitBoxOrient: "vertical",
     overflow: "hidden",
   },
   metadata: {},

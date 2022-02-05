@@ -15,7 +15,7 @@ import Bounty from "@components/pages/Bounty";
 
 const BountyPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { user_id, bounty_id } = router?.query;
+  const { twitter_handle, bounty_id } = router?.query;
 
   return (
     <div className={styles.container}>

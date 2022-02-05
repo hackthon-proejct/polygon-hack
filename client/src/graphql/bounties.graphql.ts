@@ -81,3 +81,16 @@ export const CREATE_BOUNTY = gql`
   }
   ${BountyData}
 `;
+
+export const PUBLISH_BOUNTY = gql`
+  mutation PublishBounty($id: String!) {
+    publishBounty(id: $id) {
+      id
+      block_metadata {
+        ...BountyDataFrag
+      }
+      metadata
+    }
+  }
+  ${BountyData}
+`;

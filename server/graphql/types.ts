@@ -1,5 +1,6 @@
 import {
   GraphQLBoolean,
+  GraphQLFloat,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
@@ -17,14 +18,13 @@ export const BountyData = new GraphQLObjectType({
       description: "The wallet address of the creator, assigned on publish",
     },
     maxValue: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLFloat),
       description:
-        "1000000000 = 1 gwei, the price at which this bounty is no longer joinable",
+        "The price in ETH at which this bounty is no longer joinable",
     },
     reservePrice: {
-      type: new GraphQLNonNull(GraphQLString),
-      description:
-        "1000000000 = 1 gwei, the price this bounty must be at to be claimable",
+      type: new GraphQLNonNull(GraphQLFloat),
+      description: "The price in ETH this bounty must be at to be claimable",
     },
     bonusTargets: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInt))),

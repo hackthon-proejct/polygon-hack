@@ -20,6 +20,7 @@ import { useAppSelector } from "@redux/hooks";
 import { selectUserId } from "@redux/slices/userSlice";
 import BountyJoin from "@components/bounty/BountyJoin";
 import { getReadableStatus } from "@utils/bounty";
+import BountyPublish from "@components/bounty/BountyPublish";
 
 type Props = { bountyId: string };
 
@@ -47,6 +48,7 @@ function Bounty({ bountyId }: Props) {
   const hasJoinedBounty = false;
   // const hasJoinedBounty = userId === bounty?.initiator_id;
   console.log(address, bounty);
+  const isOwner = userId === bounty?.initiator_id;
 
   return bounty != null ? (
     <>
@@ -74,6 +76,7 @@ function Bounty({ bountyId }: Props) {
       <Text>deadline: {block_metadata!.timeLimit}</Text>
 
       {address && !hasJoinedBounty ? <BountyJoin address={address} /> : null}
+      {isOwner ? <BountyPublish id={bountyId} /> : null}
     </>
   ) : (
     <Text>No bounty found.</Text>

@@ -13,7 +13,7 @@ export default function BountyJoin(props: Props) {
     const accounts = await web3.eth.getAccounts();
     const result = await joinBounty(
       contract,
-      web3.utils.toWei(val, "eth"),
+      web3.utils.toWei(val.toString(), "ether"),
       accounts[0]
     );
     console.log("result", result);
@@ -30,7 +30,7 @@ export default function BountyJoin(props: Props) {
           onChange={(e) => {
             setContribution(e.currentTarget.valueAsNumber);
           }}
-          placeholder="Min: 0.5ETH"
+          placeholder="0.1ETH"
         />
       </Box>
       <Button

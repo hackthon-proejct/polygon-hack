@@ -73,9 +73,12 @@ export async function updateBounty(address: string, data: BountyData) {
 }
 
 function bountyDataToArgs(data: BountyData) {
-  const maxValue = web3.utils.toWei(web3.utils.toBN(data.maxValue), "gwei");
+  const maxValue = web3.utils.toWei(
+    web3.utils.toBN(data.maxValue * 10 ** 9),
+    "gwei"
+  );
   const reservePrice = web3.utils.toWei(
-    web3.utils.toBN(data.reservePrice),
+    web3.utils.toBN(data.reservePrice * 10 ** 9),
     "gwei"
   );
   return [
