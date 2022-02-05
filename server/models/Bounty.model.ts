@@ -56,6 +56,9 @@ export default class Bounty extends Model {
   status: BountyStatus;
 
   @Column(DataType.JSON)
+  block_metadata: BountyData;
+
+  @Column(DataType.JSON)
   metadata: BountyData;
 
   @Column(DataType.STRING)
@@ -96,11 +99,11 @@ export default class Bounty extends Model {
     if (!(board.profile.user && board.profile.user.public_key)) {
       throw new NoCreatorFound();
     }
-    this.metadata = {
-      ...this.metadata,
+    this.block_metadata = {
+      ...this.block_metadata,
       creatorWallet: board.profile.user.public_key.key,
     };
-    const resp = await createBounty(this.metadata);
+    const resp = await createBounty(this.block_metadata);
     this.address = resp.address;
     this.status = BountyStatus.UNCLAIMED;
     await this.save();

@@ -61,8 +61,12 @@ const BountyType = new GraphQLObjectType({
     id: {
       type: new GraphQLNonNull(GraphQLString),
     },
-    metadata: {
+    block_metadata: {
       type: new GraphQLNonNull(BountyData),
+      description: "The blockchain metadata attached to this bounty",
+    },
+    metadata: {
+      type: new GraphQLNonNull(GraphQLJSONObject),
       description: "The metadata attached to this bounty",
     },
     address: {
@@ -76,8 +80,7 @@ const BountyType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: "The funder that initiated this bounty",
       resolve: async (parent, args, ctx, info) => {
-        const user = await parent.$get("user");
-        return user.id;
+        return parent.user_id;
       },
     },
     creator_id: {
@@ -166,6 +169,9 @@ const BountyMutations = {
   createBounty: {
     type: BountyType,
     args: {
+      block_metadata: {
+        type: new GraphQLNonNull(GraphQLJSONObject),
+      },
       metadata: {
         type: new GraphQLNonNull(GraphQLJSONObject),
       },
@@ -206,6 +212,7 @@ const BountyMutations = {
       }
 
       return await Bounty.create({
+        blockMetadata: args.blockMetadata,
         metadata: args.metadata,
         user_id: ctx.state.user.id,
         board_id: boardId,

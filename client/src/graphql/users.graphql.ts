@@ -11,9 +11,10 @@ export const USER = gql`
           initiator_id
           creator_id
           id
-          metadata {
+          block_metadata {
             ...BountyDataFrag
           }
+          metadata
         }
       }
     }
@@ -31,9 +32,10 @@ export const CURRENT_USER = gql`
           initiator_id
           creator_id
           id
-          metadata {
+          block_metadata {
             ...BountyDataFrag
           }
+          metadata
         }
       }
     }

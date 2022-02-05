@@ -1,11 +1,12 @@
 import { Text, Box, Flex, Link } from "@chakra-ui/react";
+import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import { BountyDataType } from "@utils/types";
 import { getImageUrlFromYoutube } from "@utils/youtube";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
 type Props = {
-  bounty: BountyDataType;
+  bounty: BountyQuery_bounty;
 };
 
 export function BountyPreview({ bounty }: Props) {

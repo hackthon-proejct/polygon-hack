@@ -7,7 +7,7 @@
 // GraphQL mutation operation: CreateBounty
 // ====================================================
 
-export interface CreateBounty_createBounty_metadata {
+export interface CreateBounty_createBounty_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -47,9 +47,13 @@ export interface CreateBounty_createBounty {
   __typename: "Bounty";
   id: string;
   /**
+   * The blockchain metadata attached to this bounty
+   */
+  block_metadata: CreateBounty_createBounty_block_metadata;
+  /**
    * The metadata attached to this bounty
    */
-  metadata: CreateBounty_createBounty_metadata;
+  metadata: any;
 }
 
 export interface CreateBounty {
@@ -57,6 +61,7 @@ export interface CreateBounty {
 }
 
 export interface CreateBountyVariables {
+  block_metadata: any;
   metadata: any;
   board_id?: string | null;
   twitter_handle?: string | null;

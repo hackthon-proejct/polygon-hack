@@ -7,7 +7,7 @@
 // GraphQL query operation: CurrentUserQuery
 // ====================================================
 
-export interface CurrentUserQuery_currentUser_board_bounties_metadata {
+export interface CurrentUserQuery_currentUser_board_bounties_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -55,9 +55,13 @@ export interface CurrentUserQuery_currentUser_board_bounties {
   creator_id: string;
   id: string;
   /**
+   * The blockchain metadata attached to this bounty
+   */
+  block_metadata: CurrentUserQuery_currentUser_board_bounties_block_metadata;
+  /**
    * The metadata attached to this bounty
    */
-  metadata: CurrentUserQuery_currentUser_board_bounties_metadata;
+  metadata: any;
 }
 
 export interface CurrentUserQuery_currentUser_board {

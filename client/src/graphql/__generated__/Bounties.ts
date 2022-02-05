@@ -7,7 +7,7 @@
 // GraphQL query operation: Bounties
 // ====================================================
 
-export interface Bounties_bounties_metadata {
+export interface Bounties_bounties_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -47,9 +47,13 @@ export interface Bounties_bounties {
   __typename: "Bounty";
   id: string;
   /**
+   * The blockchain metadata attached to this bounty
+   */
+  block_metadata: Bounties_bounties_block_metadata;
+  /**
    * The metadata attached to this bounty
    */
-  metadata: Bounties_bounties_metadata;
+  metadata: any;
   /**
    * The funder that initiated this bounty
    */
