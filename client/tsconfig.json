@@ -22,7 +22,8 @@
       "@gqlt/*": ["src/graphql/__generated__/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/components/layouts/*"],
-      "@redux/*": ["src/redux/*"]
+      "@redux/*": ["src/redux/*"],
+      "@shared/*": ["shared/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
