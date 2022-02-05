@@ -24,15 +24,15 @@ export interface UserQuery_user_profile_board_bounties_block_metadata {
   /**
    * [20,20] if 20% of the funds are disbursed in m0 and m1
    */
-  bonusTargets: number;
+  bonusTargets: number[];
   /**
    * [40,40] if 40% if the vote needs to be yea to pass milestones 0 and 1
    */
-  bonusPctYeasNeeded: number;
+  bonusPctYeasNeeded: number[];
   /**
    * [1,2] if milestone 0 can fail 1 time and m1 can fail twice
    */
-  bonusFailureThresholds: number;
+  bonusFailureThresholds: number[];
   /**
    * Datetime when this must be claimed or expires
    */
