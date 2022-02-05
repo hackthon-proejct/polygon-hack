@@ -21,6 +21,7 @@ import { selectUserId } from "@redux/slices/userSlice";
 import BountyJoin from "@components/bounty/BountyJoin";
 import { getReadableStatus } from "@utils/bounty";
 import BountyPublish from "@components/bounty/BountyPublish";
+import BountyState from "@components/bounty/BountyState";
 
 type Props = { bountyId: string };
 
@@ -77,6 +78,7 @@ function Bounty({ bountyId }: Props) {
 
       {address && !hasJoinedBounty ? <BountyJoin address={address} /> : null}
       {isOwner ? <BountyPublish id={bountyId} /> : null}
+      <BountyState bounty={bounty} />
     </>
   ) : (
     <Text>No bounty found.</Text>
