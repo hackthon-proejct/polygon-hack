@@ -7,22 +7,7 @@ import {
 import Profile from "../models/Profile.model";
 import User from "../models/User.model";
 import { BoardType } from "./board";
-
-const ProfileType = new GraphQLObjectType({
-  name: "Profile",
-  description: "The profile attached to a user",
-  fields: {
-    twitter_handle: {
-      type: GraphQLString,
-    },
-    image_url: {
-      type: GraphQLString,
-    },
-    user_id: {
-      type: GraphQLString,
-    },
-  },
-});
+import { ProfileType } from "./types";
 
 const PublicKeyType = new GraphQLObjectType({
   name: "PublicKey",

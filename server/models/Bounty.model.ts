@@ -18,6 +18,11 @@ import {
   createBounty,
 } from "../utils/smart_contracts/toolbox/bounty";
 import { BountyData } from "../utils/smart_contracts/toolbox/types";
+import Profile from "./Profile.model";
+import Web3PublicKey from "./Web3PublicKey.model";
+
+class NoCreatorFound extends Error {}
+class IncorrectStatus extends Error {}
 
 export enum BountyStatus {
   UNKNOWN = 0,
@@ -71,6 +76,30 @@ export default class Bounty extends Model {
 
   // Publishes to blockchain and returns address as well as saves to db
   async publish(): Promise<Bounty> {
+    if (this.status != BountyStatus.DRAFT) {
+      throw new IncorrectStatus();
+    }
+    // Find the creator wallet here
+    const board = await Board.findByPk(this.board_id, {
+      include: [
+        {
+          model: Profile,
+          include: [
+            {
+              model: User,
+              include: [Web3PublicKey],
+            },
+          ],
+        },
+      ],
+    });
+    if (!(board.profile.user && board.profile.user.public_key)) {
+      throw new NoCreatorFound();
+    }
+    this.metadata = {
+      ...this.metadata,
+      creatorWallet: board.profile.user.public_key.key,
+    };
     const resp = await createBounty(this.metadata);
     this.address = resp.address;
     this.status = BountyStatus.UNCLAIMED;
@@ -79,6 +108,9 @@ export default class Bounty extends Model {
   }
 
   async claim(): Promise<Bounty> {
+    if (this.status != BountyStatus.UNCLAIMED) {
+      throw new IncorrectStatus();
+    }
     await claimBounty(this.address);
     this.status = BountyStatus.CLAIMED;
     await this.save();

@@ -11,6 +11,44 @@ import Board from "../models/Board.model";
 import Bounty, { BountyStatus } from "../models/Bounty.model";
 import Profile from "../models/Profile.model";
 
+const BountyData = new GraphQLObjectType({
+  name: "BountyData",
+  fields: {
+    maxValue: {
+      type: new GraphQLNonNull(GraphQLString),
+      description:
+        "1000000000 = 1 gwei, the price at which this bounty is no longer joinable",
+    },
+    reservePrice: {
+      type: new GraphQLNonNull(GraphQLString),
+      description:
+        "1000000000 = 1 gwei, the price this bounty must be at to be claimable",
+    },
+    bonusTargets: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: "[20,20] if 20% of the funds are disbursed in m0 and m1",
+    },
+    bonusPctYeasNeeded: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description:
+        "[40,40] if 40% if the vote needs to be yea to pass milestones 0 and 1",
+    },
+    bonusFailureThresholds: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: "[1,2] if milestone 0 can fail 1 time and m1 can fail twice",
+    },
+    mustBeClaimedTime: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: "Datetime when this must be claimed or expires",
+    },
+    timeLimit: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description:
+        "Time in seconds the creator has to finish this when claimed",
+    },
+  },
+});
+
 const BountyType = new GraphQLObjectType({
   name: "Bounty",
   description: "A single bounty",
@@ -19,7 +57,7 @@ const BountyType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
     },
     metadata: {
-      type: GraphQLJSONObject,
+      type: new GraphQLNonNull(BountyData),
       description: "The metadata attached to this bounty",
     },
     address: {

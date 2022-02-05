@@ -95,6 +95,10 @@ authRouter.post("/twitter/merge", async (ctx, next) => {
     maybeProfile.user_id = ctx.state.user.id;
     await maybeProfile.save();
   }
+  const board = await maybeProfile.$get("board");
+  board.claimed = true;
+  await board.save();
+
   ctx.status = 200;
 });
 

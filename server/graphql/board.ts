@@ -1,4 +1,5 @@
 import {
+  GraphQLBoolean,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
@@ -9,6 +10,7 @@ import { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
 import logger from "../utils/logger";
 import { BountyType } from "./bounty";
+import { ProfileType } from "./types";
 
 const BoardType = new GraphQLObjectType({
   name: "Board",
@@ -21,10 +23,19 @@ const BoardType = new GraphQLObjectType({
       type: GraphQLJSONObject,
       description: "The metadata of this board",
     },
+    claimed: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+    },
     bounties: {
       type: new GraphQLList(BountyType),
       resolve: async (parent, args, ctx, info) => {
         return await parent.$get("bounties");
+      },
+    },
+    creator: {
+      type: ProfileType,
+      resolve: async (parent, args, ctx, info) => {
+        return await parent.$get("profile");
       },
     },
   },

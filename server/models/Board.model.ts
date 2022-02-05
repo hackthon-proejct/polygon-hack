@@ -36,6 +36,9 @@ export default class Board extends Model {
   @Column(DataType.JSON)
   metadata: any;
 
+  @Column(DataType.BOOLEAN)
+  claimed: boolean;
+
   @ForeignKey(() => Profile)
   @Column
   profile_id: string;
