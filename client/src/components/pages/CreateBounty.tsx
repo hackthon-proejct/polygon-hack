@@ -109,7 +109,7 @@ function CreateBounty({ twitterHandle }: Props) {
 
   return loading ? (
     <Text>Loading...</Text>
-  ) : board_id != null ? (
+  ) : (
     <Flex direction="column">
       <FormLabel htmlFor="bountyTitle">Title</FormLabel>
       <Input
@@ -245,8 +245,6 @@ function CreateBounty({ twitterHandle }: Props) {
         {isCreatingBounty ? "Creating..." : "Create"}
       </Button>
     </Flex>
-  ) : (
-    <Text>No board was found</Text>
   );
 }
 

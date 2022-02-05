@@ -76,7 +76,7 @@ export interface LookupTwitterHandle_lookupTwitterHandle_board {
 
 export interface LookupTwitterHandle_lookupTwitterHandle {
   __typename: "Profile";
-  board: LookupTwitterHandle_lookupTwitterHandle_board;
+  board: LookupTwitterHandle_lookupTwitterHandle_board | null;
   user_id: string | null;
   twitter_handle: string | null;
   image_url: string | null;

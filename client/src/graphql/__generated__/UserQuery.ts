@@ -77,7 +77,7 @@ export interface UserQuery_user_profile_board {
 export interface UserQuery_user_profile {
   __typename: "Profile";
   twitter_handle: string | null;
-  board: UserQuery_user_profile_board;
+  board: UserQuery_user_profile_board | null;
 }
 
 export interface UserQuery_user {

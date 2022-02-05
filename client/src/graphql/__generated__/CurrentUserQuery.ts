@@ -73,7 +73,7 @@ export interface CurrentUserQuery_currentUser_profile_board {
 export interface CurrentUserQuery_currentUser_profile {
   __typename: "Profile";
   twitter_handle: string | null;
-  board: CurrentUserQuery_currentUser_profile_board;
+  board: CurrentUserQuery_currentUser_profile_board | null;
 }
 
 export interface CurrentUserQuery_currentUser {

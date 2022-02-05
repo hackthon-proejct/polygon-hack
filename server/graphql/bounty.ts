@@ -120,6 +120,7 @@ const BountyMutations = {
         } else {
           const board = await Board.create({
             profile_id: maybeProfile.id,
+            claimed: true,
           });
           boardId = board.id;
         }

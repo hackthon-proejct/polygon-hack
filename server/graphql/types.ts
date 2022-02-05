@@ -133,7 +133,7 @@ export const ProfileType = new GraphQLObjectType({
       type: GraphQLString,
     },
     board: {
-      type: new GraphQLNonNull(BoardType),
+      type: BoardType,
       resolve: async (parent, args, ctx, info) => {
         return await parent.$get("board");
       },

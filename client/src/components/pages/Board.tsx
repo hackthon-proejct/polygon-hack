@@ -49,7 +49,10 @@ function Board({ twitterHandle }: Props) {
           )}
         </Wrap>
       ) : (
-        <Text>No bounties found</Text>
+        <>
+          <Text>No bounties found</Text>
+          <CreateBounty twitterHandle={twitterHandle} />
+        </>
       )}
     </>
   ) : (
