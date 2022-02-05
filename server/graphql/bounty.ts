@@ -127,7 +127,7 @@ const BountyMutations = {
       }
 
       return await Bounty.create({
-        blockMetadata: args.blockMetadata,
+        block_metadata: args.block_metadata,
         metadata: args.metadata,
         user_id: ctx.state.user.id,
         board_id: boardId,

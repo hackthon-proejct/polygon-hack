@@ -27,16 +27,16 @@ export const BountyData = new GraphQLObjectType({
         "1000000000 = 1 gwei, the price this bounty must be at to be claimable",
     },
     bonusTargets: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInt))),
       description: "[20,20] if 20% of the funds are disbursed in m0 and m1",
     },
     bonusPctYeasNeeded: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInt))),
       description:
         "[40,40] if 40% if the vote needs to be yea to pass milestones 0 and 1",
     },
     bonusFailureThresholds: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInt))),
       description: "[1,2] if milestone 0 can fail 1 time and m1 can fail twice",
     },
     mustBeClaimedTime: {

@@ -27,10 +27,6 @@ function Board({ twitterHandle }: Props) {
   });
 
   const profile = data?.lookupTwitterHandle || null;
-  console.log("profile", profile);
-  if (!profile || error) {
-    return <CreateBounty twitterHandle={twitterHandle} />;
-  }
 
   const { board } = profile || {};
   const { bounties = [] } = board || {};
