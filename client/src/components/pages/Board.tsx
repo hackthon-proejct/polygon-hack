@@ -10,6 +10,7 @@ import {
   LookupTwitterHandleVariables,
 } from "@gql/__generated__/LookupTwitterHandle";
 import CreateBounty from "./CreateBounty";
+import { BountyStatus } from "@shared/enums";
 
 type Props = { twitterHandle: string };
 

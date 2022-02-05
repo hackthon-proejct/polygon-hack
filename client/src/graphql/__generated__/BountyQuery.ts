@@ -46,6 +46,7 @@ export interface BountyQuery_bounty_block_metadata {
 export interface BountyQuery_bounty {
   __typename: "Bounty";
   id: string;
+  status: number;
   /**
    * The blockchain metadata attached to this bounty
    */

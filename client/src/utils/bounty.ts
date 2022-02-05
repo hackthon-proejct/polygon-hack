@@ -1,3 +1,4 @@
+import { BountyStatus } from "@shared/enums";
 import { web3 } from "@utils/constants";
 import bountyJSON from "../contracts/polygon-contracts/Bounty.json";
 
@@ -63,4 +64,24 @@ export async function vote(
   });
   console.log("vote", result);
   return result;
+}
+
+const BountyStatusReadableMap: {
+  [key in BountyStatus]: string;
+} = {
+  [BountyStatus.UNKNOWN]: "Unknown",
+  [BountyStatus.DRAFT]: "Draft",
+  [BountyStatus.UNCLAIMED]: "Unclaimed",
+  [BountyStatus.NEGOTIATING]: "Unclaimed",
+  [BountyStatus.CLAIMED]: "Claimed",
+  [BountyStatus.SUCCEEDED]: "Succeeded",
+  [BountyStatus.FAILED]: "Failed",
+  [BountyStatus.REJECTED]: "Rejected",
+};
+
+export function getReadableStatus(status?: BountyStatus) {
+  if (status == null) {
+    return BountyStatusReadableMap[BountyStatus.UNKNOWN];
+  }
+  return BountyStatusReadableMap[status];
 }

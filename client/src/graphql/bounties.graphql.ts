@@ -16,6 +16,7 @@ export const BOUNTY = gql`
   query BountyQuery($id: String!) {
     bounty(id: $id) {
       id
+      status
       block_metadata {
         ...BountyDataFrag
       }

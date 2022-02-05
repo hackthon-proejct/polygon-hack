@@ -19,6 +19,7 @@ import { getEmbedUrlFromYoutube } from "@utils/youtube";
 import { useAppSelector } from "@redux/hooks";
 import { selectUserId } from "@redux/slices/userSlice";
 import BountyJoin from "@components/bounty/BountyJoin";
+import { getReadableStatus } from "@utils/bounty";
 
 type Props = { bountyId: string };
 
@@ -37,17 +38,20 @@ function Bounty({ bountyId }: Props) {
   );
 
   const { bounty } = data || {};
-  const { metadata, block_metadata, id, creator_id, address } = bounty || {};
+  const { metadata, block_metadata, id, creator_id, address, status } =
+    bounty || {};
 
   const embedURL = getEmbedUrlFromYoutube(metadata?.pitch);
 
   // TODO: add checks for if you're a funder in smart contract
   const hasJoinedBounty = false;
   // const hasJoinedBounty = userId === bounty?.initiator_id;
+  console.log(address, bounty);
 
   return bounty != null ? (
     <>
       <Heading>{metadata.title}</Heading>
+      <Text>Status: {getReadableStatus(status)}</Text>
       <Text>{metadata.description}</Text>
       {embedURL != null ? (
         <iframe
