@@ -1,7 +1,6 @@
 "use strict";
 import passport from "koa-passport";
 import { Strategy as PassportLocal } from "passport-local";
-import { Strategy as PassportTwitter } from "passport-twitter";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 
 import config from "../../config";
@@ -41,19 +40,6 @@ passport.use(
     },
     (payload, done) => {
       deserializeAccount(payload.userId, done);
-    }
-  )
-);
-passport.use(
-  "twitter",
-  new PassportTwitter(
-    {
-      consumerKey: config.auth.TWITTER.CONSUMER_KEY,
-      consumerSecret: config.auth.TWITTER.CONSUMER_SECRET,
-      callbackURL: "http://localhost:8080/api/auth/twitter/callback",
-    },
-    (token, tokenSecret, profile, cb) => {
-      cb(null, profile.username);
     }
   )
 );

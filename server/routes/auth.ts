@@ -9,7 +9,6 @@ import { web3 } from "../utils/smart_contracts/web3";
 import Web3PublicKey from "../models/Web3PublicKey.model";
 import logger from "../utils/logger";
 import Profile from "../models/Profile.model";
-import Board from "../models/Board.model";
 
 const authRouter = new Router({
   prefix: "/auth",
