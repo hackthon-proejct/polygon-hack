@@ -1,4 +1,3 @@
-"use strict";
 import Router from "koa-router";
 import authRouter from "./auth";
 
@@ -12,6 +11,7 @@ apiRouter.get("/status", async (ctx, next) => {
   ctx.status = 200;
   next();
 });
+
 apiRouter.use(authRouter.routes(), authRouter.allowedMethods());
 
 export default apiRouter;

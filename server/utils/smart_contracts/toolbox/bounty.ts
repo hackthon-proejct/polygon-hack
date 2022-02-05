@@ -2,6 +2,14 @@ import logger from "../../logger";
 import { web3, account } from "../web3";
 import { BountyData } from "./types";
 import MachineContract from "../machine";
+import contractJSON from "../../../../web3/build/polygon-contracts/Bounty.json";
+
+const abi = contractJSON.abi;
+
+export default function bountyContract(addr: string) {
+  // @ts-ignore
+  return new web3.eth.Contract(abi, addr);
+}
 
 export async function createBounty(
   data: BountyData
@@ -72,4 +80,25 @@ export function joinBounty(address: string): string[] {
 export function voteOnBounty(address: string): string[] {
   // TODO call vote bounty
   return [];
+}
+export async function claimBounty(address: string) {
+  logger.info("claimBounty: ", { address });
+  const Contract = bountyContract(address);
+  const transaction = Contract.methods.claim();
+  const tx = {
+    from: account.address,
+    to: transaction._parent._address,
+    gas: await transaction.estimateGas({ from: account.address }),
+    gasPrice: await web3.eth.getGasPrice(),
+    data: transaction.encodeABI(),
+  };
+  logger.info("claimBounty: ", { tx });
+
+  const signed = await web3.eth.accounts.signTransaction(
+    tx,
+    account.privateKey
+  );
+  const result = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+  logger.info("claimBounty: ", { result });
+  return result.status;
 }

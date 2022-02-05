@@ -25,7 +25,6 @@ export default class User extends Model {
   static Profile;
   static PublicKey;
   static Bounties; // the bounties that this user has created
-  static Board; // the board that holds the bounties for this user
 
   @Default(v4)
   @PrimaryKey
@@ -46,9 +45,6 @@ export default class User extends Model {
 
   @HasOne(() => Profile, "user_id")
   profile: Profile;
-
-  @HasOne(() => Board, "user_id")
-  board: Board;
 
   @HasOne(() => Web3PublicKey, "user_id")
   public_key: Web3PublicKey;

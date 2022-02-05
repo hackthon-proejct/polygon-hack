@@ -31,12 +31,12 @@ export default function init() {
 // This sucks, what even is this
 function postInit() {
   Board.Bounties = Board.hasMany(Bounty);
-  Board.User = Board.belongsTo(User);
+  Board.Profile = Board.belongsTo(Profile);
   Bounty.User = Bounty.belongsTo(User);
   Bounty.Board = Bounty.belongsTo(Board);
   User.Profile = User.hasOne(Profile);
   User.PublicKey = User.hasOne(Web3PublicKey);
   User.Bounties = User.hasMany(Bounty);
-  User.Board = User.hasOne(Board);
   Profile.User = Profile.belongsTo(User);
+  Profile.Board = Profile.hasOne(Board);
 }

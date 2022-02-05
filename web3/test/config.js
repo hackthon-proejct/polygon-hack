@@ -5,7 +5,7 @@ const FIFTEEN_ZEROS = "000000000000000";
 let bounty;
 const maxValue = new BN("10" + FIFTEEN_ZEROS);
 const bonusTargets = [20, 20];
-const bonusPctYeasNeeded = [60, 60];
+const bonusPctYeasNeeded = [40, 60];
 const bonusFailureThresholds = [1, 1];
 const mustBeClaimedTime = Math.floor(Date.now() / 1000) + 525600;
 const timeLimit = 86400;
@@ -33,6 +33,7 @@ contract("Bounty", (accounts) => {
   beforeEach(async () => {
     creatorWallet = accounts[1];
     ourWallet = accounts[0];
+    otherWallet = accounts[2];
     bounty = await Bounty.new(
       creatorWallet,
       maxValue,
@@ -99,6 +100,7 @@ contract("Bounty", (accounts) => {
 
   it("...can be voted on", async () => {
     // Join the first time
+    console.log("Join owner 3");
     await bounty.join({
       from: ourWallet,
       value: new BN("3" + FIFTEEN_ZEROS),
@@ -107,7 +109,18 @@ contract("Bounty", (accounts) => {
     let data = await bounty.balanceOf(ourWallet);
     console.log("our balance", data.toString());
 
+    // Join with someone else
+    console.log("Join other 2");
+    await bounty.join({
+      from: otherWallet,
+      value: new BN("2" + FIFTEEN_ZEROS),
+    });
+    console.log("joined", otherWallet);
+    data = await bounty.balanceOf(otherWallet);
+    console.log("other balance", data.toString());
+
     // Claim
+    console.log("Claim creator");
     await bounty.claim({
       from: creatorWallet,
     });
@@ -115,8 +128,9 @@ contract("Bounty", (accounts) => {
     printVoteStatus(data);
 
     // Vote
+    console.log("Vote 0 yea");
     await bounty.vote(0, true, {
-      from: ourWallet,
+      from: otherWallet,
     });
     data = await bounty.voteStatus();
     printVoteStatus(data);
@@ -126,10 +140,13 @@ contract("Bounty", (accounts) => {
     console.log("creator wallet", data.toString());
     data = await bounty.balanceOf(ourWallet);
     console.log("our balance", data.toString());
+    data = await bounty.balanceOf(otherWallet);
+    console.log("other balance", data.toString());
 
     // Vote again nay (should trigger withdrawal)
+    console.log("Vote 1 nay");
     await bounty.vote(1, false, {
-      from: ourWallet,
+      from: otherWallet,
     });
     data = await bounty.voteStatus();
     printVoteStatus(data);
@@ -141,8 +158,13 @@ contract("Bounty", (accounts) => {
     console.log("our wallet", data.toString());
     data = await bounty.balanceOf(ourWallet);
     console.log("our balance", data.toString());
+    data = await web3.eth.getBalance(otherWallet);
+    console.log("other wallet", data.toString());
+    data = await bounty.balanceOf(otherWallet);
+    console.log("other balance", data.toString());
 
     // Withdraw (not precipitating event, should no-op)
+    console.log("Withdraw no-op");
     await bounty.withdraw({
       from: ourWallet,
     });
@@ -150,7 +172,9 @@ contract("Bounty", (accounts) => {
     console.log("bounty balance", data.toString());
     data = await bounty.balanceOf(ourWallet);
     console.log("our balance", data.toString());
+
     // Withdraw (should withdraw 80% of equity)
+    console.log("Withdraw working");
     await bounty.precipitatingEvent(true, {
       from: ourWallet,
     });

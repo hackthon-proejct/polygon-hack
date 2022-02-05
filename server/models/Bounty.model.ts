@@ -13,7 +13,10 @@ import {
 import { v4 } from "uuid";
 import User from "./User.model";
 import Board from "./Board.model";
-import { createBounty } from "../utils/smart_contracts/toolbox/bounty";
+import {
+  claimBounty,
+  createBounty,
+} from "../utils/smart_contracts/toolbox/bounty";
 import { BountyData } from "../utils/smart_contracts/toolbox/types";
 
 export enum BountyStatus {
@@ -71,6 +74,13 @@ export default class Bounty extends Model {
     const resp = await createBounty(this.metadata);
     this.address = resp.address;
     this.status = BountyStatus.UNCLAIMED;
+    await this.save();
+    return this;
+  }
+
+  async claim(): Promise<Bounty> {
+    await claimBounty(this.address);
+    this.status = BountyStatus.CLAIMED;
     await this.save();
     return this;
   }

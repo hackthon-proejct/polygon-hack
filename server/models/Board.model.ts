@@ -13,7 +13,7 @@ import {
 } from "sequelize-typescript";
 import { v4 } from "uuid";
 import Bounty from "./Bounty.model";
-import User from "./User.model";
+import Profile from "./Profile.model";
 
 @Table({
   timestamps: true,
@@ -21,7 +21,7 @@ import User from "./User.model";
   underscored: true,
 })
 export default class Board extends Model {
-  static User;
+  static Profile;
   static Bounties;
 
   @Default(v4)
@@ -36,12 +36,12 @@ export default class Board extends Model {
   @Column(DataType.JSON)
   metadata: any;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => Profile)
   @Column
-  user_id: string;
+  profile_id: string;
 
-  @BelongsTo(() => User, "user_id")
-  user: User;
+  @BelongsTo(() => Profile, "profile_id")
+  profile: Profile;
 
   @HasMany(() => Bounty, "board_id")
   bounties: Bounty[];

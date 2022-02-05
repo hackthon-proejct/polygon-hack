@@ -10,13 +10,14 @@ const axiosClient = axios.create({
   headers: {
     "X-Requested-With": "XMLHttpRequest",
   },
+  withCredentials: true,
 });
 if (!IS_SERVER) {
   loadJWT();
 }
 
-export function loadJWT() {
-  const jwt = localStorage.getItem(getLocalStorageKey());
+export function loadJWT(override?: string) {
+  const jwt = override || localStorage.getItem(getLocalStorageKey());
   if (jwt) {
     // @ts-ignore
     axiosClient.defaults.headers["Authorization"] = `Bearer ${jwt}`;

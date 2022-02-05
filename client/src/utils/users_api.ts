@@ -11,6 +11,15 @@ export async function getOrCreateUser(key: string, signature: Buffer) {
   loadJWT();
 }
 
+export async function mergeUser(handle: string, token: string) {
+  const client = APIClient();
+  loadJWT(token);
+  const resp = await client.post("/auth/twitter/merge", {
+    handle: handle,
+  });
+  return resp.data?.user;
+}
+
 export async function currentUser() {
   const resp = await APIClient().get("/auth/current_user");
   return resp.data?.user;

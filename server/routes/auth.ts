@@ -61,19 +61,6 @@ authRouter.post("/create", async (ctx, next) => {
             key: key,
             user_id: existing.id,
           });
-
-          // auto create a board for this new user
-          await Board.create({
-            user_id: existing.id,
-          });
-        }
-        if (!existing.profile) {
-          await Profile.create({
-            image_url:
-              "https://badger-uploads-staging.s3.us-west-1.amazonaws.com/neopet.png",
-            fullname: "Anonymous",
-            user_id: existing.id,
-          });
         }
         return _authFunc("local")(ctx, next);
       });
@@ -84,37 +71,32 @@ authRouter.post("/create", async (ctx, next) => {
     ctx.throw(401);
   }
 });
-authRouter.get("/twitter/callback", async (ctx: RouterContext, next: Next) => {
-  return passport.authenticate(
-    "twitter",
-    async (err: Error, handle: string) => {
-      let maybeProfile = await Profile.findOne({
-        where: {
-          twitter_handle: handle,
-        },
+authRouter.post("/twitter/merge", async (ctx, next) => {
+  const { handle } = ctx.request.body;
+  let maybeProfile = await Profile.findOne({
+    where: {
+      twitter_handle: handle,
+    },
+  });
+  if (!maybeProfile) {
+    const user = await User.findByPk(ctx.state.user.id, {
+      include: Profile,
+    });
+    if (user.profile) {
+      maybeProfile = user.profile;
+      maybeProfile.twitter_handle = handle;
+      await maybeProfile.save();
+    } else {
+      maybeProfile = await Profile.create({
+        user_id: ctx.state.user.id,
+        twitter_handle: handle,
       });
-      if (!maybeProfile) {
-        const user = await User.findByPk(ctx.state.user.id, {
-          include: Profile,
-        });
-        if (user.profile) {
-          maybeProfile = user.profile;
-          maybeProfile.twitter_handle = handle;
-          await maybeProfile.save();
-        } else {
-          maybeProfile = await Profile.create({
-            user_id: ctx.state.user.id,
-            twitter_handle: handle,
-          });
-        }
-      } else if (!maybeProfile.user_id) {
-        maybeProfile.user_id = ctx.state.user.id;
-        await maybeProfile.save();
-      }
-      ctx.status = 200;
-      return;
     }
-  )(ctx, next);
+  } else if (!maybeProfile.user_id) {
+    maybeProfile.user_id = ctx.state.user.id;
+    await maybeProfile.save();
+  }
+  ctx.status = 200;
 });
 
 export default authRouter;

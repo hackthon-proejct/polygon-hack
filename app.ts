@@ -26,7 +26,6 @@ Sentry.init({
   dsn: "https://5504983dab14488ea98faa202ce94ec6@o1099620.ingest.sentry.io/6124364",
   tracesSampleRate: 1.0,
 });
-
 const app = new Koa();
 
 app.use(bodyParser());

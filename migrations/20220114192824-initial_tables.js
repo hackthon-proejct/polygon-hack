@@ -75,11 +75,11 @@ module.exports = {
         allowNull: false,
       },
       metadata: Sequelize.DataTypes.JSON,
-      user_id: {
+      profile_id: {
         type: Sequelize.DataTypes.UUID,
         references: {
           model: {
-            tableName: "users",
+            tableName: "profiles",
           },
           key: "id",
         },

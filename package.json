@@ -1,5 +1,5 @@
 {
-  "name": "nifty-hacks-2022",
+  "name": "polygon-hacks-2022",
   "maintainer": "Boyang Niu",
   "license": "MIT",
   "version": "0.0.1",
@@ -15,7 +15,8 @@
     "dev": "tsc-watch --onSuccess \"bash ./scripts/restart_dev.sh\"",
     "docker": "docker build -t polygon-hack_app:latest .",
     "migrate": "sequelize-cli db:migrate",
-    "rollback": "sequelize-cli db:migrate:undo"
+    "rollback": "sequelize-cli db:migrate:undo",
+    "contracts:copy": "cp -r web3/build/polygon-contracts client/src/contracts/"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.36.0",
@@ -49,7 +50,6 @@
     "koa": "^2.11.4",
     "koa-bodyparser": "^4.3.0",
     "koa-morgan": "^1.0.1",
-    "koa-passport": "^4.1.3",
     "koa-router": "^7.4.0",
     "lodash": "^4.14.161",
     "mariadb": "^2.5.5",

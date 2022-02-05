@@ -9,8 +9,10 @@ import {
   Default,
   DataType,
   PrimaryKey,
+  HasOne,
 } from "sequelize-typescript";
 import { v4 } from "uuid";
+import Board from "./Board.model";
 import User from "./User.model";
 
 @Table({
@@ -19,6 +21,7 @@ import User from "./User.model";
   underscored: true,
 })
 export default class Profile extends Model {
+  static Board;
   static User;
 
   @Default(v4)
@@ -42,4 +45,7 @@ export default class Profile extends Model {
 
   @BelongsTo(() => User, "user_id")
   user: User;
+
+  @HasOne(() => Board, "profile_id")
+  board: Board;
 }

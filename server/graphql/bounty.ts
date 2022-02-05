@@ -6,13 +6,10 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from "graphql";
-import GraphQLJSON, { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
 import Bounty, { BountyStatus } from "../models/Bounty.model";
 import Profile from "../models/Profile.model";
-import User from "../models/User.model";
-import { BoardType } from "./board";
-import { UserType } from "./user";
 
 const BountyType = new GraphQLObjectType({
   name: "Bounty",
@@ -45,7 +42,12 @@ const BountyType = new GraphQLObjectType({
       description: "The creator who can claim this bounty",
       resolve: async (parent, args, ctx, info) => {
         const board = await parent.$get("board");
-        return board.user_id;
+        const profile = await Profile.findOne({
+          where: {
+            id: board.profile_id,
+          },
+        });
+        return profile.user_id;
       },
     },
   },
@@ -134,17 +136,32 @@ const BountyMutations = {
     resolve: async (parent, args, ctx, info) => {
       let boardId = args.board_id;
       if (!boardId) {
-        // create new creator user acc and board
-        const user = await User.create({});
-        await Profile.create({
-          twitter_handle: args.twitter_handle,
-          user_id: user.id,
+        let maybeProfile = await Profile.findOne({
+          where: {
+            twitter_handle: args.twitter_handle,
+          },
+          include: Board,
         });
-        const board = await Board.create({
-          user_id: user.id,
-        });
-        boardId = board.id;
+        if (!maybeProfile) {
+          // create new creator profile
+          maybeProfile = await Profile.create(
+            {
+              twitter_handle: args.twitter_handle,
+            },
+            { include: Board }
+          );
+        }
+        // Board is already set
+        if (maybeProfile.board) {
+          boardId = maybeProfile.board.id;
+        } else {
+          const board = await Board.create({
+            profile_id: maybeProfile.id,
+          });
+          boardId = board.id;
+        }
       }
+
       return await Bounty.create({
         metadata: args.metadata,
         user_id: ctx.state.user.id,
@@ -163,6 +180,18 @@ const BountyMutations = {
     resolve: async (parent, args, ctx, info) => {
       const bounty = await Bounty.findByPk(args.id);
       return await bounty.publish();
+    },
+  },
+  claimBounty: {
+    type: BountyType,
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLString),
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      const bounty = await Bounty.findByPk(args.id);
+      return await bounty.claim();
     },
   },
 };

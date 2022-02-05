@@ -81,6 +81,7 @@ abstract contract Treasury {
     }
 
     function nextMilestone() private returns (bool success) {
+        emit Debug("nextMilestone");
         if (votingOn < bonusTargets.length - 1) {
             votingOn += 1;
         }
@@ -90,6 +91,7 @@ abstract contract Treasury {
     // Called by server at time of expiry - should check whether this vote
     // actually succeeded and auto fail/withdraw/move on otherwise
     function failMilestone() internal returns (bool success) {
+        emit Debug("failMilestone");
         bonusFailures[votingOn] += 1;
         if (bonusFailures[votingOn] == bonusFailureThresholds[votingOn]) {
             return failAndWithdraw();
@@ -98,14 +100,16 @@ abstract contract Treasury {
     }
 
     function failAndWithdraw() internal returns (bool success) {
+        emit Debug("failAndWithdraw");
         // the amount about to be disbursed among all equity holders
         uint256 disbursement = totalContribution
             .mul(bonusTargets[votingOn])
             .div(100);
         for (uint256 i = 0; i < fans.length; i += 1) {
             // calculate the equity % from totalContribution vs equity
-            uint256 contrib = equity[fans[i]];
-            uint256 pctContrib = contrib.mul(100).div(totalContribution); // percent * 100
+            uint256 pctContrib = equity[fans[i]].mul(100).div(
+                totalContribution
+            ); // percent * 100
             fans[i].transfer(disbursement.mul(pctContrib).div(100));
         }
         // adjust all balances downward
@@ -116,7 +120,8 @@ abstract contract Treasury {
     }
 
     function approveAndPay() internal returns (bool success) {
-        if (bonusTargets[votingOn] < 0) {
+        emit Debug("approveAndPay");
+        if (bonusTargets[votingOn] == 0) {
             revert AlreadyPaid();
         }
         uint256 disbursement = totalContribution
@@ -135,6 +140,7 @@ abstract contract Treasury {
         private
         returns (bool success)
     {
+        emit Debug("adjustBalances");
         // calc the % to adjust downward
         uint256 pctAdjust = disbursement.mul(100).div(totalContribution);
         for (uint256 i = 0; i < fans.length; i += 1) {
@@ -146,6 +152,7 @@ abstract contract Treasury {
     event Withdraw(address indexed _to, uint256 _amount);
     event Approval(uint8 _milestone, uint256 _amount, address _creatorWallet);
     event Failure(uint8 _milestone);
+    event Debug(string indexed msg);
 }
 
 contract Bounty is Treasury {
@@ -158,6 +165,7 @@ contract Bounty is Treasury {
     uint256 public currentYeas; // yea vote weight for the current bonus
     uint256 public currentNays; // nay vote weight for the current bonus
     uint32 public currentVotesCast; // number of discrete votes cast for the current bonus
+    uint8 public status; // [UNCLAIMED, CLAIMED, SUCCESS, FAILURE]
 
     error VoteOver();
     error AlreadyVoted();
@@ -207,6 +215,7 @@ contract Bounty is Treasury {
         onlyBefore(mustBeClaimedTime)
         returns (bool success)
     {
+        emit Debug("join called");
         if (msg.value == 0) {
             revert NoEquity();
         }
@@ -225,12 +234,12 @@ contract Bounty is Treasury {
     }
 
     function checkVote() public onlyBy(owner) returns (bool success) {
-        uint8 status = checkVoteMarginMet();
-        if (status != 0) {
+        uint8 _status = checkVoteMarginMet();
+        if (_status != 0) {
             bool result;
-            if (status == 1) {
+            if (_status == 1) {
                 result = approveAndPay();
-            } else if (status == 2) {
+            } else if (_status == 2) {
                 result = failMilestone();
             }
             // result is true if we took a step forward, otherwise false
@@ -260,7 +269,9 @@ contract Bounty is Treasury {
         onlyWithEquity
         returns (bool success)
     {
-        if (_milestone != votingOn) {
+        emit Debug("vote called");
+        // Not yet claimed
+        if (status == 0 || _milestone != votingOn) {
             revert VoteOver();
         }
         if (votedThisRound[msg.sender]) {
@@ -277,12 +288,12 @@ contract Bounty is Treasury {
 
         emit Vote(msg.sender, _vote);
 
-        uint8 status = checkVoteMarginMet();
-        if (status != 0) {
+        uint8 _status = checkVoteMarginMet();
+        if (_status != 0) {
             bool result;
-            if (status == 1) {
+            if (_status == 1) {
                 result = approveAndPay();
-            } else if (status == 2) {
+            } else if (_status == 2) {
                 result = failMilestone();
             }
             // result is true if we took a step forward, otherwise false
@@ -296,14 +307,14 @@ contract Bounty is Treasury {
     }
 
     // Sets initial state and sets the end time of this bounty according to config
-    // This must be called by the creator - they will have to pay the gas
-    function claim() public onlyBy(creatorWallet) returns (bool success) {
+    function claim() public onlyBy(owner) returns (bool success) {
         // Already claimed
-        if (endTime != 0) {
+        if (status != 0) {
             return false;
         }
         endTime = uint64(block.timestamp + timeLimit);
         isPrecipitatingEvent = false;
+        status = 1;
         return true;
     }
 
@@ -311,6 +322,9 @@ contract Bounty is Treasury {
         currentYeas = 0;
         currentNays = 0;
         currentVotesCast = 0;
+        for (uint256 i = 0; i < fans.length; i += 1) {
+            votedThisRound[fans[i]] = false;
+        }
         return true;
     }
 

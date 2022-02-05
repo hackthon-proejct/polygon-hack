@@ -50,7 +50,7 @@ passport.use(
     {
       consumerKey: config.auth.TWITTER.CONSUMER_KEY,
       consumerSecret: config.auth.TWITTER.CONSUMER_SECRET,
-      callbackURL: config.auth.TWITTER.CALLBACK_URL,
+      callbackURL: "http://localhost:8080/api/auth/twitter/callback",
     },
     (token, tokenSecret, profile, cb) => {
       cb(null, profile.username);
