@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { BountyData } from "./bounties.graphql";
 
 export const USER = gql`
   query UserQuery($id: String!) {
@@ -10,11 +11,14 @@ export const USER = gql`
           initiator_id
           creator_id
           id
-          metadata
+          metadata {
+            ...BountyDataFrag
+          }
         }
       }
     }
   }
+  ${BountyData}
 `;
 
 export const CURRENT_USER = gql`
@@ -27,9 +31,12 @@ export const CURRENT_USER = gql`
           initiator_id
           creator_id
           id
-          metadata
+          metadata {
+            ...BountyDataFrag
+          }
         }
       }
     }
   }
+  ${BountyData}
 `;

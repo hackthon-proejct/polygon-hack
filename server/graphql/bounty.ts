@@ -5,6 +5,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLInputObjectType,
 } from "graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
@@ -14,6 +15,10 @@ import Profile from "../models/Profile.model";
 const BountyData = new GraphQLObjectType({
   name: "BountyData",
   fields: {
+    creatorWallet: {
+      type: GraphQLString,
+      description: "The wallet address of the creator, assigned on publish",
+    },
     maxValue: {
       type: new GraphQLNonNull(GraphQLString),
       description:

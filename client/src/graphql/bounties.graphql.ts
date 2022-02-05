@@ -1,35 +1,57 @@
 import { gql } from "@apollo/client";
+export const BountyData = gql`
+  fragment BountyDataFrag on BountyData {
+    creatorWallet
+    maxValue
+    reservePrice
+    bonusTargets
+    bonusPctYeasNeeded
+    bonusFailureThresholds
+    mustBeClaimedTime
+    timeLimit
+  }
+`;
+
 export const BOUNTY = gql`
   query BountyQuery($id: String!) {
     bounty(id: $id) {
       id
-      metadata
+      metadata {
+        ...BountyDataFrag
+      }
       initiator_id
       creator_id
     }
   }
+  ${BountyData}
 `;
 
 export const BOUNTIES_BY_USER = gql`
   query BountiesByUser($id: String!) {
     bounties_by_user(id: $id) {
       id
-      metadata
+      metadata {
+        ...BountyDataFrag
+      }
       initiator_id
       creator_id
     }
   }
+  ${BountyData}
 `;
 
 export const BOUNTIES = gql`
   query Bounties {
     bounties {
       id
-      metadata
+      metadata {
+        ...BountyDataFrag
+      }
       initiator_id
       creator_id
     }
   }
+  ${BountyData}
 `;
 
 export const CREATE_BOUNTY = gql`
@@ -44,6 +66,10 @@ export const CREATE_BOUNTY = gql`
       twitter_handle: $twitter_handle
     ) {
       id
+      metadata {
+        ...BountyDataFrag
+      }
     }
   }
+  ${BountyData}
 `;
