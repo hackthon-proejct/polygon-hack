@@ -23,11 +23,6 @@ const Config = {
     CLIENT_HOSTNAME: env.CLIENT_HOSTNAME,
   },
   auth: {
-    TWITTER: {
-      CONSUMER_KEY: env.TWITTER_CONSUMER_KEY,
-      CONSUMER_SECRET: env.TWITTER_CONSUMER_SECRET,
-      CALLBACK_URL: env.TWITTER_CALLBACK_URL,
-    },
     JWT_SECRET: env.JWT_SECRET || "sometestjwtsecret",
     CLIENT_ORIGIN: env.CORS_HOSTNAME,
   },

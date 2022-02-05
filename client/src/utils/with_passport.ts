@@ -12,9 +12,9 @@ passport.use(
   "twitter",
   new PassportTwitter(
     {
-      consumerKey: "ql5RgBHVsILTT7PMxjTnjmukG",
-      consumerSecret: "Fw7HPyeB3Ik9Caa4d9zmMK3c3Esp1K1KVL7j7KxVCE8Nt0zuEe",
-      callbackURL: "http://localhost:3000/api/twitter_callback",
+      consumerKey: process.env.NEXT_TWITTER_CONSUMER_KEY!,
+      consumerSecret: process.env.NEXT_TWITTER_CONSUMER_SECRET!,
+      callbackURL: process.env.NEXT_TWITTER_CALLBACK_URL!,
     },
     (token: any, tokenSecret: any, profile: any, cb: any) => {
       cb(null, profile.username);
