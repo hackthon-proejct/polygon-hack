@@ -103,7 +103,8 @@ function CreateBounty({ userId }: Props) {
   const [pitch, setPitch] = useState("");
   const [resX, setResX] = useState(2000);
   const [resY, setResY] = useState(2000);
-  const [max, setMax] = useState(100);
+  const [max, setMax] = useState(1);
+  const [reserve, setReserve] = useState(0);
 
   return loading ? (
     <Text>Loading...</Text>
@@ -161,7 +162,7 @@ function CreateBounty({ userId }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyMax">MaxBounty</FormLabel>
+      <FormLabel htmlFor="bountyMax">Maximum Bounty</FormLabel>
       <Input
         id="bountyMax"
         type="number"
@@ -169,6 +170,17 @@ function CreateBounty({ userId }: Props) {
         value={max}
         onChange={(e) => {
           setMax(e.currentTarget.valueAsNumber);
+        }}
+      />
+
+      <FormLabel htmlFor="bountyReserve">Reserve Price</FormLabel>
+      <Input
+        id="bountyReserve"
+        type="number"
+        placeholder="1ETH"
+        value={reserve}
+        onChange={(e) => {
+          setReserve(e.currentTarget.valueAsNumber);
         }}
       />
 
@@ -217,8 +229,12 @@ function CreateBounty({ userId }: Props) {
               },
               block_metadata: {
                 maxValue: max,
+                reservePrice: reserve,
+                bonusTargets: [20, 20, 40],
+                bonusPctYeasNeeded: [50, 50, 50],
+                bonusFailureThresholds: [2, 2, 2],
                 mustBeClaimedTime:
-                  Math.floor(Date.now() / 100) + timeMap[expiration],
+                  Math.floor(Date.now() / 1000) + timeMap[expiration],
                 timeLimit: timeMap[deadline],
               },
             },

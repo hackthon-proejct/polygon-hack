@@ -15,8 +15,33 @@ export const USER = gql`
             ...BountyDataFrag
           }
           metadata
+          address
         }
       }
+    }
+  }
+  ${BountyData}
+`;
+
+export const LOOKUP_TWITTER_HANDLE = gql`
+  query LookupTwitterHandle($handle: String!) {
+    lookupTwitterHandle(handle: $handle) {
+      board {
+        id
+        bounties {
+          initiator_id
+          creator_id
+          id
+          block_metadata {
+            ...BountyDataFrag
+          }
+          metadata
+          address
+        }
+      }
+      user_id
+      twitter_handle
+      image_url
     }
   }
   ${BountyData}

@@ -51,6 +51,10 @@ export interface BountyQuery_bounty {
    */
   block_metadata: BountyQuery_bounty_block_metadata;
   /**
+   * The contract address for this bounty
+   */
+  address: string | null;
+  /**
    * The metadata attached to this bounty
    */
   metadata: any;

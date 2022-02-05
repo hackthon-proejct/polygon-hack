@@ -14,7 +14,7 @@ import Me from "@components/pages/Me";
 
 const BoardPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { user_id } = router?.query;
+  const { handle } = router?.query;
 
   return (
     <div className={styles.container}>
@@ -24,11 +24,11 @@ const BoardPage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {user_id ? (
-          user_id === "me" ? (
+        {handle ? (
+          handle === "me" ? (
             <Me />
           ) : (
-            <Board userId={user_id as string} />
+            <Board handle={handle as string} />
           )
         ) : (
           <>No board was specified.</>

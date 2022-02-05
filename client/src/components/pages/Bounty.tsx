@@ -37,7 +37,7 @@ function Bounty({ bountyId }: Props) {
   );
 
   const { bounty } = data || {};
-  const { metadata, block_metadata, id, creator_id } = bounty || {};
+  const { metadata, block_metadata, id, creator_id, address } = bounty || {};
 
   const embedURL = getEmbedUrlFromYoutube(metadata?.pitch);
 
@@ -69,7 +69,7 @@ function Bounty({ bountyId }: Props) {
       <Text>expiration: {block_metadata!.mustBeClaimedTime}</Text>
       <Text>deadline: {block_metadata!.timeLimit}</Text>
 
-      {!hasJoinedBounty ? <BountyJoin /> : null}
+      {address && !hasJoinedBounty ? <BountyJoin address={address} /> : null}
     </>
   ) : (
     <Text>No bounty found.</Text>

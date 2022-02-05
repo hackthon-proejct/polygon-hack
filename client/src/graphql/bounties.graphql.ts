@@ -19,6 +19,7 @@ export const BOUNTY = gql`
       block_metadata {
         ...BountyDataFrag
       }
+      address
       metadata
       initiator_id
       creator_id

@@ -1,11 +1,25 @@
 import { Box, Button, Flex, FormLabel, Input } from "@chakra-ui/react";
+import { web3 } from "@utils/constants";
+import bountyContract, { joinBounty } from "@utils/bounty";
 import { useState } from "react";
 
-type Props = {};
+type Props = { address: string };
 
-export default function BountyJoin() {
+export default function BountyJoin(props: Props) {
   const [contribution, setContribution] = useState(0);
-  //
+
+  const join = async (val: number) => {
+    const contract = bountyContract(props.address);
+    const accounts = await web3.eth.getAccounts();
+    const result = await joinBounty(
+      contract,
+      web3.utils.toWei(val, "eth"),
+      accounts[0]
+    );
+    console.log("result", result);
+    return result;
+  };
+
   return (
     <Flex direction="column">
       <Box>
@@ -19,7 +33,12 @@ export default function BountyJoin() {
           placeholder="Min: 0.5ETH"
         />
       </Box>
-      <Button isDisabled={contribution === 0}> Join Bounty</Button>
+      <Button
+        isDisabled={contribution === 0}
+        onClick={() => join(contribution)}
+      >
+        Join Bounty
+      </Button>
     </Flex>
   );
 }

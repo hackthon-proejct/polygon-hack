@@ -1,38 +1,37 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
-import { USER } from "@gql/users.graphql";
 
-import {
-  UserQuery as UserQueryType,
-  UserQueryVariables,
-  UserQuery_user,
-} from "@gqlt/UserQuery";
 import { Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { BountyPreview } from "@components/bounty/BountyPreview";
+import { LOOKUP_TWITTER_HANDLE } from "@gql/users.graphql";
+import {
+  LookupTwitterHandle,
+  LookupTwitterHandleVariables,
+} from "@gql/__generated__/LookupTwitterHandle";
 
-type Props = { userId: string };
+type Props = { handle: string };
 
-function Board({ userId }: Props) {
+function Board({ handle }: Props) {
   // fetch the user info and their bounties from graphql
 
-  const { data, loading, error } = useQuery<UserQueryType, UserQueryVariables>(
-    USER,
-    {
-      fetchPolicy: "network-only",
-      variables: {
-        id: userId,
-      },
-    }
-  );
+  const { data, loading, error } = useQuery<
+    LookupTwitterHandle,
+    LookupTwitterHandleVariables
+  >(LOOKUP_TWITTER_HANDLE, {
+    fetchPolicy: "network-only",
+    variables: {
+      handle: handle,
+    },
+  });
 
-  const user = data?.user || null;
+  const profile = data?.lookupTwitterHandle || null;
 
-  const { board } = user || {};
+  const { board } = profile || {};
   const { bounties = [] } = board || {};
-  return userId != null ? (
+  return profile != null ? (
     <>
-      <Heading>{userId}&apos;s Board</Heading>
+      <Heading>{profile.twitter_handle}&apos;s Board</Heading>
       <Text>Bounties</Text>
       {bounties?.length ? (
         <Wrap sx={styles.bountyWrap} spacing="30px">

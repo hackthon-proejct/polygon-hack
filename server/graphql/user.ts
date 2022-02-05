@@ -65,14 +65,14 @@ const UserQueries = {
     },
   },
   lookupTwitterHandle: {
-    type: UserType,
+    type: ProfileType,
     args: {
       handle: {
         type: new GraphQLNonNull(GraphQLString),
       },
     },
     resolve: async (parent, args, ctx, info) => {
-      return await User.findOne({
+      return await Profile.findOne({
         where: {
           twitter_handle: args.handle,
         },
@@ -84,6 +84,17 @@ const UserQueries = {
     description: "The current logged in user",
     resolve: (parent, args, ctx, info) => {
       return ctx.state.user;
+    },
+  },
+  profile: {
+    type: ProfileType,
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLString),
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      return await Profile.findByPk(args.id);
     },
   },
 };
