@@ -11,6 +11,7 @@ contract Machine {
     function create(
         address payable _creatorWallet,
         uint256 _maxValue,
+        uint256 _reservePrice,
         uint8[] memory _bonusTargets,
         uint8[] memory _bonusPctYeasNeeded,
         uint8[] memory _bonusFailureThresholds,
@@ -21,6 +22,7 @@ contract Machine {
             new Bounty(
                 _creatorWallet,
                 _maxValue,
+                _reservePrice,
                 _bonusTargets,
                 _bonusPctYeasNeeded,
                 _bonusFailureThresholds,

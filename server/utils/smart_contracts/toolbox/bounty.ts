@@ -16,9 +16,14 @@ export async function createBounty(
 ): Promise<{ address: string }> {
   logger.info("createBounty", [data]);
   const maxValue = web3.utils.toWei(web3.utils.toBN(data.maxValue), "gwei");
+  const reservePrice = web3.utils.toWei(
+    web3.utils.toBN(data.reservePrice),
+    "gwei"
+  );
   const transaction = MachineContract.methods.create(
     data.creatorWallet,
     maxValue,
+    reservePrice,
     data.bonusTargets,
     data.bonusPctYeasNeeded,
     data.bonusFailureThresholds,

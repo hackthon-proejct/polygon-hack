@@ -161,6 +161,7 @@ contract Bounty is Treasury {
     mapping(address => bool) votedThisRound; // whether this address has already voted
     uint64 public mustBeClaimedTime; // the time epoch at which this bounty expires if unclaimed
     uint256 public maxValue; // the max value this bounty could be
+    uint256 public reservePrice; // the lowest value that this bounty can be, otherwise it expires
     uint64 public timeLimit; // the time limit in seconds that this bounty must be completed in
     uint256 public currentYeas; // yea vote weight for the current bonus
     uint256 public currentNays; // nay vote weight for the current bonus
@@ -173,6 +174,7 @@ contract Bounty is Treasury {
     constructor(
         address payable _creatorWallet,
         uint256 _maxValue,
+        uint256 _reservePrice,
         uint8[] memory _bonusTargets,
         uint8[] memory _bonusPctYeasNeeded,
         uint8[] memory _bonusFailureThresholds,
@@ -182,6 +184,7 @@ contract Bounty is Treasury {
     ) {
         creatorWallet = _creatorWallet;
         maxValue = _maxValue;
+        reservePrice = _reservePrice;
         bonusTargets = _bonusTargets;
         bonusPctYeasNeeded = _bonusPctYeasNeeded;
         bonusFailureThresholds = _bonusFailureThresholds;
@@ -303,6 +306,26 @@ contract Bounty is Treasury {
             }
             return result;
         }
+        return true;
+    }
+
+    function negotiate(
+        uint256 _maxValue,
+        uint256 _reservePrice,
+        uint8[] memory _bonusTargets,
+        uint8[] memory _bonusPctYeasNeeded,
+        uint8[] memory _bonusFailureThresholds,
+        uint64 _timeLimit
+    ) public onlyBy(owner) returns (bool success) {
+        if (status != 0) {
+            return false;
+        }
+        reservePrice = _reservePrice;
+        maxValue = _maxValue;
+        bonusTargets = _bonusTargets;
+        bonusFailureThresholds = _bonusFailureThresholds;
+        bonusPctYeasNeeded = _bonusPctYeasNeeded;
+        timeLimit = _timeLimit;
         return true;
     }
 

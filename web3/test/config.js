@@ -4,6 +4,7 @@ const BN = require("bn.js");
 const FIFTEEN_ZEROS = "000000000000000";
 let bounty;
 const maxValue = new BN("10" + FIFTEEN_ZEROS);
+const reservePrice = new BN("8" + FIFTEEN_ZEROS);
 const bonusTargets = [20, 20];
 const bonusPctYeasNeeded = [40, 60];
 const bonusFailureThresholds = [1, 1];
@@ -37,6 +38,7 @@ contract("Bounty", (accounts) => {
     bounty = await Bounty.new(
       creatorWallet,
       maxValue,
+      reservePrice,
       bonusTargets,
       bonusPctYeasNeeded,
       bonusFailureThresholds,
