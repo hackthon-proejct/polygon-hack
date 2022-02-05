@@ -11,11 +11,15 @@ import {
 } from "@chakra-ui/react";
 import { RadioCard } from "@components/RadioCard";
 import { CREATE_BOUNTY } from "@gql/bounties.graphql";
-import { USER } from "@gql/users.graphql";
+import { LOOKUP_TWITTER_HANDLE, USER } from "@gql/users.graphql";
 import {
   CreateBounty as CreateBountyType,
   CreateBountyVariables,
 } from "@gql/__generated__/CreateBounty";
+import {
+  LookupTwitterHandle,
+  LookupTwitterHandleVariables,
+} from "@gql/__generated__/LookupTwitterHandle";
 import {
   UserQuery as UserQueryType,
   UserQueryVariables,
@@ -24,7 +28,7 @@ import { TimeType } from "@utils/types";
 import { useState } from "react";
 
 type Props = {
-  userId: string;
+  twitterHandle: string;
 };
 
 const expirationOptions: TimeType[] = ["48 hours", "1 week", "2 weeks"];
@@ -47,7 +51,7 @@ const timeMap = {
   "3 months": 7889238,
 };
 
-function CreateBounty({ userId }: Props) {
+function CreateBounty({ twitterHandle }: Props) {
   const [expiration, setExpiration] = useState<TimeType>("48 hours");
   const [deadline, setDeadline] = useState<TimeType>("1 week");
   const {
@@ -73,30 +77,27 @@ function CreateBounty({ userId }: Props) {
   const expirationGroup = getExpirationRootProps();
   const deadlineGroup = getDeadlineRootProps();
 
-  const { data, loading, error } = useQuery<UserQueryType, UserQueryVariables>(
-    USER,
-    {
-      fetchPolicy: "network-only",
-      variables: {
-        id: userId,
-      },
-    }
-  );
+  const { data, loading, error } = useQuery<
+    LookupTwitterHandle,
+    LookupTwitterHandleVariables
+  >(LOOKUP_TWITTER_HANDLE, {
+    fetchPolicy: "network-only",
+    variables: {
+      handle: twitterHandle,
+    },
+  });
 
   const [
     createBounty,
     { loading: isCreatingBounty, error: errorCreatingBounty },
   ] = useMutation<CreateBountyType, CreateBountyVariables>(CREATE_BOUNTY);
 
-  const user = data?.user || null;
-  const { board } = user || {};
+  const profile = data?.lookupTwitterHandle || null;
+  const { board } = profile || {};
   const { id: board_id } = board || {};
 
   // only pass the twitter handle if we can't fetch a user.
-  let twitter_handle: string | null = userId;
-  if (user != null) {
-    twitter_handle = null;
-  }
+  let twitter_handle: string | null = profile?.twitter_handle!;
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

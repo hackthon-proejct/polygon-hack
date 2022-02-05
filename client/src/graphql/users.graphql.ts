@@ -5,17 +5,20 @@ export const USER = gql`
   query UserQuery($id: String!) {
     user(id: $id) {
       id
-      board {
-        id
-        bounties {
-          initiator_id
-          creator_id
+      profile {
+        twitter_handle
+        board {
           id
-          block_metadata {
-            ...BountyDataFrag
+          bounties {
+            initiator_id
+            creator_id
+            id
+            block_metadata {
+              ...BountyDataFrag
+            }
+            metadata
+            address
           }
-          metadata
-          address
         }
       }
     }
@@ -51,16 +54,19 @@ export const CURRENT_USER = gql`
   query CurrentUserQuery {
     currentUser {
       id
-      board {
-        id
-        bounties {
-          initiator_id
-          creator_id
+      profile {
+        twitter_handle
+        board {
           id
-          block_metadata {
-            ...BountyDataFrag
+          bounties {
+            initiator_id
+            creator_id
+            id
+            block_metadata {
+              ...BountyDataFrag
+            }
+            metadata
           }
-          metadata
         }
       }
     }

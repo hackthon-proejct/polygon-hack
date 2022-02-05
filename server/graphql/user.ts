@@ -42,13 +42,6 @@ const UserType = new GraphQLObjectType({
         return await parent.$get("public_key");
       },
     },
-    board: {
-      type: BoardType,
-      description: "The user's bounty board",
-      resolve: async (parent, args, ctx, info) => {
-        return await parent.$get("board");
-      },
-    },
   },
 });
 

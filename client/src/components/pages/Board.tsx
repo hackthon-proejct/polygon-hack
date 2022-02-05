@@ -9,10 +9,11 @@ import {
   LookupTwitterHandle,
   LookupTwitterHandleVariables,
 } from "@gql/__generated__/LookupTwitterHandle";
+import CreateBounty from "./CreateBounty";
 
-type Props = { handle: string };
+type Props = { twitterHandle: string };
 
-function Board({ handle }: Props) {
+function Board({ twitterHandle }: Props) {
   // fetch the user info and their bounties from graphql
 
   const { data, loading, error } = useQuery<
@@ -21,11 +22,15 @@ function Board({ handle }: Props) {
   >(LOOKUP_TWITTER_HANDLE, {
     fetchPolicy: "network-only",
     variables: {
-      handle: handle,
+      handle: twitterHandle,
     },
   });
 
   const profile = data?.lookupTwitterHandle || null;
+  console.log("profile", profile);
+  if (!profile || error) {
+    return <CreateBounty twitterHandle={twitterHandle} />;
+  }
 
   const { board } = profile || {};
   const { bounties = [] } = board || {};

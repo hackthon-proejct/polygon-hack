@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@chakra-ui/react";
 
 import { useAppSelector, useAppDispatch } from "@redux/hooks";
-import { selectAddress, setAddressTo, setUserIdTo } from "@redux/slices/userSlice";
+import {
+  selectAddress,
+  setAddressTo,
+  setTwitterHandleTo,
+  setUserIdTo,
+} from "@redux/slices/userSlice";
 import { web3 } from "@utils/constants";
 import { isMetaMaskInstalled } from "@utils/web3";
 import { eth } from "@utils/constants";
@@ -22,9 +27,10 @@ export default function MetaMaskButton() {
       if (accounts[0]) {
         dispatch(setAddressTo(accounts[0]));
         const user = await currentUser();
-        console.log('current user', user);
+        console.log("current user", user);
         //We take the first address in the array of addresses and display it
         dispatch(setUserIdTo(user?.id));
+        dispatch(setTwitterHandleTo(user?.profile?.twitter_handle));
       }
     }
     isMetaMaskInstalled().then(async (i) => {
@@ -68,11 +74,12 @@ export default function MetaMaskButton() {
             await getOrCreateUser(accounts[0], signature);
 
             const user = await currentUser();
-            console.log('new loggedin user', user);
+            console.log("new loggedin user", user);
 
             //We take the first address in the array of addresses and display it
             dispatch(setAddressTo(accounts[0]));
             dispatch(setUserIdTo(user?.id));
+            dispatch(setTwitterHandleTo(user?.profile?.twitter_handle));
           } catch (error) {
             console.error(error);
           }

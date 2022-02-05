@@ -7,7 +7,7 @@
 // GraphQL query operation: CurrentUserQuery
 // ====================================================
 
-export interface CurrentUserQuery_currentUser_board_bounties_block_metadata {
+export interface CurrentUserQuery_currentUser_profile_board_bounties_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -43,7 +43,7 @@ export interface CurrentUserQuery_currentUser_board_bounties_block_metadata {
   timeLimit: number;
 }
 
-export interface CurrentUserQuery_currentUser_board_bounties {
+export interface CurrentUserQuery_currentUser_profile_board_bounties {
   __typename: "Bounty";
   /**
    * The funder that initiated this bounty
@@ -57,17 +57,23 @@ export interface CurrentUserQuery_currentUser_board_bounties {
   /**
    * The blockchain metadata attached to this bounty
    */
-  block_metadata: CurrentUserQuery_currentUser_board_bounties_block_metadata;
+  block_metadata: CurrentUserQuery_currentUser_profile_board_bounties_block_metadata;
   /**
    * The metadata attached to this bounty
    */
   metadata: any;
 }
 
-export interface CurrentUserQuery_currentUser_board {
+export interface CurrentUserQuery_currentUser_profile_board {
   __typename: "Board";
   id: string;
-  bounties: (CurrentUserQuery_currentUser_board_bounties | null)[] | null;
+  bounties: (CurrentUserQuery_currentUser_profile_board_bounties | null)[] | null;
+}
+
+export interface CurrentUserQuery_currentUser_profile {
+  __typename: "Profile";
+  twitter_handle: string | null;
+  board: CurrentUserQuery_currentUser_profile_board;
 }
 
 export interface CurrentUserQuery_currentUser {
@@ -77,9 +83,9 @@ export interface CurrentUserQuery_currentUser {
    */
   id: string;
   /**
-   * The user's bounty board
+   * The user's profile
    */
-  board: CurrentUserQuery_currentUser_board | null;
+  profile: CurrentUserQuery_currentUser_profile | null;
 }
 
 export interface CurrentUserQuery {

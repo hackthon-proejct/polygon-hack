@@ -7,7 +7,7 @@
 // GraphQL query operation: UserQuery
 // ====================================================
 
-export interface UserQuery_user_board_bounties_block_metadata {
+export interface UserQuery_user_profile_board_bounties_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -43,7 +43,7 @@ export interface UserQuery_user_board_bounties_block_metadata {
   timeLimit: number;
 }
 
-export interface UserQuery_user_board_bounties {
+export interface UserQuery_user_profile_board_bounties {
   __typename: "Bounty";
   /**
    * The funder that initiated this bounty
@@ -57,7 +57,7 @@ export interface UserQuery_user_board_bounties {
   /**
    * The blockchain metadata attached to this bounty
    */
-  block_metadata: UserQuery_user_board_bounties_block_metadata;
+  block_metadata: UserQuery_user_profile_board_bounties_block_metadata;
   /**
    * The metadata attached to this bounty
    */
@@ -68,10 +68,16 @@ export interface UserQuery_user_board_bounties {
   address: string | null;
 }
 
-export interface UserQuery_user_board {
+export interface UserQuery_user_profile_board {
   __typename: "Board";
   id: string;
-  bounties: (UserQuery_user_board_bounties | null)[] | null;
+  bounties: (UserQuery_user_profile_board_bounties | null)[] | null;
+}
+
+export interface UserQuery_user_profile {
+  __typename: "Profile";
+  twitter_handle: string | null;
+  board: UserQuery_user_profile_board;
 }
 
 export interface UserQuery_user {
@@ -81,9 +87,9 @@ export interface UserQuery_user {
    */
   id: string;
   /**
-   * The user's bounty board
+   * The user's profile
    */
-  board: UserQuery_user_board | null;
+  profile: UserQuery_user_profile | null;
 }
 
 export interface UserQuery {

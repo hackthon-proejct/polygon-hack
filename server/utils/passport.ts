@@ -10,7 +10,9 @@ import Profile from "../models/Profile.model";
 
 const deserializeAccount = async function (id: string, done) {
   try {
-    const account = await User.findByPk(id, { include: Web3PublicKey });
+    const account = await User.findByPk(id, {
+      include: [Web3PublicKey, Profile],
+    });
     done(null, account);
   } catch (err) {
     done(err, false);

@@ -14,7 +14,7 @@ import Me from "@components/pages/Me";
 
 const BoardPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { handle } = router?.query;
+  const { twitter_handle } = router?.query;
 
   return (
     <div className={styles.container}>
@@ -24,11 +24,11 @@ const BoardPage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {handle ? (
-          handle === "me" ? (
+        {twitter_handle ? (
+          twitter_handle === "me" ? (
             <Me />
           ) : (
-            <Board handle={handle as string} />
+            <Board twitterHandle={twitter_handle as string} />
           )
         ) : (
           <>No board was specified.</>
