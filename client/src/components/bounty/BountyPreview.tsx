@@ -1,8 +1,7 @@
-import { Text, Box, Flex, Link } from "@chakra-ui/react";
+import { Text, Box, Flex, Link, Image } from "@chakra-ui/react";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import { BountyDataType } from "@utils/types";
 import { getImageUrlFromYoutube } from "@utils/youtube";
-import Image from "next/image";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
