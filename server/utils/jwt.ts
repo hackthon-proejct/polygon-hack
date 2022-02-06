@@ -7,6 +7,7 @@ export function setJwtHeaderOnLogin(ctx: RouterContext, user: User) {
   const newToken = jwt.sign({ userId: user.id }, config.auth.JWT_SECRET, {
     expiresIn: "30d",
   });
+  console.log("user", user);
   ctx.cookies.set("auth_token", newToken, {
     maxAge: 86400000 * 30,
     overwrite: true,
@@ -15,6 +16,7 @@ export function setJwtHeaderOnLogin(ctx: RouterContext, user: User) {
     sameSite: config.app.IS_PROD ? "none" : "lax",
     path: "/",
   });
+  console.log("token set");
   ctx.body = {
     access_token: newToken,
     token_type: "Bearer",

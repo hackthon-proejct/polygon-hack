@@ -23,6 +23,7 @@ const _authFunc = (strat: string) => {
         ctx.body = err;
         ctx.throw(401);
       } else {
+        console.log("here");
         ctx.status = 200;
         setJwtHeaderOnLogin(ctx, user);
         return;
@@ -61,6 +62,7 @@ authRouter.post("/create", async (ctx, next) => {
             user_id: existing.id,
           });
         }
+        console.log("here2");
         return _authFunc("local")(ctx, next);
       });
     } catch (err) {
