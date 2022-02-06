@@ -1,4 +1,4 @@
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Text, Flex, Heading, VStack } from "@chakra-ui/react";
 import { web3 } from "@utils/constants";
 import { useMutation } from "@apollo/client";
 import {
@@ -16,10 +16,21 @@ export default function BountyPublish(props: Props) {
   >(PUBLISH_BOUNTY);
 
   return (
-    <Flex direction="column">
+    <VStack
+      direction="column"
+      mt="36px"
+      spacing="12px"
+      maxWidth="80%"
+      margin="auto"
+    >
+      <Heading my="12px">Publish this bounty</Heading>
+      <Text textAlign="center" fontSize="24px" pb="12px">
+        Ready to show the world? Publish this bounty to kickstart the funding
+        process!
+      </Text>
       <Button onClick={() => publishBounty({ variables: { id: props.id } })}>
         Publish
       </Button>
-    </Flex>
+    </VStack>
   );
 }
