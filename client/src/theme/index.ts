@@ -46,7 +46,8 @@ const theme = extendTheme({
   xl: "1408px",
   colors: {
     bountyGreen: "#7DC794",
-    bountyGreenLightest: "#cbf5cf",
+    bountyHeaderGreen: "#e8ffea",
+    bountyGreenLightest: "#d9fae0",
     bountyGreenLighter: "#9be0a8",
     bountyGreenLight: "#8fd6a0",
     bountyYellow: "#FFE6AD",

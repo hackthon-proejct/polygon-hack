@@ -31,7 +31,7 @@ const styles = {
       sm: "52px",
       md: "80px",
     },
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.bountyHeaderGreen,
   },
 };
 
