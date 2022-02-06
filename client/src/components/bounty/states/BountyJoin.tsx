@@ -23,6 +23,10 @@ export default function BountyJoin({ address }: Props) {
     return result;
   };
 
+  // TODO: add checks for if you're a funder in smart contract
+  const hasJoinedBounty = false;
+  // const hasJoinedBounty = userId === bounty?.initiator_id;
+
   return (
     <Flex direction="column">
       <Box>

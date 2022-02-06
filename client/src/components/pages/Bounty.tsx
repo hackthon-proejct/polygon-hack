@@ -21,7 +21,6 @@ import { useAppSelector } from "@redux/hooks";
 import { selectUserId } from "@redux/slices/userSlice";
 import BountyJoin from "@components/bounty/BountyJoin";
 import BountyVote from "@components/bounty/BountyVote";
-import BountyPublish from "@components/bounty/BountyPublish";
 import BountyState from "@components/bounty/BountyState";
 
 import bountyContract, {
@@ -81,11 +80,7 @@ function Bounty({ bountyId }: Props) {
 
   const embedURL = getEmbedUrlFromYoutube(metadata?.pitch);
 
-  // TODO: add checks for if you're a funder in smart contract
-  const hasJoinedBounty = false;
-  // const hasJoinedBounty = userId === bounty?.initiator_id;
   console.log(address, bounty);
-  const isOwner = userId === bounty?.initiator_id;
 
   return bounty != null ? (
     <>
@@ -128,7 +123,6 @@ function Bounty({ bountyId }: Props) {
       votingState ? (
         <BountyVote address={address} votingState={votingState} />
       ) : null}
-      {isOwner && !address ? <BountyPublish id={bountyId} /> : null}
       <BountyState bounty={bounty} />
     </>
   ) : (
