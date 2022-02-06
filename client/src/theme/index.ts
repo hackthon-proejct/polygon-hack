@@ -48,15 +48,57 @@ const Text = {
       overflow: "hidden",
       marginTop: 0,
     },
+
+    metadataLabel: {
+      fontSize: "18px",
+      fontWeight: "700",
+    },
+    metadataValue: {},
+
+    metadataLabelLg: {
+      fontSize: "24px",
+      fontWeight: "700",
+    },
+    metadataValueLg: { fontSize: "22px" },
+    descriptionLg: {
+      fontSize: "24px",
+      marginBottom: "12px",
+    },
   },
   // The default size and variant values
   defaultProps: {},
+};
+
+const Container = {
+  variants: {
+    base: {
+      padding: {
+        sm: "52px",
+        md: "80px",
+      },
+      maxWidth: {
+        md: "1080px",
+        xl: "1366px",
+      },
+    },
+  },
+};
+
+const Heading = {
+  variants: {
+    titleLg: {
+      fontSize: "48px",
+      marginBottom: "18px",
+    },
+  },
 };
 
 const theme = extendTheme({
   components: {
     Button,
     Text,
+    Container,
+    Heading,
   },
   // mobile
   sm: "768px",

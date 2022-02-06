@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
+import { User } from "react-feather";
 import { USER } from "@gql/users.graphql";
 
 import {
@@ -9,7 +10,19 @@ import {
   UserQueryVariables,
   UserQuery_user,
 } from "@gqlt/UserQuery";
-import { Button, Heading, Link, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Link,
+  Text,
+  Spacer,
+  Wrap,
+  WrapItem,
+  VStack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { BountyPreview } from "@components/bounty/BountyPreview";
 import { BOUNTY } from "@gql/bounties.graphql";
 import {
@@ -26,8 +39,10 @@ import bountyContract, {
   getReadableStatus,
   getEquity,
   getBountyStatus,
+  getBalance,
 } from "@utils/bounty";
 import { web3 } from "@utils/constants";
+import { useWindowResize } from "@utils/hooks";
 
 type Props = { bountyId: string };
 
@@ -46,11 +61,17 @@ function Bounty({ bountyId }: Props) {
   );
   const [bountyState, setBountyState] = useState<BountyBlockState | null>(null);
   const [equity, setEquity] = useState<string>("0");
+  const [totalFund, setTotalFund] = useState<string>("0");
 
   useEffect(() => {
     async function getBounty(contract: any) {
       const status = await getBountyStatus(contract);
       setBountyState(status);
+    }
+    async function totalFund(contract: any) {
+      const accounts = await web3.eth.getAccounts();
+      const result = await getBalance(contract, accounts[0]);
+      setTotalFund(result);
     }
     async function equity(contract: any) {
       const accounts = await web3.eth.getAccounts();
@@ -72,32 +93,108 @@ function Bounty({ bountyId }: Props) {
 
   console.log(address, bounty);
 
+  const [iframeSizeMultiplier, setIframeSizeMultipler] = useState(1);
+  const breakpointSize = useBreakpointValue({
+    base: 0.25,
+    sm: 0.5,
+    md: 0.75,
+    xl: 1,
+  });
+  // bug with breakpointSize and SSR
+  useWindowResize(() => {
+    setIframeSizeMultipler(breakpointSize || 0);
+  }, [breakpointSize]);
+
   return bounty != null ? (
     <>
-      <Heading>{metadata.title}</Heading>
-      <Text>Status: {getReadableStatus(status)}</Text>
-      <Text>{metadata.description}</Text>
-      {embedURL != null ? (
-        <iframe
-          width="560"
-          height="315"
-          src={embedURL}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <Link>{metadata.pitch}</Link>
-      )}
-      <Text>
-        {metadata.specs.resX} x {metadata.specs.resY}
-      </Text>
-      <Text>max: {block_metadata!.maxValue}</Text>
-      <Text>reserve: {block_metadata!.reservePrice}</Text>
-      <Text>expiration: {block_metadata!.mustBeClaimedTime}</Text>
-      <Text>deadline: {block_metadata!.timeLimit}</Text>
-      <Text>your equity: {equity}</Text>
+      <VStack>
+        <Flex width="100%">
+          <Flex direction="column">
+            {embedURL != null ? (
+              <iframe
+                width={840 * iframeSizeMultiplier}
+                height={475 * iframeSizeMultiplier}
+                src={embedURL}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <Link>{metadata.pitch}</Link>
+            )}
+            <HStack alignItems="center" my="12px">
+              <HStack>
+                <Text variant="metadataLabelLg">Current Funding:</Text>
+                <Text variant="metadataValueLg">
+                  {totalFund} MATIC (
+                  {(Number(totalFund) / block_metadata!.maxValue).toFixed(2)}%
+                  of max)
+                </Text>
+              </HStack>
+              <Spacer />
+              <Flex sx={styles.funderCount}>
+                <Text variant="metadataValueLg">6</Text>
+                <User />
+              </Flex>
+            </HStack>
+          </Flex>
+          <VStack
+            direction="column"
+            ml="36px"
+            alignItems="flex-start"
+            spacing="16px"
+          >
+            <Heading sx={styles.specs}>Specs</Heading>
+            <Flex direction="column">
+              <Text variant="metadataLabel">Status:</Text>
+              <Text variant="metadataValue">{getReadableStatus(status)}</Text>
+            </Flex>
+            <Flex direction="column">
+              <Text variant="metadataLabel">Expiration: </Text>
+              <Text variant="metadataValue">
+                {block_metadata!.mustBeClaimedTime}
+              </Text>
+            </Flex>
+            <Flex direction="column">
+              <Text variant="metadataLabel">Deliverable deadline:</Text>
+              <Text variant="metadataValue">{block_metadata!.timeLimit}</Text>
+            </Flex>
+            <Flex direction="column">
+              <Text variant="metadataLabel">Resolution:</Text>
+
+              <Text variant="metadataValue">
+                {metadata.specs.resX} x {metadata.specs.resY}
+              </Text>
+            </Flex>
+            <Flex direction="column">
+              <Text variant="metadataLabel">Max. Fund Size:</Text>
+              <Text variant="metadataValue">
+                {block_metadata!.maxValue} MATIC
+              </Text>
+            </Flex>
+            <Flex direction="column">
+              <Text variant="metadataLabel">Min. Reserve Price:</Text>
+              <Text variant="metadataValue">
+                {block_metadata!.reservePrice} MATIC
+              </Text>
+            </Flex>
+            {equity !== "0" ? (
+              <Flex direction="column">
+                <Text variant="metadataLabel">Your equity:</Text>
+                <Text variant="metadataValue">{equity}</Text>
+              </Flex>
+            ) : null}
+          </VStack>
+        </Flex>
+        <Flex>
+          <Flex direction="column">
+            <Heading variant="titleLg">{metadata.title}</Heading>
+            <Text variant="descriptionLg">{metadata.description}</Text>
+          </Flex>
+        </Flex>
+      </VStack>
+
       {bountyState ? (
         <>
           <Text>isPrecipitatingEvent: {bountyState.isPrecipitatingEvent} </Text>
@@ -116,6 +213,13 @@ function Bounty({ bountyId }: Props) {
 const styles = {
   bountyWrap: {
     width: "100%",
+  },
+  specs: {},
+  funderCount: {
+    alignItems: "center",
+    "& > .chakra-text": {
+      marginRight: "4px",
+    },
   },
 };
 
