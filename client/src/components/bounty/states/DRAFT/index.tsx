@@ -15,7 +15,5 @@ export default function BountyDraft({ bounty }: Props) {
   // const isCreator = bounty.initator_id === loggedInUserId;
   //
   let shouldShowPublish = isInitiator && !bounty.address;
-  // TODO: for testing
-  shouldShowPublish = true;
   return <Box>{shouldShowPublish && <BountyPublish id={bounty.id} />}</Box>;
 }
