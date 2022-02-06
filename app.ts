@@ -27,6 +27,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 const app = new Koa();
+app.proxy = true;
 
 app.use(bodyParser());
 export class LoggerStream {
