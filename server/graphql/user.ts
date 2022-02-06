@@ -4,6 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from "graphql";
+import { Op } from "sequelize";
 import Profile from "../models/Profile.model";
 import User from "../models/User.model";
 import { ProfileType, BoardType } from "./types";
@@ -54,6 +55,24 @@ const UserQueries = {
     },
     resolve: async (parent, args, ctx, info) => {
       return await User.findByPk(args.id);
+    },
+  },
+  creators: {
+    type: new GraphQLNonNull(new GraphQLList(UserType)),
+    args: {},
+    resolve: async (parent, args, ctx, info) => {
+      return await User.findAll({
+        include: [
+          {
+            model: Profile,
+            where: {
+              twitter_handle: {
+                [Op.ne]: null,
+              },
+            },
+          },
+        ],
+      });
     },
   },
   lookupTwitterHandle: {

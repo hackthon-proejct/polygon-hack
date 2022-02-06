@@ -46,10 +46,15 @@ export interface Bounties_bounties_block_metadata {
 export interface Bounties_bounties {
   __typename: "Bounty";
   id: string;
+  status: number;
   /**
    * The blockchain metadata attached to this bounty
    */
   block_metadata: Bounties_bounties_block_metadata;
+  /**
+   * The contract address for this bounty
+   */
+  address: string | null;
   /**
    * The metadata attached to this bounty
    */
@@ -62,11 +67,6 @@ export interface Bounties_bounties {
    * The creator who can claim this bounty
    */
   creator_id: string;
-  status: number;
-  /**
-   * The contract address for this bounty
-   */
-  address: string | null;
 }
 
 export interface Bounties {

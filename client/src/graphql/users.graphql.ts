@@ -26,6 +26,18 @@ export const USER = gql`
   ${BountyData}
 `;
 
+export const CREATORS = gql`
+  query Creators {
+    creators {
+      id
+      profile {
+        twitter_handle
+        image_url
+      }
+    }
+  }
+`;
+
 export const LOOKUP_TWITTER_HANDLE = gql`
   query LookupTwitterHandle($handle: String!) {
     lookupTwitterHandle(handle: $handle) {
@@ -38,6 +50,7 @@ export const LOOKUP_TWITTER_HANDLE = gql`
           block_metadata {
             ...BountyDataFrag
           }
+          status
           metadata
           address
         }

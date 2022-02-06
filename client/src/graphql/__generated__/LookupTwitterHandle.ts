@@ -58,6 +58,7 @@ export interface LookupTwitterHandle_lookupTwitterHandle_board_bounties {
    * The blockchain metadata attached to this bounty
    */
   block_metadata: LookupTwitterHandle_lookupTwitterHandle_board_bounties_block_metadata;
+  status: number;
   /**
    * The metadata attached to this bounty
    */

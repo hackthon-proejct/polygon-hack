@@ -1,35 +1,36 @@
 import { Text, Box, Flex, Link, Image, VStack } from "@chakra-ui/react";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
+import { Creators_creators } from "@gql/__generated__/Creators";
 import { BountyDataType } from "@utils/types";
 import { getImageUrlFromYoutube } from "@utils/youtube";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
 type Props = {
-  creator: any;
+  creator: Creators_creators;
 };
 
 export function CreatorPreview({ creator }: Props) {
+  const handle = creator?.profile?.twitter_handle;
+  const url = creator?.profile?.image_url;
+  const successes = Math.round(6 * Math.random());
+  const ongoing = Math.round(3 * Math.random());
   return (
     <Flex direction="column" sx={styles.container}>
-      <NextLink href={`/${creator.twitter_handle}`}>
+      <NextLink href={`/${handle}`}>
         <Link>
-          <Image sx={styles.image} alt="" src={creator.profile_pic} />
+          <Image sx={styles.image} alt="" src={url || ""} />
         </Link>
       </NextLink>
       <Flex direction="column" sx={styles.metadata}>
-        <NextLink href={`/${creator.twitter_handle}`}>
+        <NextLink href={`/${handle}`}>
           <Link>
-            <Text variant="previewTitle">@{creator.twitter_handle}</Text>
+            <Text variant="previewTitle">@{handle}</Text>
           </Link>
         </NextLink>
         <Flex direction="column" alignItems="flex-start" spacing={0}>
-          <Text variant="previewSubtitle">
-            {creator.successes} successful bounties
-          </Text>
-          <Text variant="previewSubtitle">
-            {creator.successes} ongoing bounties
-          </Text>
+          <Text variant="previewSubtitle">{successes} successful bounties</Text>
+          <Text variant="previewSubtitle">{ongoing} ongoing bounties</Text>
         </Flex>
       </Flex>
     </Flex>
