@@ -69,7 +69,7 @@ export default function Creator({ bounty }: Props) {
       <Heading my="12px">Negotiate this bounty</Heading>
       <Text textAlign="center" fontSize="24px" pb="12px">
         Interested in this bounty? Declare your terms of service, deliverable
-        timelines, and any other changes you'd like to see below start the
+        timelines, and any other changes you&apos;d like to see below start the
         claim.
       </Text>
       <VStack
