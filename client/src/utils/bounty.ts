@@ -2,6 +2,9 @@ import { BountyStatus } from "@shared/enums";
 import { web3 } from "@utils/constants";
 import bountyJSON from "../contracts/polygon-contracts/Bounty.json";
 
+import { TimeSecondsType, TimeStringType } from "@utils/types";
+import { swapKeys } from "@utils/helpers";
+
 const abi = bountyJSON.abi;
 
 export default function bountyContract(addr: string) {
@@ -111,4 +114,38 @@ export function getReadableStatus(status?: BountyStatus) {
     return BountyStatusReadableMap[BountyStatus.UNKNOWN];
   }
   return BountyStatusReadableMap[status];
+}
+
+export const bountyExpirationOptions: TimeStringType[] = [
+  "48 hours",
+  "1 week",
+  "2 weeks",
+];
+
+export const bountyDeliverableOptions: TimeStringType[] = [
+  "48 hours",
+  "1 week",
+  "2 weeks",
+  "1 month",
+  "2 months",
+  "3 months",
+];
+
+const stringToSecondsTimeMap: Record<TimeStringType, TimeSecondsType> = {
+  "48 hours": 172800,
+  "1 week": 604800,
+  "2 weeks": 1209600,
+  "1 month": 2629746,
+  "2 months": 5259492,
+  "3 months": 7889238,
+};
+
+const secondsToStringTimeMap = swapKeys(stringToSecondsTimeMap);
+
+export function getSecondsFromTimeString(timeString: TimeStringType) {
+  return stringToSecondsTimeMap[timeString];
+}
+
+export function getTimeStringFromSeconds(seconds: TimeSecondsType) {
+  return secondsToStringTimeMap[seconds];
 }

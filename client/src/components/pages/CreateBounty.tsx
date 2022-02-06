@@ -24,58 +24,45 @@ import {
   UserQuery as UserQueryType,
   UserQueryVariables,
 } from "@gql/__generated__/UserQuery";
-import { TimeType } from "@utils/types";
+import {
+  bountyDeliverableOptions,
+  bountyExpirationOptions,
+  getSecondsFromTimeString,
+} from "@utils/bounty";
+import { TimeStringType } from "@utils/types";
 import { useState } from "react";
 
 type Props = {
   twitterHandle: string;
 };
 
-const expirationOptions: TimeType[] = ["48 hours", "1 week", "2 weeks"];
-
-const deadlineOptions: TimeType[] = [
-  "48 hours",
-  "1 week",
-  "2 weeks",
-  "1 month",
-  "2 months",
-  "3 months",
-];
-
-const timeMap = {
-  "48 hours": 172800,
-  "1 week": 604800,
-  "2 weeks": 1209600,
-  "1 month": 2629746,
-  "2 months": 5259492,
-  "3 months": 7889238,
-};
-
 function CreateBounty({ twitterHandle }: Props) {
-  const [expiration, setExpiration] = useState<TimeType>("48 hours");
-  const [deadline, setDeadline] = useState<TimeType>("1 week");
+  const [expirationString, setExpirationString] =
+    useState<TimeStringType>("48 hours");
+  const [deliverableString, setDeliverableString] =
+    useState<TimeStringType>("1 week");
   const {
     getRootProps: getExpirationRootProps,
     getRadioProps: getExpirationRadioProps,
   } = useRadioGroup({
     name: "expiration",
-    value: expiration,
+    value: expirationString,
     onChange: (val) => {
-      setExpiration(val as TimeType);
+      setExpirationString(val as TimeStringType);
     },
   });
   const {
-    getRootProps: getDeadlineRootProps,
-    getRadioProps: getDeadlineRadioProps,
+    getRootProps: getDeliverableRootProps,
+    getRadioProps: getDeliverableRadioProps,
   } = useRadioGroup({
-    name: "deadlineOptions",
-    value: deadline,
+    name: "deliverableOptions",
+    value: deliverableString,
     onChange: (val) => {
-      setDeadline(val as TimeType);
+      setDeliverableString(val as TimeStringType);
     },
   });
   const expirationGroup = getExpirationRootProps();
-  const deadlineGroup = getDeadlineRootProps();
+  const deliverableGroup = getDeliverableRootProps();
 
   const { data, loading, error } = useQuery<
     LookupTwitterHandle,
@@ -187,22 +174,22 @@ function CreateBounty({ twitterHandle }: Props) {
 
       <FormLabel htmlFor="bountyResY">Expiration Date</FormLabel>
       <HStack {...expirationGroup}>
-        {expirationOptions.map((value) => {
+        {bountyExpirationOptions.map((value) => {
           const radio = getExpirationRadioProps({ value });
           return (
-            <RadioCard key={value} value={expiration} {...radio}>
+            <RadioCard key={value} value={expirationString} {...radio}>
               {value}
             </RadioCard>
           );
         })}
       </HStack>
 
-      <FormLabel htmlFor="bountyResY">Deadline Date</FormLabel>
-      <HStack {...deadlineGroup}>
-        {deadlineOptions.map((value) => {
-          const radio = getDeadlineRadioProps({ value });
+      <FormLabel htmlFor="bountyResY">Deliverable Date</FormLabel>
+      <HStack {...deliverableGroup}>
+        {bountyDeliverableOptions.map((value) => {
+          const radio = getDeliverableRadioProps({ value });
           return (
-            <RadioCard key={value} value={deadline} {...radio}>
+            <RadioCard key={value} value={deliverableString} {...radio}>
               {value}
             </RadioCard>
           );
@@ -235,8 +222,9 @@ function CreateBounty({ twitterHandle }: Props) {
                 bonusPctYeasNeeded: [50, 50, 50],
                 bonusFailureThresholds: [2, 2, 2],
                 mustBeClaimedTime:
-                  Math.floor(Date.now() / 1000) + timeMap[expiration],
-                timeLimit: timeMap[deadline],
+                  Math.floor(Date.now() / 1000) +
+                  getSecondsFromTimeString(expirationString),
+                timeLimit: getSecondsFromTimeString(deliverableString),
               },
             },
           });

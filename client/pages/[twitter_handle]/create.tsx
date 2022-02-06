@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 const CreatePage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { user_id } = router?.query;
+  const { twitter_handle } = router?.query;
 
   return (
     <div className={styles.container}>
@@ -22,8 +22,8 @@ const CreatePage: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {user_id != null ? (
-          <CreateBounty userId={user_id as string} />
+        {twitter_handle != null ? (
+          <CreateBounty twitterHandle={twitter_handle as string} />
         ) : (
           <Text>Unable to find user and board</Text>
         )}

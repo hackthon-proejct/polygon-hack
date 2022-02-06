@@ -5,7 +5,17 @@ export type NextPageWithLayout<T = {}> = NextPage<T> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export type TimeType =
+// TODO: ideally this is shared with server
+export type TimeSecondsType =
+  | 172800
+  | 604800
+  | 1209600
+  | 2629746
+  | 5259492
+  | 7889238;
+
+// TODO: ideally this is shared with server
+export type TimeStringType =
   | "48 hours"
   | "1 week"
   | "2 weeks"
