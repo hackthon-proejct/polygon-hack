@@ -3,6 +3,3 @@
   env: static
   buildCommand: cd client && yarn && yarn build && yarn next export
   staticPublishPath: client/out
-  envVars:
-      - key: NODE_ENV
-        value: production
