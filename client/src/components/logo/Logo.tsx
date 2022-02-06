@@ -3,6 +3,7 @@ import { cx } from "@chakra-ui/react";
 import SVGLogo from "./SVGLogo";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import theme from "src/theme";
 
 enum LogoType {
   icon = "icon",
@@ -73,6 +74,7 @@ export default function Logo({ type }: Props) {
 const styles = {
   logo: {
     fontFamily: '"Averia Sans Libre", cursive',
+    color: theme.colors.bountyBrownDark,
   },
   logoIconWithText: {
     ".bounty-svglogo": {

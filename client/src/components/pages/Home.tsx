@@ -2,7 +2,6 @@ import { Flex, Heading, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
 import theme from "src/theme";
-import styles from "../../styles/Home.module.css";
 
 type Props = {};
 
@@ -10,9 +9,7 @@ function Home() {
   return (
     <Flex direction="column" sx={styles.container}>
       <Flex direction="column" sx={styles.hero}>
-        <Heading color="white" sx={styles.title}>
-          bounty
-        </Heading>
+        <Heading sx={styles.title}>bounty</Heading>
         <Text color="white" sx={styles.subtitle}>
           transform ideas into reality,
         </Text>
@@ -34,7 +31,14 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: theme.colors.bountyGreen,
-    background: `linear-gradient(${theme.colors.bountyGreen},${theme.colors.bountyGreen}, ${theme.colors.bountyGreen}, ${theme.colors.bountyGreen}, ${theme.colors.white})`,
+    background: `linear-gradient(
+    ${theme.colors.bountyGreenLighter},
+    ${theme.colors.bountyGreen},
+    ${theme.colors.bountyGreen},
+    ${theme.colors.bountyGreenLight},
+    ${theme.colors.bountyGreen},
+    ${theme.colors.bountyGreen},
+    ${theme.colors.bountyGreenLighter})`,
     // background: "radial-gradient(#FFF 0%, #7DC794 60%)",
   },
   hero: {
@@ -44,6 +48,21 @@ const styles = {
       lg: "800px",
       xl: "1000px",
     },
+    background: `linear-gradient(
+      ${theme.colors.bountyGreenLightest},
+      ${theme.colors.bountyGreenLightest},
+      ${theme.colors.white},
+      ${theme.colors.white},
+      ${theme.colors.white},
+      ${theme.colors.white},
+      ${theme.colors.white},
+      ${theme.colors.white},
+      ${theme.colors.white},
+      ${theme.colors.bountyBrownLight},
+      ${theme.colors.white}
+    )`,
+    backgroundClip: "text",
+    textFillColor: "transparent",
   },
   title: {
     fontFamily: '"Averia Sans Libre", cursive',

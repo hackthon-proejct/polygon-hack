@@ -15,7 +15,12 @@ const theme = extendTheme({
   xl: "1408px",
   colors: {
     bountyGreen: "#7DC794",
+    bountyGreenLightest: "#cbf5cf",
+    bountyGreenLighter: "#9be0a8",
+    bountyGreenLight: "#8fd6a0",
     bountyYellow: "#FFE6AD",
+    bountyBrownDark: "#5a2707",
+    bountyBrownLight: "#f7dec9",
   },
 });
 
