@@ -1,4 +1,4 @@
-import { Flex, CSSObject } from "@chakra-ui/react";
+import { Flex, CSSObject, Spacer } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import Logo from "./logo/Logo";
 import MetaMaskButton from "./MetamaskButton";
@@ -7,6 +7,7 @@ function StickyHeader({}: PropsWithChildren<{}>) {
   return (
     <Flex sx={styles.sticky}>
       <Logo type="dynamic" />
+      <Spacer />
       <MetaMaskButton />
     </Flex>
   );
@@ -26,7 +27,7 @@ const styles = {
       md: "0 80px",
     },
     height: {
-      sm: "44px",
+      sm: "52px",
       md: "80px",
     },
   },

@@ -55,7 +55,6 @@ export default function MetaMaskButton() {
 
   return (
     <Button
-      color="badger"
       onClick={async () => {
         if (hasProvider) {
           try {
@@ -85,9 +84,9 @@ export default function MetaMaskButton() {
       }}
     >
       {address !== ""
-        ? address
+        ? "Connected"
         : hasProvider
-        ? "Connect to MetaMask"
+        ? "Connect MetaMask"
         : "Install MetaMask"}
     </Button>
   );
