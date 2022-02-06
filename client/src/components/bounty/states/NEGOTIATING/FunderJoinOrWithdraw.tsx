@@ -21,6 +21,7 @@ import {
 } from "@gql/__generated__/RejoinBounty";
 import bountyContract, {
   amountRejoinTreasury,
+  getEquity,
   negotiateLeave,
   stringNumToJS,
 } from "@utils/bounty";
@@ -41,6 +42,7 @@ export default function Funder({ bounty, isCreator }: Props) {
     REJOIN_BOUNTY
   );
   const [canRejoin, setCanRejoin] = useState<string>("0");
+  console.log("iscr", isCreator);
 
   let negotiation = data?.negotiationForBounty;
   const exitBounty = async () => {
@@ -58,6 +60,21 @@ export default function Funder({ bounty, isCreator }: Props) {
     };
     canRejoin();
   });
+  const [equity, setEquity] = useState<string>();
+
+  useEffect(() => {
+    async function equity(contract: any) {
+      const accounts = await web3.eth.getAccounts();
+      const equity = await getEquity(contract, accounts[0]);
+      setEquity(stringNumToJS(equity));
+    }
+    if (bounty.address) {
+      const contract = bountyContract(bounty.address);
+      equity(contract);
+    }
+  }, [bounty.address]);
+
+  console.log("rejoining", canRejoin);
 
   let hasNegotiations =
     negotiation?.metadata?.timeLimit != null &&
@@ -72,18 +89,85 @@ export default function Funder({ bounty, isCreator }: Props) {
       maxWidth="80%"
       margin="auto"
     >
-      <Heading my="12px">Creator Negotiation</Heading>
-      <Text
-        textAlign="center"
-        htmlFor="bounty-joinContribution"
-        fontSize="24px"
-        pb="12px"
-      >
-        @{bounty.creator_handle} is interested in your bounty!{" "}
-        {hasNegotiations
-          ? "Before they can get started, they have a few requests."
-          : null}
-      </Text>
+      <Heading my="12px">
+        {isCreator
+          ? hasNegotiations
+            ? "Terms of Service (pending)"
+            : "Submit Terms of Service"
+          : "Creator Terms of Service"}
+      </Heading>
+
+      {!isCreator ? (
+        hasNegotiations ? (
+          Number(equity) === 0 ? (
+            <>
+              <Text
+                textAlign="center"
+                htmlFor="bounty-joinContribution"
+                fontSize="24px"
+              >
+                @{bounty.creator_handle} submitted their Terms of Service! You
+                have one more chance to leave the bounty.
+              </Text>
+              <Text
+                textAlign="center"
+                htmlFor="bounty-joinContribution"
+                fontSize="24px"
+                mt="0px !important"
+                pb="12px"
+              >
+                {hasNegotiations
+                  ? "Before they can get started, they have a few requests."
+                  : null}
+              </Text>
+            </>
+          ) : null
+        ) : (
+          <>
+            <Text
+              textAlign="center"
+              htmlFor="bounty-joinContribution"
+              fontSize="24px"
+            >
+              @{bounty.creator_handle} is interested in this bounty!
+            </Text>
+          </>
+        )
+      ) : (
+        <>
+          <Text
+            textAlign="center"
+            htmlFor="bounty-joinContribution"
+            fontSize="24px"
+          >
+            You&apos;ve already expressed interest in this bounty!
+          </Text>
+          <Text
+            textAlign="center"
+            htmlFor="bounty-joinContribution"
+            fontSize="24px"
+            mt="0px !important"
+            pb="12px"
+          >
+            Waiting on funders to join or withdraw
+          </Text>
+        </>
+      )}
+      {canRejoin !== "0" && !isCreator && (
+        <>
+          <Text>You have {canRejoin} MATIC staked</Text>
+          <HStack>
+            <Button
+              onClick={() =>
+                rejoinBounty({ variables: { bounty_id: bounty.id } })
+              }
+            >
+              Rejoin Bounty
+            </Button>
+            <Button onClick={exitBounty}>Withdraw Funds</Button>
+          </HStack>
+        </>
+      )}
 
       <VStack
         direction="column"
@@ -119,24 +203,12 @@ export default function Funder({ bounty, isCreator }: Props) {
           </>
         ) : null}
       </VStack>
-
-      {canRejoin !== "0" ? (
-        <>
-          <Text>You have {canRejoin} MATIC staked</Text>
-          <HStack>
-            <Button
-              onClick={() =>
-                rejoinBounty({ variables: { bounty_id: bounty.id } })
-              }
-            >
-              Rejoin Bounty
-            </Button>
-            <Button onClick={exitBounty}>Withdraw Funds</Button>
-          </HStack>
-        </>
-      ) : !isCreator ? (
-        <BountyJoin address={bounty.address} />
-      ) : null}
+      {
+        // only show it at the end if you're not committed
+        !isCreator && (
+          <BountyJoin hideTitle={Number(equity) > 0} address={bounty.address} />
+        )
+      }
     </VStack>
   ) : null;
 }

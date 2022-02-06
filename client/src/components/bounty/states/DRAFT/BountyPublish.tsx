@@ -6,10 +6,13 @@ import {
   PublishBountyVariables,
 } from "@gql/__generated__/PublishBounty";
 import { PUBLISH_BOUNTY } from "@gql/bounties.graphql";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 type Props = { id: string };
 
 export default function BountyPublish(props: Props) {
+  const router = useRouter();
   const [publishBounty, { loading, error }] = useMutation<
     PublishBounty,
     PublishBountyVariables
@@ -28,7 +31,12 @@ export default function BountyPublish(props: Props) {
         Ready to show the world? Publish this bounty to kickstart the funding
         process!
       </Text>
-      <Button onClick={() => publishBounty({ variables: { id: props.id } })}>
+      <Button
+        isLoading={loading}
+        onClick={async () => {
+          const resp = await publishBounty({ variables: { id: props.id } });
+        }}
+      >
         Publish
       </Button>
     </VStack>

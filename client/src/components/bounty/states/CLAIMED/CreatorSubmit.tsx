@@ -22,6 +22,7 @@ import { IS_SERVER } from "@utils/constants";
 import SubmitButton from "./SubmitButton";
 import { stringNumToJS, VotingState } from "@utils/bounty";
 import { SubmissionsForBounty_submissionsForBounty } from "@gql/__generated__/SubmissionsForBounty";
+import { useRouter } from "next/router";
 
 type Props = {
   bounty: BountyQuery_bounty;
@@ -36,6 +37,7 @@ export default function CreatorSubmit({
   votingState,
   currSubmission,
 }: Props) {
+  const router = useRouter();
   const uploadRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
@@ -44,6 +46,8 @@ export default function CreatorSubmit({
   const imgRef = useRef<HTMLImageElement>(null);
   const loggedInUserId = useAppSelector(selectUserId);
   const isCreator = bounty.creator_id === loggedInUserId;
+
+  const bonusTarget = Number(votingState.votingOn) + 1;
 
   useEffect(() => {
     function handleImageLoaded() {}
@@ -70,13 +74,32 @@ export default function CreatorSubmit({
     },
     [setFile]
   );
+  console.log(currSubmission);
   return currSubmission?.metadata?.milestone ===
     Number(votingState.votingOn) ? (
     <VStack>
-      <Heading my="12px">Ongoing vote</Heading>
-      <Text textAlign="center" fontSize="24px" pb="12px">
-        {`Funders are currently voting on your submission for milestone ${votingState.votingOn} - you'll be able to submit again when the vote is finished!`}
+      <Heading my="12px">
+        Vote in progress:{" "}
+        <Heading as="span" variant="metadataLabelLg" mr="12px">
+          Bonus Target {bonusTarget}.
+        </Heading>
+      </Heading>
+      <Text textAlign="center" fontSize="24px">
+        {`Funders are currently voting on your submission for `}
+
+        <Text as="span" variant="metadataLabelLg" mr="12px">
+          Bonus Target {bonusTarget}.
+        </Text>
       </Text>
+      <Text textAlign="center" fontSize="24px" pb="12px">
+        You&apos;ll be able to submit again when the vote is finished!
+      </Text>
+      <Image
+        src={currSubmission?.metadata?.image_url}
+        width="100%"
+        boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
+        px={{ sm: "32px", md: "80px" }}
+      />
     </VStack>
   ) : (
     <VStack
@@ -86,7 +109,13 @@ export default function CreatorSubmit({
       maxWidth="80%"
       margin="auto"
     >
-      <Heading my="12px">Submit a revision</Heading>
+      <Heading my="12px">
+        Submit{" "}
+        <Text as="span" fontWeight="500">
+          a revision for:
+        </Text>{" "}
+        Bonus Target {bonusTarget}
+      </Heading>
       <Text textAlign="center" fontSize="24px" pb="12px">
         Ready to get your next bonus? Submit a new revision below for review!
         Funders will have <b>48 hours</b> to vote and decide whether your
@@ -102,12 +131,9 @@ export default function CreatorSubmit({
       >
         <Flex alignItems="center" py="18px">
           <VStack>
-            <Text variant="metadataLabelLg" mr="12px">
-              Milestone {votingState.votingOn}
-            </Text>
             <HStack>
               <Text variant="metadataLabelLg" mr="12px">
-                Next Bonus Target:
+                Bonus Target {bonusTarget}:
               </Text>
               <Text variant="metadataLabelLg" fontSize="36px">
                 {stringNumToJS(votingState.bonusValue)} MATIC (
@@ -164,14 +190,14 @@ export default function CreatorSubmit({
         />
       </VStack>
       <SubmitButton
-        disabled={file == null}
+        disabled={file == null || description === ""}
         milestone={Number(votingState.votingOn)}
         bountyId={bounty.id}
         description={description}
         metadata={{ name: name }}
         imageFile={file!}
-        onSuccess={() => {
-          alert("success");
+        onSuccess={(data) => {
+          router.reload();
         }}
       />
     </VStack>

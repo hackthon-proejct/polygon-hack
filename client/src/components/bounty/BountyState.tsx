@@ -11,6 +11,7 @@ import { BountyBlockState } from "@utils/bounty";
 type Props = { bounty: BountyQuery_bounty; blockState?: BountyBlockState };
 
 export default function BountyState({ bounty, blockState }: Props) {
+  console.log("bounty", bounty, blockState);
   switch (blockState?.status) {
     case "1":
       return <BountyNegotiating bounty={bounty} />;

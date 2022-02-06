@@ -50,6 +50,7 @@ export default function BountyUnclaimed({ bounty }: Props) {
       equity(contract);
     }
   }, []);
+  console.log("iscr", isCreator, bounty.creator_id, loggedInUserId);
 
   return (
     <Box>

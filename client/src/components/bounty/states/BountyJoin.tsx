@@ -18,10 +18,13 @@ import bountyContract, {
   stringNumToJS,
 } from "@utils/bounty";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-type Props = { address: string | null };
+type Props = { address: string | null; hideTitle?: boolean };
 
-export default function BountyJoin({ address }: Props) {
+export default function BountyJoin({ address, hideTitle = false }: Props) {
+  const router = useRouter();
+  const [joining, setJoining] = useState(false);
   const [contribution, setContribution] = useState("");
   const [equity, setEquity] = useState<string>();
 
@@ -42,14 +45,24 @@ export default function BountyJoin({ address }: Props) {
   }
 
   const join = async (val: number) => {
+    setJoining(true);
     const contract = bountyContract(address);
     const accounts = await web3.eth.getAccounts();
-    const result = await joinBounty(
-      contract,
-      web3.utils.toWei(val.toString(), "ether"),
-      accounts[0]
-    );
-    return result;
+    try {
+      const result = await joinBounty(
+        contract,
+        web3.utils.toWei(val.toString(), "ether"),
+        accounts[0]
+      );
+      router.reload();
+      return result;
+    } catch (e: any) {
+      alert(
+        `Something went wrong trying to join this bounty: ${e.message} ; Please try again`
+      );
+    } finally {
+      setJoining(false);
+    }
   };
 
   return (
@@ -60,11 +73,28 @@ export default function BountyJoin({ address }: Props) {
       maxWidth="80%"
       margin="auto"
     >
-      <Heading my="12px">Join this bounty</Heading>
-      <FormLabel htmlFor="bounty-joinContribution" fontSize="24px" pb="12px">
-        {equity
-          ? `You have ${equity} MATIC in this bounty - contribute more below!`
-          : "Interested? Set up a contribution below so you don't miss out on the action!"}
+      {!hideTitle && (
+        <Heading my="12px">
+          {equity ? "Add to your contribution" : "Join this bounty"}{" "}
+        </Heading>
+      )}
+      <FormLabel
+        htmlFor="bounty-joinContribution"
+        fontSize="24px"
+        pb="12px"
+        textAlign={hideTitle ? "center" : "flex-start"}
+      >
+        {Number(equity) > 0 ? (
+          <>
+            You already contributed{" "}
+            <Text display="inline-block" fontWeight="700" fontSize="1.2em">
+              {equity} MATIC
+            </Text>{" "}
+            to this bounty - contribute more below!
+          </>
+        ) : (
+          "Interested? Set up a contribution below so you don't miss out on the action."
+        )}
       </FormLabel>
       <HStack alignItems="center" pb="12px">
         <Input
@@ -83,10 +113,11 @@ export default function BountyJoin({ address }: Props) {
         <Text fontSize="24px">MATIC</Text>
       </HStack>
       <Button
+        isLoading={joining}
         isDisabled={contribution === "" || isNaN(Number(contribution))}
         onClick={() => join(Number(contribution))}
       >
-        Join Bounty
+        {Number(equity) > 0 ? "Add to Contribution" : "Join Bounty"}
       </Button>
     </VStack>
   );

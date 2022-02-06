@@ -12,6 +12,7 @@ export default function BountyNegotiating({ bounty }: Props) {
   const loggedInUserId = useAppSelector(selectUserId);
   // TODO: for testing only
   const isCreator = bounty.creator_id === loggedInUserId;
+  console.log("jjj");
   return (
     <Box>
       <FunderJoinOrWithdraw bounty={bounty} isCreator={isCreator} />

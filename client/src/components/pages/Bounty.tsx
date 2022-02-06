@@ -112,8 +112,8 @@ function Bounty({ bountyId }: Props) {
             ) : (
               <Link>{metadata.pitch}</Link>
             )}
-            <HStack alignItems="center" my="12px">
-              <VStack>
+            <HStack alignItems="flex-start" my="18px">
+              <Flex alignItems="flex-start" direction="column">
                 <HStack>
                   <Text variant="metadataLabelLg">Current Funding:</Text>
                   <Text variant="metadataValueLg">
@@ -126,10 +126,10 @@ function Bounty({ bountyId }: Props) {
                   </Text>
                 </HStack>
                 <HStack>
-                  <Text variant="metadataLabelLg">Balance remaining:</Text>
+                  <Text variant="metadataLabelLg">Your remaining balance:</Text>
                   <Text variant="metadataValueLg">{totalFund} MATIC</Text>
                 </HStack>
-              </VStack>
+              </Flex>
               <Spacer />
               <Flex sx={styles.funderCount}>
                 <Text variant="metadataValueLg">{funders}</Text>

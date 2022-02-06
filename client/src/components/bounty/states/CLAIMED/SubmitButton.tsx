@@ -34,19 +34,23 @@ export default function UploadButton({
 
   return (
     <Button
+      isLoading={isCreatingSubmission}
       onClick={async () => {
-        const submissionResp = await createSubmission({
-          variables: {
-            image: imageFile,
-            bounty_id: bountyId,
-            milestone,
-            description,
-            mint_metadata: props.metadata,
-          },
-        });
-        if (submissionResp?.data?.createSubmission) {
-          onSuccess(submissionResp?.data?.createSubmission);
-        } else {
+        try {
+          const submissionResp = await createSubmission({
+            variables: {
+              image: imageFile,
+              bounty_id: bountyId,
+              milestone,
+              description,
+              mint_metadata: props.metadata,
+            },
+          });
+
+          if (submissionResp?.data?.createSubmission) {
+            onSuccess(submissionResp?.data?.createSubmission);
+          }
+        } catch (e: any) {
           alert("something went wrong");
         }
       }}

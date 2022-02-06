@@ -17,11 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { web3 } from "@utils/constants";
 import bountyContract, {
+  BountyBlockState,
+  getBountyStatus,
   stringNumToJS,
   voteBounty,
   VotingState,
 } from "@utils/bounty";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioCard } from "@components/RadioCard";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import theme from "src/theme";
@@ -31,11 +33,14 @@ type Props = {
   votingState: VotingState;
   bounty: BountyQuery_bounty;
   currSubmission: SubmissionsForBounty_submissionsForBounty | null;
+  equity: number;
 };
 
 export default function FunderVote(props: Props) {
+  const [bountyState, setBountyState] = useState<BountyBlockState>();
   const [yea, setYea] = useState<number>(-1);
-  let { votingState, bounty } = props;
+  const [isLoading, setLoading] = useState<boolean>(false);
+  let { votingState, bounty, equity } = props;
 
   const vote = async (val: number) => {
     const contract = bountyContract(bounty.address!);
@@ -49,6 +54,16 @@ export default function FunderVote(props: Props) {
     console.log("result", result);
     return result;
   };
+
+  useEffect(() => {
+    async function getBounty(contract: any) {
+      const status = await getBountyStatus(contract);
+      setBountyState(status);
+    }
+    const contract = bountyContract(bounty?.address!);
+    getBounty(contract);
+  }, [bounty?.address]);
+
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "deadlineOptions",
     value: yea,
@@ -56,6 +71,7 @@ export default function FunderVote(props: Props) {
       setYea(Number(val));
     },
   });
+  const bonusTarget = Number(votingState.votingOn) + 1;
 
   return (
     <VStack
@@ -78,10 +94,17 @@ export default function FunderVote(props: Props) {
       ) : (
         <Text textAlign="center" fontSize="24px" pb="12px">
           Waiting for @{bounty.creator_handle} to submit for{" "}
-          <b>milestone {votingState.votingOn}</b>
+          <b>Bonus Target {bonusTarget}</b>
         </Text>
       )}
 
+      <Text fontSize="24px" pb="12px" mr="8px">
+        This bounty can fail{" "}
+        <Text as="span" fontSize="24px" fontWeight="700" pb="12px">
+          {Number(votingState.maxFailures) - Number(votingState.timesFailed)}{" "}
+          more times
+        </Text>
+      </Text>
       <VStack
         direction="column"
         alignItems="flex-start"
@@ -90,9 +113,9 @@ export default function FunderVote(props: Props) {
         maxWidth="80%"
         margin="auto"
       >
-        <Flex alignItems="center" py="18px">
+        <Flex alignItems="center" pb="18px">
           <Text variant="metadataLabelLg" mr="12px">
-            Next Bonus Target:
+            Bonus Target {bonusTarget}:
           </Text>
 
           <Text variant="metadataLabelLg" fontSize="36px">
@@ -101,74 +124,92 @@ export default function FunderVote(props: Props) {
           </Text>
         </Flex>
       </VStack>
-      <Box py="48px" width="100%">
-        <Slider
-          isReadOnly
-          defaultValue={Number(votingState.currentYeas)}
-          min={0}
-          max={Number(votingState.currentVotes)}
-          step={1}
-        >
-          <SliderTrack bg="red.100">
-            <Box position="relative" right={10} />
-            <SliderFilledTrack bg={theme.colors.bountyGreen} />
-          </SliderTrack>
-          <SliderThumb boxSize={6} />
-          <SliderMark
-            value={
-              (Number(votingState.pctYeasNeeded) / 100) *
-              Number(votingState.currentVotes)
-            }
-            textAlign="center"
-            color={theme.colors.bountyBrown}
-            fontSize="20px"
-            mt="5"
-            ml="-15px"
+
+      {props.currSubmission != null && (
+        <>
+          <Box pb="48px" width="100%">
+            <Slider
+              isReadOnly
+              defaultValue={Number(votingState.currentYeas)}
+              min={0}
+              max={bountyState?.totalContribution}
+              step={1}
+            >
+              <SliderTrack bg="red.100">
+                <Box position="relative" right={10} />
+                <SliderFilledTrack bg={theme.colors.bountyGreen} />
+              </SliderTrack>
+              <SliderThumb boxSize={6} />
+              <SliderMark
+                value={
+                  (Number(votingState.pctYeasNeeded) / 100) *
+                  Number(votingState.currentVotes)
+                }
+                textAlign="center"
+                color={theme.colors.bountyBrown}
+                fontSize="20px"
+                mt="5"
+                ml="-15px"
+              >
+                {votingState.pctYeasNeeded}% needed
+              </SliderMark>
+            </Slider>
+          </Box>
+          <Flex width="100%">
+            <Text variant="metadataLabelLg">
+              {stringNumToJS(votingState.currentYeas)} Yeas
+            </Text>
+            <Spacer />
+            <Text variant="metadataLabelLg">
+              {stringNumToJS(votingState.currentNays)} Nays
+            </Text>
+          </Flex>
+          <Flex>
+            <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
+              {stringNumToJS(votingState.yeasNeeded)} MATIC{" "}
+              <Text
+                as="span"
+                fontSize="24px"
+                fontWeight="500"
+                pb="12px"
+                mr="8px"
+              >
+                more &apos;Yea&apos; equity is needed to succeed.
+              </Text>
+            </Text>
+          </Flex>
+          <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
+            <Text as="span" fontSize="24px" fontWeight="500" pb="12px" mr="8px">
+              You have
+            </Text>
+            {equity} MATIC
+          </Text>
+
+          <FormLabel variant="metadataLabelLg">What will you choose?</FormLabel>
+          <HStack {...getRootProps()}>
+            {[0, 1].map((value) => {
+              const radio = getRadioProps({ value });
+              return (
+                <RadioCard key={value} value={yea} {...radio}>
+                  {value === 0 ? "Nay" : "Yea"}
+                </RadioCard>
+              );
+            })}
+          </HStack>
+          <Button
+            isLoading={isLoading}
+            disabled={yea === -1 && !isLoading}
+            onClick={async () => {
+              setLoading(true);
+
+              await vote(yea);
+              setLoading(false);
+            }}
           >
-            {votingState.pctYeasNeeded} % needed
-          </SliderMark>
-        </Slider>
-      </Box>
-      <Flex width="100%">
-        <Text variant="metadataLabelLg">
-          {stringNumToJS(votingState.currentYeas)} Yeas
-        </Text>
-        <Spacer />
-        <Text variant="metadataLabelLg">
-          {stringNumToJS(votingState.currentNays)} Nays
-        </Text>
-      </Flex>
-
-      <Flex>
-        <Text fontSize="24px" pb="12px" mr="8px">
-          This bounty can fail
-        </Text>
-        <Text fontSize="24px" fontWeight="700" pb="12px">
-          {Number(votingState.maxFailures) - Number(votingState.timesFailed)}{" "}
-          more times
-        </Text>
-      </Flex>
-      <Flex>
-        <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
-          {stringNumToJS(votingState.yeasNeeded)} more &apos;Yea&apos; votes
-          needed to succeed
-        </Text>
-      </Flex>
-
-      <FormLabel variant="metadataLabelLg">What will you choose?</FormLabel>
-      <HStack {...getRootProps()}>
-        {[0, 1].map((value) => {
-          const radio = getRadioProps({ value });
-          return (
-            <RadioCard key={value} value={yea} {...radio}>
-              {value === 0 ? "Nay" : "Yea"}
-            </RadioCard>
-          );
-        })}
-      </HStack>
-      <Button disabled={yea == -1} onClick={() => vote(yea)}>
-        Vote
-      </Button>
+            Vote
+          </Button>
+        </>
+      )}
     </VStack>
   );
 }

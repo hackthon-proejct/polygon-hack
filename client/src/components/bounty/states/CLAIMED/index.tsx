@@ -50,7 +50,7 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
       getVoting(contract);
       equity(contract);
     }
-  }, []);
+  }, [bounty.address]);
 
   const filtered =
     data?.submissionsForBounty && votingState
@@ -77,6 +77,7 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
         />
       ) : shouldShowFunderVote ? (
         <FunderVote
+          equity={Number(equity)}
           bounty={bounty}
           votingState={votingState!}
           currSubmission={currSubmission}
