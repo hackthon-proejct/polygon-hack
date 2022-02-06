@@ -13,6 +13,7 @@ import Web3PublicKey from "../models/Web3PublicKey.model";
 import { BountyType, SubmissionType } from "./types";
 import s3 from "../utils/s3";
 import config from "../../config";
+import { GraphQLJSONObject } from "graphql-type-json";
 
 const SubmissionQueries = {
   submission: {
@@ -61,6 +62,9 @@ const SubmissionMutations = {
         description: "description of the submission",
         type: GraphQLString,
       },
+      mint_metadata: {
+        type: GraphQLJSONObject,
+      },
     },
     resolve: async (parent, args, ctx, info) => {
       const { filename, mimetype, createReadStream, encoding } =
@@ -93,6 +97,8 @@ const SubmissionMutations = {
         metadata: {
           image_url: imageUrl,
           milestone: args.milestone,
+          description: args.description,
+          ...args.mint_metadata,
         },
         bounty_id: args.bounty_id,
       });

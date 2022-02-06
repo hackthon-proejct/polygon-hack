@@ -41,6 +41,7 @@ export default function UploadButton({
             bounty_id: bountyId,
             milestone,
             description,
+            mint_metadata: props.metadata,
           },
         });
         if (submissionResp?.data?.createSubmission) {

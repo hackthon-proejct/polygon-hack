@@ -27,4 +27,5 @@ export interface CreateSubmissionVariables {
   milestone: number;
   image: any;
   description: string;
+  mint_metadata: any;
 }

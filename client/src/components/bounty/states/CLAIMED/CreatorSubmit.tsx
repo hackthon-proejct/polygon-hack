@@ -39,6 +39,7 @@ export default function CreatorSubmit({
   const uploadRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const loggedInUserId = useAppSelector(selectUserId);
@@ -150,12 +151,24 @@ export default function CreatorSubmit({
             setDescription(e.currentTarget.value);
           }}
         />
+        <Text variant="metadataLabelLg" mr="12px">
+          Name:
+        </Text>
+        <Input
+          type="text"
+          placeholder="Name your piece"
+          value={name}
+          onChange={(e) => {
+            setName(e.currentTarget.value);
+          }}
+        />
       </VStack>
       <SubmitButton
         disabled={file == null}
         milestone={Number(votingState.votingOn)}
         bountyId={bounty.id}
         description={description}
+        metadata={{ name: name }}
         imageFile={file!}
         onSuccess={() => {
           alert("success");

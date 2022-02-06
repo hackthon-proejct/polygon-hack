@@ -157,8 +157,10 @@ export function getReadableStatus(status?: BountyStatus, blockStatus?: string) {
       case "2":
         return "Claimed";
       case "3":
-        return "Success";
+        return "Waiting to Mint";
       case "4":
+        return "Success";
+      case "5":
         return "Failure";
       default:
         console.log("no status");

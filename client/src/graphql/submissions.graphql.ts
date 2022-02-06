@@ -7,12 +7,14 @@ export const CREATE_SUBMISSION = gql`
     $milestone: Int!
     $image: Upload!
     $description: String!
+    $mint_metadata: JSONObject!
   ) {
     createSubmission(
       bounty_id: $bounty_id
       image: $image
       milestone: $milestone
       description: $description
+      mint_metadata: $mint_metadata
     ) {
       metadata {
         image_url
