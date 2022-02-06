@@ -27,7 +27,6 @@ export default function MetaMaskButton() {
       if (accounts[0]) {
         dispatch(setAddressTo(accounts[0]));
         const user = await currentUser();
-        console.log("current user", user);
         //We take the first address in the array of addresses and display it
         dispatch(setUserIdTo(user?.id));
         dispatch(setTwitterHandleTo(user?.profile?.twitter_handle));
@@ -70,11 +69,9 @@ export default function MetaMaskButton() {
               "Open sesame!",
               accounts[0]
             );
-            console.log("hello", accounts[0]);
             await getOrCreateUser(accounts[0], signature);
 
             const user = await currentUser();
-            console.log("new loggedin user", user);
 
             //We take the first address in the array of addresses and display it
             dispatch(setAddressTo(accounts[0]));

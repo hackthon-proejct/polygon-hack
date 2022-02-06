@@ -3,20 +3,23 @@ import { web3 } from "@utils/constants";
 import bountyContract, { joinBounty } from "@utils/bounty";
 import { useState } from "react";
 
-type Props = { address: string };
+type Props = { address: string | null };
 
-export default function BountyJoin(props: Props) {
+export default function BountyJoin({ address }: Props) {
   const [contribution, setContribution] = useState(0);
 
+  if (address == null) {
+    return null;
+  }
+
   const join = async (val: number) => {
-    const contract = bountyContract(props.address);
+    const contract = bountyContract(address);
     const accounts = await web3.eth.getAccounts();
     const result = await joinBounty(
       contract,
       web3.utils.toWei(val.toString(), "ether"),
       accounts[0]
     );
-    console.log("result", result);
     return result;
   };
 

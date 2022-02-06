@@ -121,7 +121,6 @@ function Bounty({ bountyId }: Props) {
         </>
       ) : null}
 
-      {address && !hasJoinedBounty ? <BountyJoin address={address} /> : null}
       {address &&
       equity &&
       bountyState &&
