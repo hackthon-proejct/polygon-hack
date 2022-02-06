@@ -2,14 +2,25 @@ import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { BoardMutations, BoardQueries, BoardSubscriptions } from "./board";
 import { BountyMutations, BountyQueries } from "./bounty";
 import { UserQueries, UserMutations } from "./user";
+import { NegotiationQueries, NegotiationMutations } from "./negotiation";
 
 const rootQuery = new GraphQLObjectType({
   name: "RootQuery",
-  fields: Object.assign(BoardQueries, BountyQueries, UserQueries),
+  fields: Object.assign(
+    BoardQueries,
+    BountyQueries,
+    UserQueries,
+    NegotiationQueries
+  ),
 });
 const rootMutation = new GraphQLObjectType({
   name: "RootMutation",
-  fields: Object.assign(BoardMutations, BountyMutations, UserMutations),
+  fields: Object.assign(
+    BoardMutations,
+    BountyMutations,
+    UserMutations,
+    NegotiationMutations
+  ),
 });
 
 let schema = new GraphQLSchema({

@@ -82,7 +82,6 @@ const NegotiationMutations = {
       });
       bounty.status = BountyStatus.NEGOTIATING;
       await bounty.save();
-      await precipitatingEvent(bounty.address, true);
       return negotiation;
     },
   },
