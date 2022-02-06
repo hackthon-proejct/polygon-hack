@@ -43,8 +43,9 @@ import bountyContract, {
   getBountyStatus,
   getBalance,
 } from "@utils/bounty";
-import { web3 } from "@utils/constants";
+import { IS_SERVER, web3 } from "@utils/constants";
 import { useWindowResize } from "@utils/hooks";
+import YoutubeIframeVideo from "@components/YoutubeIframeVideo";
 
 type Props = { bountyId: string };
 
@@ -93,35 +94,13 @@ function Bounty({ bountyId }: Props) {
 
   const embedURL = getEmbedUrlFromYoutube(metadata?.pitch);
 
-  console.log(address, bounty);
-
-  const [iframeSizeMultiplier, setIframeSizeMultipler] = useState(1);
-  const breakpointSize = useBreakpointValue({
-    base: 0.25,
-    sm: 0.5,
-    md: 0.75,
-    xl: 1,
-  });
-  // bug with breakpointSize and SSR
-  useWindowResize(() => {
-    setIframeSizeMultipler(breakpointSize || 0);
-  }, [breakpointSize]);
-
   return bounty != null ? (
     <Box mt={{ base: "52px", md: "80px" }}>
       <VStack>
         <Flex width="100%">
           <Flex direction="column">
-            {embedURL != null ? (
-              <iframe
-                width={840 * iframeSizeMultiplier}
-                height={475 * iframeSizeMultiplier}
-                src={embedURL}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+            {embedURL != null && !IS_SERVER ? (
+              <YoutubeIframeVideo embedURL={embedURL} />
             ) : (
               <Link>{metadata.pitch}</Link>
             )}
