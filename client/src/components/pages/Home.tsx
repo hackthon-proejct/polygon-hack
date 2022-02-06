@@ -19,7 +19,7 @@ function Home() {
 const styles = {
   container: {
     maxWidth: {
-      sm: "300px",
+      sm: "350px",
       md: "600px",
       lg: "800px",
       xl: "1000px",
@@ -27,12 +27,20 @@ const styles = {
   },
   title: {
     fontFamily: '"Averia Sans Libre", cursive',
-    fontSize: "72px",
+    fontSize: {
+      sm: "48px",
+      md: "60px",
+      lg: "72px",
+    },
     marginBottom: "16px",
   },
   subtitle: {
     fontFamily: '"Josefin Sans", sans-serif',
-    fontSize: "42px",
+    fontSize: {
+      sm: "24px",
+      md: "32px",
+      lg: "40px",
+    },
   },
 };
 
