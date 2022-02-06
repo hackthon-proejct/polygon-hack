@@ -76,19 +76,19 @@ export async function getBountyStatus(
 
 export async function getEquity(contract: any, account: any): Promise<string> {
   const result = await contract.methods.equityOf(account).call();
-  console.log("result", result);
+  console.log("getEquity", result);
   return result;
 }
 
 export async function getUniqueFans(contract: any): Promise<string> {
   const result = await contract.methods.uniqueFans().call();
-  console.log("result", result);
+  console.log("getUniqueFans", result);
   return result;
 }
 
-export async function getBalance(contract: any, account: any): Promise<string> {
-  const result = await contract.methods.balanceOf(account).call();
-  console.log("result", result);
+export async function getBalance(address: string): Promise<string> {
+  const result = await web3.eth.getBalance(address);
+  console.log("getBalance", result);
   return result;
 }
 

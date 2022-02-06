@@ -33,7 +33,7 @@ function Board({ twitterHandle }: Props) {
   const { bounties = [] } = board || {};
   return profile != null ? (
     <>
-      <Heading>{profile.twitter_handle}&apos;s Board</Heading>
+      <Heading>@{profile.twitter_handle}&apos;s Board</Heading>
       <Text>Bounties</Text>
       {bounties?.length ? (
         <Wrap sx={styles.bountyWrap} spacing="30px">
@@ -53,7 +53,13 @@ function Board({ twitterHandle }: Props) {
       <CreateBounty twitterHandle={twitterHandle} />
     </>
   ) : (
-    <Text>No user found.</Text>
+    <>
+      <Heading>
+        @{twitterHandle} {"isn't on Bounty yet"}
+      </Heading>
+      <Text>but you can create one for them when they join!</Text>
+      <CreateBounty twitterHandle={twitterHandle} />
+    </>
   );
 }
 

@@ -92,7 +92,7 @@ export const BountyType = new GraphQLObjectType({
     },
     // todo: cleanup
     creator_id: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
       resolve: async (parent, args, ctx, info) => {
         const board = await Board.findByPk(parent.board_id, {
           include: [Profile],

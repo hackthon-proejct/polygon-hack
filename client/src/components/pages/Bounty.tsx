@@ -74,9 +74,8 @@ function Bounty({ bountyId }: Props) {
       const status = await getBountyStatus(contract);
       setBountyState(status);
     }
-    async function totalFund(contract: any) {
-      const accounts = await web3.eth.getAccounts();
-      const result = await getBalance(contract, accounts[0]);
+    async function totalFund(address: string) {
+      const result = await getBalance(address);
       setTotalFund(stringNumToJS(result));
     }
     async function equity(contract: any) {
@@ -91,7 +90,7 @@ function Bounty({ bountyId }: Props) {
     if (data?.bounty?.address) {
       const contract = bountyContract(data.bounty.address);
       equity(contract);
-      totalFund(contract);
+      totalFund(data.bounty.address);
       getBounty(contract);
       uniqueFans(contract);
     }

@@ -84,7 +84,7 @@ function CreateBounty({ twitterHandle }: Props) {
   const { id: board_id } = board || {};
 
   // only pass the twitter handle if we can't fetch a user.
-  let twitter_handle: string | null = profile?.twitter_handle!;
+  let twitter_handle: string | null = profile?.twitter_handle || twitterHandle;
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
