@@ -6,8 +6,10 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Input,
   Select,
   Text,
+  Textarea,
   useRadioGroup,
 } from "@chakra-ui/react";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
@@ -31,6 +33,8 @@ export default function BountyCreatorNegotiate({ bounty }: Props) {
   const [deliverable, setDeliverable] = useState<TimeStringType>(
     currentTimeOnBlockcchain
   );
+  const [description, setDescription] = useState("");
+  const [bountyMin, setBountyMin] = useState(0);
 
   const {
     getRootProps: getDeliverableRootProps,
@@ -52,7 +56,6 @@ export default function BountyCreatorNegotiate({ bounty }: Props) {
         <Flex direction="column">
           <Heading>Negotiate this bounty</Heading>
           <FormLabel>Deliverable Date</FormLabel>
-          <FormLabel htmlFor="bountyResY">Deliverable Date</FormLabel>
           <HStack {...deliverableGroup}>
             {bountyDeliverableOptions.map((value) => {
               const radio = getDeliverableRadioProps({ value });
@@ -72,8 +75,36 @@ export default function BountyCreatorNegotiate({ bounty }: Props) {
               );
             })}
           </HStack>
+          <FormLabel htmlFor="bountyChangesDescription">
+            Describe your proposed changes
+          </FormLabel>
+          <Textarea
+            id="bountyChangesDescription"
+            placeholder="Description of Changes"
+            value={description}
+            onChange={(e) => {
+              setDescription(e.currentTarget.value);
+            }}
+          />
+          <FormLabel htmlFor="bountyChangesDescription">
+            Minimum bounty size
+          </FormLabel>
+          <Input
+            id="bountyMin"
+            placeholder="Mininum bounty size"
+            value={bountyMin}
+            onChange={(e) => {
+              setBountyMin(e.currentTarget.valueAsNumber);
+            }}
+          />
 
-          <Button>Submit</Button>
+          <Button
+            onClick={() => {
+              alert("Should submit negotiation and trigger neg");
+            }}
+          >
+            Submit
+          </Button>
         </Flex>
       ) : null}
     </Box>

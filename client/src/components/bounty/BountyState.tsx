@@ -10,9 +10,9 @@ type Props = { bounty: BountyQuery_bounty };
 export default function BountyState({ bounty }: Props) {
   switch (bounty.status) {
     case BountyStatus.DRAFT:
-      return <BountyCreatorNegotiate bounty={bounty} />;
-    case BountyStatus.DRAFT:
       return <BountyNegotiate bounty={bounty} />;
+    case BountyStatus.UNCLAIMED:
+      return <BountyCreatorNegotiate bounty={bounty} />;
     case BountyStatus.CLAIMED:
       return <BountySubmit bounty={bounty} />;
     default:
