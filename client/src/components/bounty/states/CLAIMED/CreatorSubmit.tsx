@@ -19,6 +19,7 @@ import * as Icon from "react-feather";
 import { selectUserId } from "@redux/slices/userSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IS_SERVER } from "@utils/constants";
+import SubmitButton from "./SubmitButton";
 
 type Props = { bounty: BountyQuery_bounty };
 
@@ -27,6 +28,7 @@ const fr = IS_SERVER ? null : new FileReader();
 export default function CreatorSubmit({ bounty }: Props) {
   const uploadRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [description, setDescription] = useState("");
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const loggedInUserId = useAppSelector(selectUserId);
@@ -119,9 +121,24 @@ export default function CreatorSubmit({ bounty }: Props) {
         <Text variant="metadataLabelLg" mr="12px">
           Submission Summary:
         </Text>
-        <Textarea placeholder="Summary of submission" />
+        <Textarea
+          placeholder="Summary of submission"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.currentTarget.value);
+          }}
+        />
       </VStack>
-      <Button>Submit artwork</Button>
+      <SubmitButton
+        disabled={file == null}
+        milestone={0}
+        bountyId={bounty.id}
+        description={description}
+        imageFile={file!}
+        onSuccess={() => {
+          alert("success");
+        }}
+      />
     </VStack>
   );
 }

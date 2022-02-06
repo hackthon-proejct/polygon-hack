@@ -1228,6 +1228,18 @@
             "deprecationReason": null
           },
           {
+            "name": "description",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "milestone",
             "description": null,
             "args": [],
@@ -1519,6 +1531,18 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Upload",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "description",
+                "description": "description of the submission",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 },
                 "defaultValue": null,

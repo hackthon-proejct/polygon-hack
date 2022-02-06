@@ -193,6 +193,9 @@ export const SubmissionMetadata = new GraphQLObjectType({
     image_url: {
       type: GraphQLString,
     },
+    description: {
+      type: GraphQLString,
+    },
     milestone: {
       type: GraphQLInt,
     },

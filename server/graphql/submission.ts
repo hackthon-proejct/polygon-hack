@@ -57,6 +57,10 @@ const SubmissionMutations = {
         description: "Image file",
         type: GraphQLUpload,
       },
+      description: {
+        description: "description of the submission",
+        type: GraphQLString,
+      },
     },
     resolve: async (parent, args, ctx, info) => {
       const { filename, mimetype, createReadStream, encoding } =
