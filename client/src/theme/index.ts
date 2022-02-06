@@ -52,6 +52,7 @@ const Text = {
     metadataLabel: {
       fontSize: "18px",
       fontWeight: "700",
+      marginBottom: "4px",
     },
     metadataValue: {},
 
@@ -97,6 +98,7 @@ const theme = extendTheme({
   components: {
     Button,
     Text,
+    FormLabel: Text,
     Container,
     Heading,
   },

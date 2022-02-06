@@ -8,6 +8,7 @@ import {
   Textarea,
   Input,
   Button,
+  VStack,
   useRadioGroup,
 } from "@chakra-ui/react";
 import { RadioCard } from "@components/RadioCard";
@@ -40,7 +41,9 @@ export default function Creator({ bounty }: Props) {
     CreateNegotiationVariables
   >(CREATE_NEGOTIATION);
   const [description, setDescription] = useState("");
-  const [bountyMin, setBountyMin] = useState(0);
+  const [bountyMin, setBountyMin] = useState(
+    bounty.block_metadata.reservePrice
+  );
   const {
     getRootProps: getDeliverableRootProps,
     getRadioProps: getDeliverableRadioProps,
@@ -54,9 +57,13 @@ export default function Creator({ bounty }: Props) {
 
   const deliverableGroup = getDeliverableRootProps();
   return (
-    <Flex direction="column">
-      <Heading>Negotiate this bounty</Heading>
-      <FormLabel>Deliverable Date</FormLabel>
+    <VStack alignItems="flex-start" mt="14px" direction="column" spacing="12px">
+      <Heading my="12px">Negotiate this bounty</Heading>
+      <Text fontSize="20px" pb="12px">
+        Interested in this bounty? You can declare your terms of service, and
+        deliverable timelines below!
+      </Text>
+      <Text variant="metadataLabel">Deliverable Date</Text>
       <HStack {...deliverableGroup}>
         {bountyDeliverableOptions.map((value) => {
           const radio = getDeliverableRadioProps({ value });
@@ -76,7 +83,7 @@ export default function Creator({ bounty }: Props) {
           );
         })}
       </HStack>
-      <FormLabel htmlFor="bountyChangesDescription">
+      <FormLabel variant="metadataLabel" htmlFor="bountyChangesDescription">
         Describe your proposed changes
       </FormLabel>
       <Textarea
@@ -87,9 +94,24 @@ export default function Creator({ bounty }: Props) {
           setDescription(e.currentTarget.value);
         }}
       />
-      <FormLabel htmlFor="bountyChangesDescription">
-        Minimum bounty size
-      </FormLabel>
+      <Flex>
+        <FormLabel
+          variant="metadataLabel"
+          htmlFor="bountyChangesDescription"
+          mr="4px"
+        >
+          Minimum Reserve Price
+        </FormLabel>
+        <Text variant="metadataLabel" fontWeight="400" mr="4px">
+          (currently
+        </Text>
+        <Text variant="metadataLabel">
+          {bounty.block_metadata.reservePrice} MATIC
+        </Text>
+        <Text variant="metadataLabel" fontWeight="400" mr="4px">
+          )
+        </Text>
+      </Flex>
       <Input
         id="bountyMin"
         type="number"
@@ -116,7 +138,7 @@ export default function Creator({ bounty }: Props) {
       >
         Submit
       </Button>
-    </Flex>
+    </VStack>
   );
 }
 
