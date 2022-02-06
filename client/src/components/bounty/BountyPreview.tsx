@@ -4,6 +4,7 @@ import { BountyDataType } from "@utils/types";
 import { getImageUrlFromYoutube } from "@utils/youtube";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
+import BountyRejectButton from "./BountyRejectButton";
 
 type Props = {
   bounty: BountyQuery_bounty;
@@ -23,6 +24,7 @@ export function BountyPreview({ bounty }: Props) {
         <Text>{title}</Text>
         <Text sx={styles.description}>{description}</Text>
       </Flex>
+      <BountyRejectButton bounty={bounty} />
     </Flex>
   );
 }
