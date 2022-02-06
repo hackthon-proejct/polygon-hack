@@ -14,7 +14,7 @@ import { RadioCard } from "@components/RadioCard";
 
 type Props = { votingState: VotingState; address: string };
 
-export default function BountyVote(props: Props) {
+export default function FunderVote(props: Props) {
   const [yea, setYea] = useState<number>(0);
 
   const vote = async (val: number) => {

@@ -19,14 +19,11 @@ import {
 import { getEmbedUrlFromYoutube } from "@utils/youtube";
 import { useAppSelector } from "@redux/hooks";
 import { selectUserId } from "@redux/slices/userSlice";
-import BountyVote from "@components/bounty/BountyVote";
 import BountyState from "@components/bounty/BountyState";
 
 import bountyContract, {
-  VotingState,
   BountyBlockState,
   getReadableStatus,
-  getVotingStatus,
   getEquity,
   getBountyStatus,
 } from "@utils/bounty";
@@ -47,15 +44,10 @@ function Bounty({ bountyId }: Props) {
       },
     }
   );
-  const [votingState, setVotingState] = useState<VotingState | null>(null);
   const [bountyState, setBountyState] = useState<BountyBlockState | null>(null);
   const [equity, setEquity] = useState<string>("0");
 
   useEffect(() => {
-    async function getVoting(contract: any) {
-      const status = await getVotingStatus(contract);
-      setVotingState(status);
-    }
     async function getBounty(contract: any) {
       const status = await getBountyStatus(contract);
       setBountyState(status);
@@ -67,7 +59,6 @@ function Bounty({ bountyId }: Props) {
     }
     if (data?.bounty?.address) {
       const contract = bountyContract(data.bounty.address);
-      getVoting(contract);
       equity(contract);
       getBounty(contract);
     }
@@ -115,13 +106,6 @@ function Bounty({ bountyId }: Props) {
         </>
       ) : null}
 
-      {address &&
-      equity &&
-      bountyState &&
-      bountyState.status === "1" &&
-      votingState ? (
-        <BountyVote address={address} votingState={votingState} />
-      ) : null}
       <BountyState bounty={bounty} />
     </>
   ) : (
