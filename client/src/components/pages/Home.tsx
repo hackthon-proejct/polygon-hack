@@ -1,9 +1,10 @@
-import { Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Icon, Text, VStack } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
 import theme from "src/theme";
 import Bounties from "./home/Bounties";
 import Creators from "./home/Creators";
+import { PolygonLogo } from "./PolygonLogo";
 
 type Props = {};
 
@@ -14,13 +15,13 @@ function Home() {
         <Flex direction="column" sx={styles.hero}>
           <Heading sx={styles.title}>bounty</Heading>
           <Text color="white" sx={styles.subtitle}>
-            transform ideas into reality,
+            turn ideas into reality
           </Text>
           <Text color="white" sx={styles.subtitle}>
-            inverting the crowdfunding model,
+            invert crowdfunding & pitch to creators
           </Text>
           <Text color="white" sx={styles.subtitle}>
-            powered by web3
+            powered by <Icon size={45} as={PolygonLogo} />
           </Text>
         </Flex>
       </Flex>
@@ -71,7 +72,7 @@ const styles = {
       ${theme.colors.white},
       ${theme.colors.white},
       ${theme.colors.white},
-      ${theme.colors.white},
+      ${theme.colors.bountyBrownLight},
       ${theme.colors.bountyBrownLight},
       ${theme.colors.white}
     )`,

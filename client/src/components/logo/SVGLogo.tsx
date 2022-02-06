@@ -5,7 +5,6 @@ type Props = { size: number; sx?: CSSObject };
 type SVGProps = { size: number };
 
 const SVG = ({ size }: SVGProps) => {
-  console.log("jj", size);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
