@@ -51,7 +51,9 @@ export async function getVotingStatus(contract: any): Promise<VotingState> {
   };
 }
 
-export async function getBountyStatus(contract: any): Promise<BountyState> {
+export async function getBountyStatus(
+  contract: any
+): Promise<BountyBlockState> {
   const result = await contract.methods.bountyStatus().call();
   console.log("getBountyStatus", result);
   const [totalContribution, isPrecipitatingEvent, status] = result;
@@ -80,6 +82,20 @@ export async function joinBounty(contract: any, stake: string, account: any) {
     value: web3.utils.toBN(stake),
   });
   console.log("joinBounty", result);
+  return result;
+}
+
+export async function negotiateLeave(contract: any, account: any) {
+  const result = await contract.methods.negotiateLeave().send({
+    from: account,
+  });
+  console.log("negotiateLeave", result);
+  return result;
+}
+
+export async function canRejoinTreasury(contract: any, account: any) {
+  const result = await contract.methods.canRejoinTreasury(account).call();
+  console.log("canRejoinTreasury", result);
   return result;
 }
 

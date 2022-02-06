@@ -7,10 +7,16 @@ import {
 } from "graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 import Bounty, { BountyStatus } from "../models/Bounty.model";
-import Negotiation from "../models/Negotiation.model";
+import Negotiation, { NegotiationStatus } from "../models/Negotiation.model";
+import User from "../models/User.model";
+import Web3PublicKey from "../models/Web3PublicKey.model";
 import logger from "../utils/logger";
-import { precipitatingEvent } from "../utils/smart_contracts/toolbox/bounty";
-import { NegotiationType } from "./types";
+import {
+  negotiateBounty,
+  negotiateRejoin,
+  precipitatingEvent,
+} from "../utils/smart_contracts/toolbox/bounty";
+import { BountyType, NegotiationType } from "./types";
 
 const NegotiationQueries = {
   negotiation: {
@@ -49,7 +55,9 @@ const NegotiationQueries = {
       },
     },
     resolve: async (parent, args, ctx, info) => {
-      return await Negotiation.findOne({ where: { bounty_id: args.id } });
+      return await Negotiation.findOne({
+        where: { bounty_id: args.bounty_id },
+      });
     },
   },
 };
@@ -67,7 +75,7 @@ const NegotiationMutations = {
     },
     resolve: async (parent, args, ctx, info) => {
       const existing = await Negotiation.findOne({
-        where: { bounty_id: args.id },
+        where: { bounty_id: args.bounty_id },
       });
       if (existing) {
         return existing;
@@ -79,10 +87,34 @@ const NegotiationMutations = {
       const negotiation = await Negotiation.create({
         bounty_id: args.bounty_id,
         metadata: args.metadata,
+        status: NegotiationStatus.PROPOSED,
       });
       bounty.status = BountyStatus.NEGOTIATING;
+      bounty.block_metadata = {
+        ...bounty.block_metadata,
+        reservePrice: args.metadata.reservePrice,
+        timeLimit: args.metadata.timeLimit,
+      };
       await bounty.save();
+      await negotiateBounty(bounty.address, bounty.block_metadata);
+
       return negotiation;
+    },
+  },
+  rejoinBounty: {
+    type: BountyType,
+    args: {
+      bounty_id: {
+        type: new GraphQLNonNull(GraphQLString),
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      const bounty = await Bounty.findByPk(args.bounty_id);
+      const user = await User.findByPk(ctx.state.user.id, {
+        include: Web3PublicKey,
+      });
+      await negotiateRejoin(bounty.address, user.public_key.key);
+      return bounty;
     },
   },
 };

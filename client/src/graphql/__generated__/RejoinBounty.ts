@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: BountyDataFrag
+// GraphQL mutation operation: RejoinBounty
 // ====================================================
 
-export interface BountyDataFrag {
+export interface RejoinBounty_rejoinBounty_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -41,4 +41,36 @@ export interface BountyDataFrag {
    * Time in seconds the creator has to finish this when claimed
    */
   timeLimit: number;
+}
+
+export interface RejoinBounty_rejoinBounty {
+  __typename: "Bounty";
+  /**
+   * The blockchain metadata attached to this bounty
+   */
+  block_metadata: RejoinBounty_rejoinBounty_block_metadata;
+  /**
+   * The contract address for this bounty
+   */
+  address: string | null;
+  /**
+   * The metadata attached to this bounty
+   */
+  metadata: any;
+  /**
+   * The funder that initiated this bounty
+   */
+  initiator_id: string;
+  /**
+   * The creator who can claim this bounty
+   */
+  creator_id: string;
+}
+
+export interface RejoinBounty {
+  rejoinBounty: RejoinBounty_rejoinBounty | null;
+}
+
+export interface RejoinBountyVariables {
+  bounty_id: string;
 }

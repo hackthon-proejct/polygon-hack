@@ -14,13 +14,13 @@ export interface LookupTwitterHandle_lookupTwitterHandle_board_bounties_block_me
    */
   creatorWallet: string | null;
   /**
-   * 1000000000 = 1 gwei, the price at which this bounty is no longer joinable
+   * The price in ETH at which this bounty is no longer joinable
    */
-  maxValue: string;
+  maxValue: number;
   /**
-   * 1000000000 = 1 gwei, the price this bounty must be at to be claimable
+   * The price in ETH this bounty must be at to be claimable
    */
-  reservePrice: string;
+  reservePrice: number;
   /**
    * [20,20] if 20% of the funds are disbursed in m0 and m1
    */

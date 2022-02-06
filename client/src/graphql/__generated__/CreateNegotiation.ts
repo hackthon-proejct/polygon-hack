@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: PublishBounty
+// GraphQL mutation operation: CreateNegotiation
 // ====================================================
 
-export interface PublishBounty_publishBounty_block_metadata {
+export interface CreateNegotiation_createNegotiation_bounty_block_metadata {
   __typename: "BountyData";
   /**
    * The wallet address of the creator, assigned on publish
@@ -43,23 +43,46 @@ export interface PublishBounty_publishBounty_block_metadata {
   timeLimit: number;
 }
 
-export interface PublishBounty_publishBounty {
+export interface CreateNegotiation_createNegotiation_bounty {
   __typename: "Bounty";
-  id: string;
   /**
    * The blockchain metadata attached to this bounty
    */
-  block_metadata: PublishBounty_publishBounty_block_metadata;
+  block_metadata: CreateNegotiation_createNegotiation_bounty_block_metadata;
+  /**
+   * The contract address for this bounty
+   */
+  address: string | null;
   /**
    * The metadata attached to this bounty
    */
   metadata: any;
+  /**
+   * The funder that initiated this bounty
+   */
+  initiator_id: string;
+  /**
+   * The creator who can claim this bounty
+   */
+  creator_id: string;
 }
 
-export interface PublishBounty {
-  publishBounty: PublishBounty_publishBounty | null;
-}
-
-export interface PublishBountyVariables {
+export interface CreateNegotiation_createNegotiation {
+  __typename: "Negotiation";
   id: string;
+  /**
+   * The metadata of this negotiation
+   */
+  metadata: any | null;
+  status: number;
+  bounty: CreateNegotiation_createNegotiation_bounty;
+}
+
+export interface CreateNegotiation {
+  createNegotiation: CreateNegotiation_createNegotiation | null;
+}
+
+export interface CreateNegotiationVariables {
+  bounty_id: string;
+  metadata: any;
 }

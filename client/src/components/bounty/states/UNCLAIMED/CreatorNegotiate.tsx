@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import {
   Text,
   Flex,
@@ -10,9 +11,15 @@ import {
   useRadioGroup,
 } from "@chakra-ui/react";
 import { RadioCard } from "@components/RadioCard";
+import { CREATE_NEGOTIATION } from "@gql/negotiations.graphql";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import {
+  CreateNegotiation,
+  CreateNegotiationVariables,
+} from "@gql/__generated__/CreateNegotiation";
+import {
   bountyDeliverableOptions,
+  getSecondsFromTimeString,
   getTimeStringFromSeconds,
 } from "@utils/bounty";
 import { TimeSecondsType, TimeStringType } from "@utils/types";
@@ -27,6 +34,11 @@ export default function Creator({ bounty }: Props) {
   const [deliverable, setDeliverable] = useState<TimeStringType>(
     currentTimeOnBlockcchain
   );
+
+  const [createNegotiation, { loading, error }] = useMutation<
+    CreateNegotiation,
+    CreateNegotiationVariables
+  >(CREATE_NEGOTIATION);
   const [description, setDescription] = useState("");
   const [bountyMin, setBountyMin] = useState(0);
   const {
@@ -80,6 +92,7 @@ export default function Creator({ bounty }: Props) {
       </FormLabel>
       <Input
         id="bountyMin"
+        type="number"
         placeholder="Mininum bounty size"
         value={bountyMin}
         onChange={(e) => {
@@ -88,8 +101,17 @@ export default function Creator({ bounty }: Props) {
       />
 
       <Button
-        onClick={() => {
-          alert("Should submit negotiation and trigger neg");
+        onClick={async () => {
+          await createNegotiation({
+            variables: {
+              bounty_id: bounty.id,
+              metadata: {
+                reservePrice: bountyMin,
+                description: description,
+                timeLimit: getSecondsFromTimeString(deliverable),
+              },
+            },
+          });
         }}
       >
         Submit

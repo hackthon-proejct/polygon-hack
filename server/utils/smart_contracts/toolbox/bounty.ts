@@ -65,10 +65,23 @@ export async function claimBounty(address: string) {
 export async function negotiateBounty(address: string, data: BountyData) {
   logger.info("negotiateBounty: ", { address, data });
   const Contract = bountyContract(address);
-  const transaction = Contract.methods.negotiate(...bountyDataToArgs(data));
+  const args = bountyDataToArgs(data);
+  args.splice(0, 1);
+  args.splice(6, 1);
+  const transaction = Contract.methods.negotiate(...args);
 
   const result = await sendTxAndLog(transaction, account);
   logger.info("negotiateBounty: ", { result });
+  return result.status;
+}
+
+export async function negotiateRejoin(address: string, userAddress: string) {
+  logger.info("negotiateRejoin: ", { address, userAddress });
+  const Contract = bountyContract(address);
+  const transaction = Contract.methods.negotiateRejoin(userAddress);
+
+  const result = await sendTxAndLog(transaction, account);
+  logger.info("negotiateRejoin: ", { result });
   return result.status;
 }
 
@@ -82,7 +95,17 @@ export async function precipitatingEvent(address: string, toggle: boolean) {
   return result.status;
 }
 
-function bountyDataToArgs(data: BountyData) {
+export async function canRejoinTreasury(address: string, walletAddr: string) {
+  logger.info("canRejoinTreasury: ", { address, walletAddr });
+  const Contract = bountyContract(address);
+  const transaction = Contract.methods.canRejoinTreasury(walletAddr);
+
+  const result = await sendTxAndLog(transaction, account);
+  logger.info("canRejoinTreasury: ", { result });
+  return result.status;
+}
+
+function bountyDataToArgs(data: BountyData): any[] {
   const maxValue = web3.utils.toWei(
     web3.utils.toBN(data.maxValue * 10 ** 9),
     "gwei"
