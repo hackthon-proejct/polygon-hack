@@ -48,9 +48,11 @@ export const BOUNTIES = gql`
   query Bounties {
     bounties {
       id
+      status
       block_metadata {
         ...BountyDataFrag
       }
+      address
       metadata
       initiator_id
       creator_id

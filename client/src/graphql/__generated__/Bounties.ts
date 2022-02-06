@@ -62,6 +62,11 @@ export interface Bounties_bounties {
    * The creator who can claim this bounty
    */
   creator_id: string;
+  status: number;
+  /**
+   * The contract address for this bounty
+   */
+  address: string | null;
 }
 
 export interface Bounties {

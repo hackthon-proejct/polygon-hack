@@ -22,6 +22,10 @@ const theme = extendTheme({
     bountyBrownDark: "#5a2707",
     bountyBrownLight: "#f7dec9",
   },
+  fonts: {
+    body: "Josefin Sans, sans-serif",
+    heading: "Josefin Sans, sans-serif",
+  },
 });
 
 export default theme;

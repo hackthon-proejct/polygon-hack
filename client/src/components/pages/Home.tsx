@@ -1,31 +1,45 @@
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
 import theme from "src/theme";
+import Bounties from "./home/Bounties";
+import Creators from "./home/Creators";
 
 type Props = {};
 
 function Home() {
   return (
-    <Flex direction="column" sx={styles.container}>
-      <Flex direction="column" sx={styles.hero}>
-        <Heading sx={styles.title}>bounty</Heading>
-        <Text color="white" sx={styles.subtitle}>
-          transform ideas into reality,
-        </Text>
-        <Text color="white" sx={styles.subtitle}>
-          inverting the crowdfunding model,
-        </Text>
-        <Text color="white" sx={styles.subtitle}>
-          powered by web3
-        </Text>
+    <VStack sx={styles.container}>
+      <Flex direction="column" sx={styles.heroContainer}>
+        <Flex direction="column" sx={styles.hero}>
+          <Heading sx={styles.title}>bounty</Heading>
+          <Text color="white" sx={styles.subtitle}>
+            transform ideas into reality,
+          </Text>
+          <Text color="white" sx={styles.subtitle}>
+            inverting the crowdfunding model,
+          </Text>
+          <Text color="white" sx={styles.subtitle}>
+            powered by web3
+          </Text>
+        </Flex>
       </Flex>
-    </Flex>
+      <VStack sx={styles.content}>
+        <Heading sx={styles.featuredTitle}>Featured Content</Heading>
+        <HStack spacing="80px" alignItems="flex-start" sx={styles.featured}>
+          <Bounties />
+          <Creators />
+        </HStack>
+      </VStack>
+    </VStack>
   );
 }
 
 const styles = {
   container: {
+    width: "100%",
+  },
+  heroContainer: {
     width: "100%",
     height: "100vh",
     alignItems: "center",
@@ -38,7 +52,7 @@ const styles = {
     ${theme.colors.bountyGreenLight},
     ${theme.colors.bountyGreen},
     ${theme.colors.bountyGreen},
-    ${theme.colors.bountyGreenLighter})`,
+    ${theme.colors.bountyGreenLightest})`,
     // background: "radial-gradient(#FFF 0%, #7DC794 60%)",
   },
   hero: {
@@ -82,6 +96,12 @@ const styles = {
       lg: "40px",
     },
   },
+  content: {
+    minHeight: "100vh",
+    paddingTop: "120px",
+  },
+  featuredTitle: { marginBottom: "60px" },
+  featured: {},
 };
 
 export default Home;
