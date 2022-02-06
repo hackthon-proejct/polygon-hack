@@ -31,6 +31,7 @@ abstract contract Treasury {
     bool isPrecipitatingEvent; // IFF true, withdrawals can take place
 
     uint8 public votingOn; // the current milestone that votes are tallied towards
+    uint8 public status; // [UNCLAIMED, NEGOTIATING, CLAIMED, WAITING_FOR_MINT, SUCCESS, FAILURE]
 
     error IncorrectPercentages();
     error Unauthorized();
@@ -90,6 +91,8 @@ abstract contract Treasury {
         emit Debug("nextMilestone");
         if (votingOn < bonusTargets.length - 1) {
             votingOn += 1;
+        } else {
+            status = 3; // WAITING FOR MINT
         }
         return true;
     }
@@ -174,7 +177,6 @@ contract Bounty is Treasury, IERC721Receiver {
     uint256 public currentYeas; // yea vote weight for the current bonus
     uint256 public currentNays; // nay vote weight for the current bonus
     uint32 public currentVotesCast; // number of discrete votes cast for the current bonus
-    uint8 public status; // [UNCLAIMED, NEGOTIATING, CLAIMED, SUCCESS, FAILURE]
 
     error VoteOver();
     error AlreadyVoted();
@@ -465,7 +467,7 @@ contract Bounty is Treasury, IERC721Receiver {
             creatorWallet.transfer(disbursement);
             // adjust all existing balances downward
             adjustBalances(disbursement);
-            status = 3;
+            status = 4; // SUCCESS
         }
         return this.onERC721Received.selector;
     }

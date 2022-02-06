@@ -21,8 +21,8 @@ import Creator from "../UNCLAIMED/CreatorNegotiate";
 import CreatorSubmit from "./CreatorSubmit";
 import FunderVote from "./FunderVote";
 
-type Props = { bounty: BountyQuery_bounty };
-export default function BountyDraft({ bounty }: Props) {
+type Props = { bounty: BountyQuery_bounty; readyToMint?: boolean };
+export default function BountyDraft({ bounty, readyToMint }: Props) {
   const loggedInUserId = useAppSelector(selectUserId);
   const [equity, setEquity] = useState<string>();
   const [votingState, setVotingState] = useState<VotingState | null>(null);
@@ -65,7 +65,9 @@ export default function BountyDraft({ bounty }: Props) {
     bounty.address != null && equity != null && votingState != null;
   let shouldShowFunderJoin = bounty.address != null && equity == null;
 
-  return (
+  return readyToMint ? (
+    <div>READY TO MINT</div>
+  ) : (
     <Box>
       {isCreator && votingState ? (
         <CreatorSubmit

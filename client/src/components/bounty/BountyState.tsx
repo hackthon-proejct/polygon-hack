@@ -11,26 +11,23 @@ import { BountyBlockState } from "@utils/bounty";
 type Props = { bounty: BountyQuery_bounty; blockState?: BountyBlockState };
 
 export default function BountyState({ bounty, blockState }: Props) {
-  switch (bounty.status) {
-    case BountyStatus.DRAFT:
-      // return <BountyUnclaimed bounty={bounty} />;
-      // return <BountyNegotiating bounty={bounty} />;
-      //   return <BountyClaimed bounty={bounty} />;
-      // return <BountySucceeded bounty={bounty} />;
-      return <BountyDraft bounty={bounty} />;
-    case BountyStatus.UNCLAIMED:
-      return <BountyUnclaimed bounty={bounty} />;
-    case BountyStatus.NEGOTIATING:
-      return blockState?.status === "2" ? (
-        <BountyClaimed bounty={bounty} />
-      ) : (
-        <BountyNegotiating bounty={bounty} />
-      );
-    case BountyStatus.CLAIMED:
+  switch (blockState?.status) {
+    case "1":
+      return <BountyNegotiating bounty={bounty} />;
+    case "2":
       return <BountyClaimed bounty={bounty} />;
-    case BountyStatus.SUCCEEDED:
+    case "3":
+      return <BountyClaimed bounty={bounty} />;
+    case "4":
       return <BountySucceeded bounty={bounty} />;
     default:
-      return null;
+      switch (bounty.status) {
+        case BountyStatus.DRAFT:
+          return <BountyDraft bounty={bounty} />;
+        case BountyStatus.UNCLAIMED:
+          return <BountyUnclaimed bounty={bounty} />;
+        default:
+          return null;
+      }
   }
 }

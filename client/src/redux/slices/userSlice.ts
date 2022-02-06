@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState, AppThunk } from "scripts/redux/store";
+import { RootState, AppThunk } from "../store";
 
 export interface UserState {
   address: string;
