@@ -10,7 +10,7 @@ export function setJwtHeaderOnLogin(ctx: RouterContext, user: User) {
   ctx.cookies.set("auth_token", newToken, {
     maxAge: 86400000 * 30,
     overwrite: true,
-    httpOnly: true,
+    httpOnly: false,
     secure: config.app.IS_PROD,
     sameSite: config.app.IS_PROD ? "none" : "lax",
     path: "/",

@@ -12,6 +12,8 @@ const axiosClient = axios.create({
   },
   withCredentials: true,
 });
+axios.defaults.withCredentials = true;
+
 if (!IS_SERVER) {
   loadJWT();
 }
