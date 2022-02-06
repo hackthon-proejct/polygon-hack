@@ -82,7 +82,7 @@ export default function BountyJoin({ address, hideTitle = false }: Props) {
         htmlFor="bounty-joinContribution"
         fontSize="24px"
         pb="12px"
-        textAlign={hideTitle ? "center" : "flex-start"}
+        textAlign={hideTitle ? "center" : "left"}
       >
         {Number(equity) > 0 ? (
           <>
