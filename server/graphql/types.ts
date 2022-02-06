@@ -26,6 +26,15 @@ export const BountyData = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLFloat),
       description: "The price in ETH this bounty must be at to be claimable",
     },
+    pctCreatorInitialDisbursement: {
+      type: GraphQLInt,
+      description:
+        "The percentage the creator will receive upon claiming this bounty",
+    },
+    pctCreatorFinalDisbursement: {
+      type: GraphQLInt,
+      description: "The percentage the creator will receive upon minting",
+    },
     bonusTargets: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInt))),
       description: "[20,20] if 20% of the funds are disbursed in m0 and m1",
@@ -180,9 +189,6 @@ export const SubmissionType = new GraphQLObjectType({
   fields: {
     metadata: {
       type: SubmissionMetadata,
-    },
-    milestone: {
-      type: new GraphQLNonNull(GraphQLInt),
     },
     bounty: {
       type: new GraphQLNonNull(BountyType),

@@ -60,7 +60,7 @@ export default class Bounty extends Model {
   block_metadata: BountyData;
 
   @Column(DataType.JSON)
-  metadata: BountyData;
+  metadata: any;
 
   @Column(DataType.STRING)
   address: string;

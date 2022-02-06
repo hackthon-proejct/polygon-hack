@@ -71,7 +71,8 @@ authRouter.post("/create", async (ctx, next) => {
   }
 });
 authRouter.post("/twitter/merge", async (ctx, next) => {
-  const { handle } = ctx.request.body;
+  const { handle, image_url } = ctx.request.body;
+  const largeImgUrl = image_url.replace("_normal.jpg", ".jpg");
   let maybeProfile = await Profile.findOne({
     where: {
       twitter_handle: handle,
@@ -84,15 +85,21 @@ authRouter.post("/twitter/merge", async (ctx, next) => {
     if (user.profile) {
       maybeProfile = user.profile;
       maybeProfile.twitter_handle = handle;
+      maybeProfile.image_url = largeImgUrl;
       await maybeProfile.save();
     } else {
       maybeProfile = await Profile.create({
         user_id: ctx.state.user.id,
         twitter_handle: handle,
+        image_url: largeImgUrl,
       });
     }
   } else if (!maybeProfile.user_id) {
     maybeProfile.user_id = ctx.state.user.id;
+    maybeProfile.image_url = largeImgUrl;
+    await maybeProfile.save();
+  } else {
+    maybeProfile.image_url = largeImgUrl;
     await maybeProfile.save();
   }
   const board = await maybeProfile.$get("board");

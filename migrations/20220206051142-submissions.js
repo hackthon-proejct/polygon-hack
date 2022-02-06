@@ -16,7 +16,6 @@ module.exports = {
       },
       metadata: Sequelize.DataTypes.JSON,
       status: Sequelize.DataTypes.INTEGER,
-      milestone: Sequelize.DataTypes.INTEGER,
       bounty_id: {
         type: Sequelize.DataTypes.UUID,
         references: {

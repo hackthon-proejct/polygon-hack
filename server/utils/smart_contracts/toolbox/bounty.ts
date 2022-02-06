@@ -65,10 +65,9 @@ export async function claimBounty(address: string) {
 export async function negotiateBounty(address: string, data: BountyData) {
   logger.info("negotiateBounty: ", { address, data });
   const Contract = bountyContract(address);
-  const args = bountyDataToArgs(data);
-  args.splice(0, 1);
-  args.splice(6, 1);
-  const transaction = Contract.methods.negotiate(...args);
+  const transaction = Contract.methods.negotiate(
+    ...bountyDataToArgs(data, "negotiate")
+  );
 
   const result = await sendTxAndLog(transaction, account);
   logger.info("negotiateBounty: ", { result });
@@ -105,7 +104,10 @@ export async function canRejoinTreasury(address: string, walletAddr: string) {
   return result.status;
 }
 
-function bountyDataToArgs(data: BountyData): any[] {
+function bountyDataToArgs(
+  data: BountyData,
+  type: "create" | "negotiate" = "create"
+): any[] {
   const maxValue = web3.utils.toWei(
     web3.utils.toBN(data.maxValue * 10 ** 9),
     "gwei"
@@ -114,19 +116,30 @@ function bountyDataToArgs(data: BountyData): any[] {
     web3.utils.toBN(data.reservePrice * 10 ** 9),
     "gwei"
   );
-  return [
-    data.creatorWallet,
-    maxValue,
-    reservePrice,
-    data.bonusTargets,
-    data.bonusPctYeasNeeded,
-    data.bonusFailureThresholds,
-    data.mustBeClaimedTime,
-    data.timeLimit,
-  ];
+  return type === "create"
+    ? [
+        data.creatorWallet,
+        maxValue,
+        reservePrice,
+        data.pctCreatorInitialDisbursement,
+        data.pctCreatorFinalDisbursement,
+        data.bonusTargets,
+        data.bonusPctYeasNeeded,
+        data.bonusFailureThresholds,
+        data.mustBeClaimedTime,
+        data.timeLimit,
+      ]
+    : [
+        maxValue,
+        reservePrice,
+        data.bonusTargets,
+        data.bonusPctYeasNeeded,
+        data.bonusFailureThresholds,
+        data.timeLimit,
+      ];
 }
 
-async function sendTxAndLog(transaction: any, account: Account) {
+export async function sendTxAndLog(transaction: any, account: Account) {
   const tx = {
     from: account.address,
     to: transaction._parent._address,

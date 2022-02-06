@@ -94,6 +94,19 @@ const SubmissionMutations = {
       });
     },
   },
+  mintSubmission: {
+    type: SubmissionType,
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLString),
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      const submission = await Submission.findByPk(args.id);
+      await submission.mint();
+      return submission;
+    },
+  },
 };
 
 export { SubmissionQueries, SubmissionMutations };

@@ -17,7 +17,10 @@ passport.use(
       callbackURL: process.env.NEXT_TWITTER_CALLBACK_URL!,
     },
     (token: any, tokenSecret: any, profile: any, cb: any) => {
-      cb(null, profile.username);
+      cb(null, {
+        handle: profile.username,
+        image_url: profile.photos[0].value,
+      });
     }
   )
 );

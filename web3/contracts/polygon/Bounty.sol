@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 abstract contract Treasury {
     using SafeMath for uint256;
@@ -16,7 +17,11 @@ abstract contract Treasury {
     address payable[] public fans; // fan address to withdraw to, mirrors equity
     address payable public creatorWallet;
 
+    // NOTE: the below pcts MUST ADD UP TO 100 or the constructor will reject
+    uint8 pctCreatorInitialDisbursement;
+    uint8 pctCreatorFinalDisbursement;
     uint8[] public bonusTargets; // the payout percentages (out of 100) for bonus targets 0,1,2,..
+
     uint64[] public bonusDeadlines; // the time that bonus[i] expires defaulting to NO
     uint8[] public bonusPctYeasNeeded; // pct yeas needed to pass bonus[i]
     uint8[] public bonusFailures; // how many times bonus[i] has failed a vote
@@ -27,6 +32,7 @@ abstract contract Treasury {
 
     uint8 public votingOn; // the current milestone that votes are tallied towards
 
+    error IncorrectPercentages();
     error Unauthorized();
     error TooLate();
     error AlreadyPaid();
@@ -137,7 +143,7 @@ abstract contract Treasury {
     }
 
     function adjustBalances(uint256 disbursement)
-        private
+        internal
         returns (bool success)
     {
         emit Debug("adjustBalances");
@@ -155,7 +161,7 @@ abstract contract Treasury {
     event Debug(string indexed msg);
 }
 
-contract Bounty is Treasury {
+contract Bounty is Treasury, IERC721Receiver {
     using SafeMath for uint256;
 
     mapping(address => bool) votedThisRound; // whether this address has already voted
@@ -177,6 +183,8 @@ contract Bounty is Treasury {
         address payable _creatorWallet,
         uint256 _maxValue,
         uint256 _reservePrice,
+        uint8 _pctCreatorInitialDisbursement,
+        uint8 _pctCreatorFinalDisbursement,
         uint8[] memory _bonusTargets,
         uint8[] memory _bonusPctYeasNeeded,
         uint8[] memory _bonusFailureThresholds,
@@ -184,9 +192,19 @@ contract Bounty is Treasury {
         uint64 _timeLimit,
         address payable _owner
     ) {
+        uint8 sum = _pctCreatorInitialDisbursement +
+            _pctCreatorFinalDisbursement;
+        for (uint8 i = 0; i < _bonusTargets.length; i++) {
+            sum += _bonusTargets[i];
+        }
+        if (sum != 100) {
+            revert IncorrectPercentages();
+        }
         creatorWallet = _creatorWallet;
         maxValue = _maxValue;
         reservePrice = _reservePrice;
+        pctCreatorInitialDisbursement = _pctCreatorInitialDisbursement;
+        pctCreatorFinalDisbursement = _pctCreatorFinalDisbursement;
         bonusTargets = _bonusTargets;
         bonusPctYeasNeeded = _bonusPctYeasNeeded;
         bonusFailureThresholds = _bonusFailureThresholds;
@@ -234,9 +252,21 @@ contract Bounty is Treasury {
             revert MaxValueReached();
         }
         if (equity[msg.sender] == 0 && mustRejoinTreasury[msg.sender] == 0) {
+            // how much have other fans paid already? disburse this % from the new number
+            uint8 pctRemaining = 100;
+            if (fans.length > 0) {
+                pctRemaining = pctBalanceRemaining[fans[0]];
+            }
+            if (pctRemaining != 100) {
+                // disburse funds to creator immediately here
+                uint256 disbursement = totalContribution
+                    .mul(100 - pctRemaining)
+                    .div(100);
+                creatorWallet.transfer(disbursement);
+            }
             // fan not added yet
             fans.push(payable(msg.sender));
-            pctBalanceRemaining[msg.sender] = 100;
+            pctBalanceRemaining[msg.sender] = pctRemaining;
         }
         equity[msg.sender] += msg.value;
         totalContribution += msg.value;
@@ -383,7 +413,7 @@ contract Bounty is Treasury {
         return [reservePrice, totalContribution];
     }
 
-    // Sets initial state and sets the end time of this bounty according to config
+    // Async set initial state and sets the end time of this bounty according to config
     function claim() public onlyBy(owner) returns (bool success) {
         return claimInternal();
     }
@@ -396,6 +426,14 @@ contract Bounty is Treasury {
         endTime = uint64(block.timestamp + timeLimit);
         isPrecipitatingEvent = false;
         status = 2; // CLAIMED
+
+        uint256 disbursement = totalContribution
+            .mul(pctCreatorInitialDisbursement)
+            .div(100);
+        creatorWallet.transfer(disbursement);
+        // adjust all existing balances downward
+        adjustBalances(disbursement);
+
         return true;
     }
 
@@ -407,6 +445,25 @@ contract Bounty is Treasury {
             votedThisRound[fans[i]] = false;
         }
         return true;
+    }
+
+    function onERC721Received(
+        address _operator,
+        address,
+        uint256,
+        bytes memory
+    ) public virtual override returns (bytes4) {
+        if (_operator == owner) {
+            // COMPLETE THE BOUNTY HERE
+            uint256 disbursement = totalContribution
+                .mul(pctCreatorFinalDisbursement)
+                .div(100);
+            creatorWallet.transfer(disbursement);
+            // adjust all existing balances downward
+            adjustBalances(disbursement);
+            status = 3;
+        }
+        return this.onERC721Received.selector;
     }
 
     // _vote is false for nay, true for yea
