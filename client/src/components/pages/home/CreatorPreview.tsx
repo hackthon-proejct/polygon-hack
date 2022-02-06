@@ -25,7 +25,7 @@ export function CreatorPreview({ creator }: Props) {
       <Flex direction="column" sx={styles.metadata}>
         <NextLink href={`/${handle}`}>
           <Link>
-            <Text variant="previewTitle">@{handle}</Text>
+            <Text variant="creatorPreviewTitle">@{handle}</Text>
           </Link>
         </NextLink>
         <Flex direction="column" alignItems="flex-start" spacing={0}>
