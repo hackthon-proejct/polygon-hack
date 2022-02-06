@@ -6,8 +6,7 @@ import {
 } from "graphql";
 import Profile from "../models/Profile.model";
 import User from "../models/User.model";
-import { BoardType } from "./board";
-import { ProfileType } from "./types";
+import { ProfileType, BoardType } from "./types";
 
 const PublicKeyType = new GraphQLObjectType({
   name: "PublicKey",

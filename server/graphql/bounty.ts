@@ -161,4 +161,4 @@ const BountyMutations = {
   },
 };
 
-export { BountyType, BountyQueries, BountyMutations };
+export { BountyQueries, BountyMutations };

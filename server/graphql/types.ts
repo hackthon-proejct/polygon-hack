@@ -162,3 +162,33 @@ export const ProfileType = new GraphQLObjectType({
     },
   },
 });
+
+export const SubmissionMetadata = new GraphQLObjectType({
+  name: "SubmissionMetadata",
+  fields: {
+    image_url: {
+      type: GraphQLString,
+    },
+    milestone: {
+      type: GraphQLInt,
+    },
+  },
+});
+
+export const SubmissionType = new GraphQLObjectType({
+  name: "Submission",
+  fields: {
+    metadata: {
+      type: SubmissionMetadata,
+    },
+    milestone: {
+      type: new GraphQLNonNull(GraphQLInt),
+    },
+    bounty: {
+      type: new GraphQLNonNull(BountyType),
+      resolve: async (parent, args, ctx, info) => {
+        return await parent.$get("bounty");
+      },
+    },
+  },
+});

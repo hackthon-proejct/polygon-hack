@@ -121,9 +121,4 @@ const NegotiationMutations = {
 
 const NegotiationSubscriptions = {};
 
-export {
-  NegotiationType,
-  NegotiationQueries,
-  NegotiationMutations,
-  NegotiationSubscriptions,
-};
+export { NegotiationQueries, NegotiationMutations, NegotiationSubscriptions };

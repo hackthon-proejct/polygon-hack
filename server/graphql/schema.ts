@@ -3,6 +3,7 @@ import { BoardMutations, BoardQueries, BoardSubscriptions } from "./board";
 import { BountyMutations, BountyQueries } from "./bounty";
 import { UserQueries, UserMutations } from "./user";
 import { NegotiationQueries, NegotiationMutations } from "./negotiation";
+import { SubmissionMutations, SubmissionQueries } from "./submission";
 
 const rootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -10,7 +11,8 @@ const rootQuery = new GraphQLObjectType({
     BoardQueries,
     BountyQueries,
     UserQueries,
-    NegotiationQueries
+    NegotiationQueries,
+    SubmissionQueries
   ),
 });
 const rootMutation = new GraphQLObjectType({
@@ -19,7 +21,8 @@ const rootMutation = new GraphQLObjectType({
     BoardMutations,
     BountyMutations,
     UserMutations,
-    NegotiationMutations
+    NegotiationMutations,
+    SubmissionMutations
   ),
 });
 

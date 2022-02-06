@@ -9,8 +9,7 @@ import {
 import { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
 import logger from "../utils/logger";
-import { BountyType } from "./bounty";
-import { BoardType } from "./types";
+import { BoardType, BountyType } from "./types";
 
 const BoardQueries = {
   board: {
@@ -47,4 +46,4 @@ const BoardMutations = {};
 
 const BoardSubscriptions = {};
 
-export { BoardType, BoardQueries, BoardMutations, BoardSubscriptions };
+export { BoardQueries, BoardMutations, BoardSubscriptions };
