@@ -10,7 +10,7 @@ import Home from "@components/pages/Home";
 
 const HomePage: NextPageWithLayout = () => {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Bounty</title>
         <meta name="description" content="Crowdfunding" />

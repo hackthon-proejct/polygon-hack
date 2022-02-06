@@ -1,6 +1,7 @@
 import { Flex, Heading, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
+import theme from "src/theme";
 import styles from "../../styles/Home.module.css";
 
 type Props = {};
@@ -8,16 +9,35 @@ type Props = {};
 function Home() {
   return (
     <Flex direction="column" sx={styles.container}>
-      <Heading sx={styles.title}>bounty</Heading>
-      <Text sx={styles.subtitle}>transform ideas into reality,</Text>
-      <Text sx={styles.subtitle}>inverting the crowdfunding model,</Text>
-      <Text sx={styles.subtitle}>powered by web3</Text>
+      <Flex direction="column" sx={styles.hero}>
+        <Heading color="white" sx={styles.title}>
+          bounty
+        </Heading>
+        <Text color="white" sx={styles.subtitle}>
+          transform ideas into reality,
+        </Text>
+        <Text color="white" sx={styles.subtitle}>
+          inverting the crowdfunding model,
+        </Text>
+        <Text color="white" sx={styles.subtitle}>
+          powered by web3
+        </Text>
+      </Flex>
     </Flex>
   );
 }
 
 const styles = {
   container: {
+    width: "100%",
+    height: "100vh",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme.colors.bountyGreen,
+    background: `linear-gradient(${theme.colors.bountyGreen},${theme.colors.bountyGreen}, ${theme.colors.bountyGreen}, ${theme.colors.bountyGreen}, ${theme.colors.white})`,
+    // background: "radial-gradient(#FFF 0%, #7DC794 60%)",
+  },
+  hero: {
     maxWidth: {
       sm: "350px",
       md: "600px",
@@ -36,6 +56,7 @@ const styles = {
   },
   subtitle: {
     fontFamily: '"Josefin Sans", sans-serif',
+    fontWeight: 500,
     fontSize: {
       sm: "24px",
       md: "32px",

@@ -1,5 +1,6 @@
 import { Flex, CSSObject, Spacer } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
+import theme from "src/theme";
 import Logo from "./logo/Logo";
 import MetaMaskButton from "./MetamaskButton";
 
@@ -30,6 +31,7 @@ const styles = {
       sm: "52px",
       md: "80px",
     },
+    backgroundColor: theme.colors.white,
   },
 };
 
