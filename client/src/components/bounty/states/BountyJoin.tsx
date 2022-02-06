@@ -1,4 +1,16 @@
-import { Box, Button, Flex, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Button,
+  Flex,
+  FormLabel,
+  Heading,
+  Input,
+  VStack,
+  HStack,
+  InputGroup,
+  InputRightAddon,
+} from "@chakra-ui/react";
 import { web3 } from "@utils/constants";
 import bountyContract, { joinBounty } from "@utils/bounty";
 import { useState } from "react";
@@ -28,24 +40,33 @@ export default function BountyJoin({ address }: Props) {
   // const hasJoinedBounty = userId === bounty?.initiator_id;
 
   return (
-    <Flex direction="column">
-      <Box>
-        <FormLabel>Contribution</FormLabel>
+    <VStack direction="column" mt="36px" spacing="12px">
+      <Heading my="12px">Join this bounty</Heading>
+      <FormLabel htmlFor="bounty-joinContribution" fontSize="24px" pb="12px">
+        Interested? Set up a contribution below so you don't miss out on the
+        action!
+      </FormLabel>
+      <HStack alignItems="center" pb="12px">
         <Input
+          size="lg"
+          id="bounty-joinContribution"
+          width="300px"
           type="number"
-          value={contribution}
+          value={contribution || ""}
+          textAlign="right"
           onChange={(e) => {
             setContribution(e.currentTarget.valueAsNumber);
           }}
-          placeholder="0.1ETH"
+          placeholder="0.1"
         />
-      </Box>
+        <Text fontSize="24px">MATIC</Text>
+      </HStack>
       <Button
         isDisabled={contribution === 0}
         onClick={() => join(contribution)}
       >
         Join Bounty
       </Button>
-    </Flex>
+    </VStack>
   );
 }
