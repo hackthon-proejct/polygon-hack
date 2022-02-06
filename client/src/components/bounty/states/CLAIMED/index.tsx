@@ -8,16 +8,12 @@ import { web3 } from "@utils/constants";
 import { useEffect, useState } from "react";
 import BountyJoin from "../BountyJoin";
 import Creator from "../UNCLAIMED/CreatorNegotiate";
+import CreatorSubmit from "./CreatorSubmit";
 import FunderVote from "./FunderVote";
 
 type Props = { bounty: BountyQuery_bounty };
 export default function BountyDraft({ bounty }: Props) {
   const loggedInUserId = useAppSelector(selectUserId);
-  // TODO: for testing only
-  const isInitiator = true;
-  // const isCreator = bounty.initator_id === loggedInUserId;
-  //
-  let shouldShowPublish = isInitiator && !bounty.address;
   const [equity, setEquity] = useState<string>("0");
   const [votingState, setVotingState] = useState<VotingState | null>(null);
 
@@ -37,10 +33,24 @@ export default function BountyDraft({ bounty }: Props) {
       equity(contract);
     }
   }, []);
+
+  let isCreator = bounty.creator_id === loggedInUserId;
+  let shouldShowFunderVote =
+    bounty.address != null && equity != null && votingState != null;
+  let shouldShowFunderJoin = bounty.address != null && equity == null;
+  // TODO: for testing only
+  // isCreator = false;
+  // shouldShowFunderVote = false;
+  // shouldShowFunderJoin = true;
+
   return (
     <Box>
-      {bounty.address && equity && votingState ? (
-        <FunderVote address={bounty.address} votingState={votingState} />
+      {isCreator ? (
+        <CreatorSubmit bounty={bounty} />
+      ) : shouldShowFunderVote ? (
+        <FunderVote address={bounty.address!} votingState={votingState!} />
+      ) : shouldShowFunderJoin ? (
+        <BountyJoin address={bounty.address} />
       ) : null}
     </Box>
   );
