@@ -7,6 +7,10 @@ const Button = {
   sizes: {},
   // Two variants: outline and solid
   variants: {
+    reject: {
+      bg: "red.400",
+      color: "white",
+    },
     outline: {
       // border: "2px solid",
       // borderColor: "purple.500",

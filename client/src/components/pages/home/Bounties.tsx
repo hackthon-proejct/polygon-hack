@@ -2,7 +2,15 @@ import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
 
-import { Heading, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  SimpleGrid,
+  Text,
+  VStack,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import { BountyPreview } from "@components/bounty/BountyPreview";
 import { LOOKUP_TWITTER_HANDLE } from "@gql/users.graphql";
 import {
@@ -25,15 +33,15 @@ function Bounties() {
     <VStack alignItems="flex-start">
       <Heading alignSelf="center">Bounties</Heading>
       {bounties?.length ? (
-        <Wrap sx={styles.bountyWrap} spacing="30px">
+        <SimpleGrid sx={styles.bountyWrap} columns={3} spacing="30px">
           {bounties.map((bounty) =>
             bounty ? (
-              <WrapItem key={bounty.id}>
+              <Box key={bounty.id}>
                 <BountyPreview bounty={bounty} />
-              </WrapItem>
+              </Box>
             ) : null
           )}
-        </Wrap>
+        </SimpleGrid>
       ) : null}
     </VStack>
   );

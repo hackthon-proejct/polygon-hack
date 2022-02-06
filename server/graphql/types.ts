@@ -89,6 +89,7 @@ export const BountyType = new GraphQLObjectType({
         return parent.user_id;
       },
     },
+    // todo: cleanup
     creator_id: {
       type: new GraphQLNonNull(GraphQLString),
       description: "The creator who can claim this bounty",
@@ -100,6 +101,20 @@ export const BountyType = new GraphQLObjectType({
           },
         });
         return profile.user_id;
+      },
+    },
+    // todo: cleanup
+    creator_handle: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "The twitter handle of the creator",
+      resolve: async (parent, args, ctx, info) => {
+        const board = await parent.$get("board");
+        const profile = await Profile.findOne({
+          where: {
+            id: board.profile_id,
+          },
+        });
+        return profile.twitter_handle;
       },
     },
   },

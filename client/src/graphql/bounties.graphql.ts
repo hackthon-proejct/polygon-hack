@@ -24,6 +24,7 @@ export const BOUNTY = gql`
       metadata
       initiator_id
       creator_id
+      creator_handle
     }
   }
   ${BountyData}
@@ -39,6 +40,7 @@ export const BOUNTIES_BY_USER = gql`
       metadata
       initiator_id
       creator_id
+      creator_handle
     }
   }
   ${BountyData}
@@ -56,6 +58,7 @@ export const BOUNTIES = gql`
       metadata
       initiator_id
       creator_id
+      creator_handle
     }
   }
   ${BountyData}

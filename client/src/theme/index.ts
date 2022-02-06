@@ -6,19 +6,41 @@ const Text = {
   baseStyle: {},
   // Two variants: outline and solid
   variants: {
-    previewTitle: {
+    creatorPreviewTitle: {
       fontSize: "22px",
       overflow: "hidden",
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
       textAlign: "center",
       margin: "8px 0",
+      maxWidth: "100%",
       // border: "2px solid",
       // borderColor: "purple.500",
       // color: "purple.500",
     },
-    previewSubtitle: {
+    creatorPreviewSubtitle: {
       fontSize: "16px",
+      // TODO: hardcoded to webkit
+      display: "-webkit-box",
+      WebkitLineClamp: "3",
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden",
+      marginTop: 0,
+    },
+    bountyPreviewTitle: {
+      fontSize: "18px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      textAlign: "center",
+      margin: "0 0 8px 0",
+      maxWidth: "100%",
+      // border: "2px solid",
+      // borderColor: "purple.500",
+      // color: "purple.500",
+    },
+    bountyPreviewSubtitle: {
+      fontSize: "14px",
       // TODO: hardcoded to webkit
       display: "-webkit-box",
       WebkitLineClamp: "3",

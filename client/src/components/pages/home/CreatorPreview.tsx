@@ -29,8 +29,12 @@ export function CreatorPreview({ creator }: Props) {
           </Link>
         </NextLink>
         <Flex direction="column" alignItems="flex-start" spacing={0}>
-          <Text variant="previewSubtitle">{successes} successful bounties</Text>
-          <Text variant="previewSubtitle">{ongoing} ongoing bounties</Text>
+          <Text variant="creatorPreviewSubtitle">
+            {successes} successful bounties
+          </Text>
+          <Text variant="creatorPreviewSubtitle">
+            {ongoing} ongoing bounties
+          </Text>
         </Flex>
       </Flex>
     </Flex>

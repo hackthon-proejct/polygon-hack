@@ -62,6 +62,10 @@ export interface BountiesByUser_bounties_by_user {
    * The creator who can claim this bounty
    */
   creator_id: string;
+  /**
+   * The twitter handle of the creator
+   */
+  creator_handle: string;
 }
 
 export interface BountiesByUser {
