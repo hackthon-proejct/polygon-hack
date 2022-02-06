@@ -77,7 +77,8 @@ export default function FunderVote(props: Props) {
         </>
       ) : (
         <Text textAlign="center" fontSize="24px" pb="12px">
-          Waiting for @{bounty.creator_handle} to submit for this milestone
+          Waiting for @{bounty.creator_handle} to submit for{" "}
+          <b>milestone {votingState.votingOn}</b>
         </Text>
       )}
 

@@ -17,7 +17,7 @@ export default function BountyState({ bounty, blockState }: Props) {
     case "2":
       return <BountyClaimed bounty={bounty} />;
     case "3":
-      return <BountyClaimed bounty={bounty} />;
+      return <BountyClaimed bounty={bounty} readyToMint={true} />;
     case "4":
       return <BountySucceeded bounty={bounty} />;
     default:
