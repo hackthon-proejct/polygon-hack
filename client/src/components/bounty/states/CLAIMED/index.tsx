@@ -39,8 +39,8 @@ export default function BountyDraft({ bounty }: Props) {
     bounty.address != null && equity != null && votingState != null;
   let shouldShowFunderJoin = bounty.address != null && equity == null;
   // TODO: for testing only
-  // isCreator = false;
-  // shouldShowFunderVote = false;
+  isCreator = false;
+  shouldShowFunderVote = true;
   // shouldShowFunderJoin = true;
 
   return (
@@ -48,7 +48,7 @@ export default function BountyDraft({ bounty }: Props) {
       {isCreator ? (
         <CreatorSubmit bounty={bounty} />
       ) : shouldShowFunderVote ? (
-        <FunderVote address={bounty.address!} votingState={votingState!} />
+        <FunderVote bounty={bounty} votingState={votingState!} />
       ) : shouldShowFunderJoin ? (
         <BountyJoin address={bounty.address} />
       ) : null}

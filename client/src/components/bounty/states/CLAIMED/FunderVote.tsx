@@ -3,22 +3,36 @@ import {
   Button,
   Flex,
   FormLabel,
+  Heading,
   HStack,
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+  Spacer,
   Text,
   useRadioGroup,
+  VStack,
 } from "@chakra-ui/react";
 import { web3 } from "@utils/constants";
 import bountyContract, { voteBounty, VotingState } from "@utils/bounty";
 import { useState } from "react";
 import { RadioCard } from "@components/RadioCard";
+import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
+import theme from "src/theme";
 
-type Props = { votingState: VotingState; address: string };
+type Props = {
+  votingState: VotingState;
+  bounty: BountyQuery_bounty;
+};
 
 export default function FunderVote(props: Props) {
-  const [yea, setYea] = useState<number>(0);
+  const [yea, setYea] = useState<number>(-1);
+  let { votingState, bounty } = props;
 
   const vote = async (val: number) => {
-    const contract = bountyContract(props.address);
+    const contract = bountyContract(bounty.address!);
     const accounts = await web3.eth.getAccounts();
     const result = await voteBounty(
       contract,
@@ -37,16 +51,110 @@ export default function FunderVote(props: Props) {
     },
   });
 
+  // for testing only
+  votingState = {
+    currentNays: "10",
+    currentVotes: "30",
+    currentYeas: "4",
+    maxFailures: "240",
+    timesFailed: "12",
+    votingOn: "32",
+    pctYeasNeeded: "32",
+  };
+  console.log(votingState);
+
   return (
-    <Flex direction="column">
-      <Text>currentNays: {props.votingState.currentNays}</Text>
-      <Text>currentVotes: {props.votingState.currentVotes}</Text>
-      <Text>currentYeas: {props.votingState.currentYeas}</Text>
-      <Text>maxFailures: {props.votingState.maxFailures}</Text>
-      <Text>pctYeasNeeded: {props.votingState.pctYeasNeeded}</Text>
-      <Text>timesFailed: {props.votingState.timesFailed}</Text>
-      <Text>votingOn: {props.votingState.votingOn}</Text>
-      <FormLabel>Your Choice</FormLabel>
+    <VStack
+      direction="column"
+      mt="36px"
+      spacing="12px"
+      maxWidth="80%"
+      margin="auto"
+    >
+      <Heading my="12px">
+        Submission #{Number(votingState.timesFailed) + 1}
+      </Heading>
+      <Text textAlign="center" fontSize="24px" pb="12px">
+        @{bounty.creator_handle} submitted a new revision! You have 48 hours to
+        vote and decide whether the submission is worthy of a bonus!
+      </Text>
+
+      <VStack
+        direction="column"
+        alignItems="flex-start"
+        mt="36px"
+        spacing="12px"
+        maxWidth="80%"
+        margin="auto"
+      >
+        <Flex alignItems="center" py="18px">
+          <Text variant="metadataLabelLg" mr="12px">
+            Next Bonus Target:
+          </Text>
+
+          <Text variant="metadataLabelLg" fontSize="36px">
+            0.15 ETH (20%)
+          </Text>
+        </Flex>
+      </VStack>
+      <Box py="48px" width="100%">
+        <Slider
+          isReadOnly
+          defaultValue={Number(votingState.currentYeas)}
+          min={0}
+          max={Number(votingState.currentVotes)}
+          step={1}
+        >
+          <SliderTrack bg="red.100">
+            <Box position="relative" right={10} />
+            <SliderFilledTrack bg={theme.colors.bountyGreen} />
+          </SliderTrack>
+          <SliderThumb boxSize={6} />
+          <SliderMark
+            value={
+              (Number(votingState.pctYeasNeeded) / 100) *
+              Number(votingState.currentVotes)
+            }
+            textAlign="center"
+            color={theme.colors.bountyBrown}
+            fontSize="20px"
+            mt="5"
+            ml="-15px"
+          >
+            {votingState.pctYeasNeeded}% needed
+          </SliderMark>
+        </Slider>
+      </Box>
+      <Flex width="100%">
+        <Text variant="metadataLabelLg">{votingState.currentYeas} Yeas</Text>
+        <Spacer />
+        <Text variant="metadataLabelLg">{votingState.currentNays} Nays</Text>
+      </Flex>
+
+      <Flex>
+        <Text fontSize="24px" pb="12px" mr="8px">
+          This bounty can fail
+        </Text>
+        <Text fontSize="24px" fontWeight="700" pb="12px">
+          {Number(votingState.maxFailures) - Number(votingState.timesFailed)}{" "}
+          more times
+        </Text>
+      </Flex>
+      <Flex>
+        <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
+          {Math.ceil(
+            (Number(votingState.pctYeasNeeded) / 100) *
+              Number(votingState.currentVotes)
+          )}{" "}
+          more people
+        </Text>
+        <Text fontSize="24px" pb="12px" mr="8px">
+          need to vote &apos;Yea&apos; to succeed
+        </Text>
+      </Flex>
+
+      <Text>votingOn: {votingState.votingOn}</Text>
+      <FormLabel variant="metadataLabelLg">What will you choose?</FormLabel>
       <HStack {...getRootProps()}>
         {[0, 1].map((value) => {
           const radio = getRadioProps({ value });
@@ -57,7 +165,9 @@ export default function FunderVote(props: Props) {
           );
         })}
       </HStack>
-      <Button onClick={() => vote(yea)}>Vote</Button>
-    </Flex>
+      <Button disabled={yea == -1} onClick={() => vote(yea)}>
+        Vote
+      </Button>
+    </VStack>
   );
 }
