@@ -9,7 +9,23 @@ export default function bountyContract(addr: string) {
   return new web3.eth.Contract(abi, addr);
 }
 
-export async function getVotingStatus(contract: any) {
+export interface VotingState {
+  votingOn: string;
+  pctYeasNeeded: string;
+  currentYeas: string;
+  currentNays: string;
+  timesFailed: string;
+  maxFailures: string;
+  currentVotes: string;
+}
+
+export interface BountyBlockState {
+  totalContribution: string;
+  isPrecipitatingEvent: boolean;
+  status: string;
+}
+
+export async function getVotingStatus(contract: any): Promise<VotingState> {
   const result = await contract.methods.voteStatus().call();
   console.log("getVotingStatus", result);
   const [
@@ -22,13 +38,24 @@ export async function getVotingStatus(contract: any) {
     currentVotes,
   ] = result;
   return {
-    votingOn: votingOn,
-    pctYeasNeeded: pctYeasNeeded,
-    currentYeas: currentYeas,
-    currentNays: currentNays,
-    timesFailed: timesFailed,
-    maxFailures: maxFailures,
-    currentVotes: currentVotes,
+    votingOn,
+    pctYeasNeeded,
+    currentYeas,
+    currentNays,
+    timesFailed,
+    maxFailures,
+    currentVotes,
+  };
+}
+
+export async function getBountyStatus(contract: any): Promise<BountyState> {
+  const result = await contract.methods.bountyStatus().call();
+  console.log("getBountyStatus", result);
+  const [totalContribution, isPrecipitatingEvent, status] = result;
+  return {
+    totalContribution,
+    isPrecipitatingEvent,
+    status,
   };
 }
 
@@ -53,7 +80,7 @@ export async function joinBounty(contract: any, stake: string, account: any) {
   return result;
 }
 
-export async function vote(
+export async function voteBounty(
   contract: any,
   milestone: number,
   yeaOrNay: boolean,

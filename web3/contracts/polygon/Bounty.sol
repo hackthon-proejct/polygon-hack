@@ -199,6 +199,12 @@ contract Bounty is Treasury {
         return uint8(fans.length);
     }
 
+    // Returns [totalContribution, isPrecipitatingEvent, status]
+    function bountyStatus() public view returns (uint256[3] memory stats) {
+        uint256 isPrecipitatingEventNum = isPrecipitatingEvent ? 1 : 0;
+        return [totalContribution, isPrecipitatingEventNum, uint256(status)];
+    }
+
     // Returns [milestone, yeasNeeded, yeas, nays, timesFailed, failureThreshold, totalVoters]
     function voteStatus() public view returns (uint256[7] memory stats) {
         return [

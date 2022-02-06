@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
@@ -19,9 +20,19 @@ import { getEmbedUrlFromYoutube } from "@utils/youtube";
 import { useAppSelector } from "@redux/hooks";
 import { selectUserId } from "@redux/slices/userSlice";
 import BountyJoin from "@components/bounty/BountyJoin";
-import { getReadableStatus } from "@utils/bounty";
+import BountyVote from "@components/bounty/BountyVote";
 import BountyPublish from "@components/bounty/BountyPublish";
 import BountyState from "@components/bounty/BountyState";
+
+import bountyContract, {
+  VotingState,
+  BountyBlockState,
+  getReadableStatus,
+  getVotingStatus,
+  getEquity,
+  getBountyStatus,
+} from "@utils/bounty";
+import { web3 } from "@utils/constants";
 
 type Props = { bountyId: string };
 
@@ -38,6 +49,31 @@ function Bounty({ bountyId }: Props) {
       },
     }
   );
+  const [votingState, setVotingState] = useState<VotingState | null>(null);
+  const [bountyState, setBountyState] = useState<BountyBlockState | null>(null);
+  const [equity, setEquity] = useState<string>("0");
+
+  useEffect(() => {
+    async function getVoting(contract: any) {
+      const status = await getVotingStatus(contract);
+      setVotingState(status);
+    }
+    async function getBounty(contract: any) {
+      const status = await getBountyStatus(contract);
+      setBountyState(status);
+    }
+    async function equity(contract: any) {
+      const accounts = await web3.eth.getAccounts();
+      const equity = await getEquity(contract, accounts[0]);
+      setEquity(equity);
+    }
+    if (data?.bounty?.address) {
+      const contract = bountyContract(data.bounty.address);
+      getVoting(contract);
+      equity(contract);
+      getBounty(contract);
+    }
+  }, [data]);
 
   const { bounty } = data || {};
   const { metadata, block_metadata, id, creator_id, address, status } =
@@ -73,11 +109,27 @@ function Bounty({ bountyId }: Props) {
         {metadata.specs.resX} x {metadata.specs.resY}
       </Text>
       <Text>max: {block_metadata!.maxValue}</Text>
+      <Text>reserve: {block_metadata!.reservePrice}</Text>
       <Text>expiration: {block_metadata!.mustBeClaimedTime}</Text>
       <Text>deadline: {block_metadata!.timeLimit}</Text>
+      <Text>your equity: {equity}</Text>
+      {bountyState ? (
+        <>
+          <Text>isPrecipitatingEvent: {bountyState.isPrecipitatingEvent} </Text>
+          <Text>totalContribution: {bountyState.totalContribution}</Text>
+          <Text>status: {bountyState.status}</Text>
+        </>
+      ) : null}
 
       {address && !hasJoinedBounty ? <BountyJoin address={address} /> : null}
-      {isOwner ? <BountyPublish id={bountyId} /> : null}
+      {address &&
+      equity &&
+      bountyState &&
+      bountyState.status === "1" &&
+      votingState ? (
+        <BountyVote address={address} votingState={votingState} />
+      ) : null}
+      {isOwner && !address ? <BountyPublish id={bountyId} /> : null}
       <BountyState bounty={bounty} />
     </>
   ) : (

@@ -20,10 +20,20 @@ import {
 import { BountyData } from "../utils/smart_contracts/toolbox/types";
 import Profile from "./Profile.model";
 import Web3PublicKey from "./Web3PublicKey.model";
-import { BountyStatus } from "@shared/enums";
 
 class NoCreatorFound extends Error {}
 class IncorrectStatus extends Error {}
+
+export enum BountyStatus {
+  UNKNOWN = 0,
+  DRAFT = 1,
+  UNCLAIMED = 2,
+  NEGOTIATING = 3,
+  CLAIMED = 4,
+  SUCCEEDED = 5,
+  FAILED = 6,
+  REJECTED = 7,
+}
 
 @Table({
   timestamps: true,

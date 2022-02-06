@@ -1,4 +1,3 @@
-import { BountyStatus } from "@shared/enums";
 import {
   GraphQLNonNull,
   GraphQLInt,
@@ -10,7 +9,7 @@ import {
 } from "graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 import Board from "../models/Board.model";
-import Bounty from "../models/Bounty.model";
+import Bounty, { BountyStatus } from "../models/Bounty.model";
 import Profile from "../models/Profile.model";
 import { BountyType } from "./types";
 

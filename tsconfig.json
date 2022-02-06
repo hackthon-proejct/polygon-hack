@@ -10,11 +10,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "@shared/*": ["shared/*"]
-    }
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "worker", "client"]
 }
