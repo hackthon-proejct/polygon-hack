@@ -1,9 +1,40 @@
 import { extendTheme } from "@chakra-ui/react";
 import Button from "./button";
 
+const Text = {
+  // The styles all button have in common
+  baseStyle: {},
+  // Two variants: outline and solid
+  variants: {
+    previewTitle: {
+      fontSize: "22px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      textAlign: "center",
+      margin: "8px 0",
+      // border: "2px solid",
+      // borderColor: "purple.500",
+      // color: "purple.500",
+    },
+    previewSubtitle: {
+      fontSize: "16px",
+      // TODO: hardcoded to webkit
+      display: "-webkit-box",
+      WebkitLineClamp: "3",
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden",
+      marginTop: 0,
+    },
+  },
+  // The default size and variant values
+  defaultProps: {},
+};
+
 const theme = extendTheme({
   components: {
     Button,
+    Text,
   },
   // mobile
   sm: "768px",

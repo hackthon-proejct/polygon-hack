@@ -1,6 +1,8 @@
 const Button = {
   // The styles all button have in common
-  baseStyle: {},
+  baseStyle: {
+    lineHeight: "initial",
+  },
   // Two sizes: sm and md
   sizes: {},
   // Two variants: outline and solid

@@ -52,7 +52,7 @@ const styles = {
     ${theme.colors.bountyGreenLight},
     ${theme.colors.bountyGreen},
     ${theme.colors.bountyGreen},
-    ${theme.colors.bountyGreenLightest})`,
+    ${theme.colors.white})`,
     // background: "radial-gradient(#FFF 0%, #7DC794 60%)",
   },
   hero: {

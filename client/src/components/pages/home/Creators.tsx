@@ -3,10 +3,14 @@ import { useQuery } from "@apollo/client";
 import NextLink from "next/link";
 
 import {
+  Box,
   Flex,
+  Grid,
+  GridItem,
   Heading,
   Image,
   Link,
+  SimpleGrid,
   Text,
   VStack,
   Wrap,
@@ -22,41 +26,42 @@ import { BountyStatus } from "@shared/enums";
 import { Bounties } from "@gql/__generated__/Bounties";
 import { BOUNTIES } from "@gql/bounties.graphql";
 import bounty from "@utils/bounty";
+import { CreatorPreview } from "./CreatorPreview";
 
 function Creators() {
   // fetch the user info and their bounties from graphql
 
   const creators = [
-    { id: "j", twitter_handle: "wobsobby", profile_pic: "www.google.com" },
+    {
+      id: "j",
+      twitter_handle: "wobsobby",
+      profile_pic: "www.google.com",
+      bio: "Hello wobsobby is me i go wobby sometimes and then sobby sometimes",
+      successes: 2,
+      ongoing: 3,
+    },
     {
       id: "j",
       twitter_handle: "kumquatexpress",
       profile_pic: "www.google.com",
+      bio: "hello my name is kumquat i express go choo choo hello friend goodbye",
+      successes: 5,
+      ongoing: 1,
     },
   ];
   return (
     <VStack alignItems="flex-start">
       <Heading alignSelf="center">Creators</Heading>
       {creators?.length ? (
-        <Wrap sx={styles.bountyWrap} spacing="30px">
+        <SimpleGrid sx={styles.bountyWrap} columns={2} spacing="30px">
           {creators.map((creator) =>
             creator ? (
-              <WrapItem key={creator.id}>
-                <Flex>
-                  <Image src={creator.profile_pic} />
-                  <NextLink href={`/${creator.twitter_handle}`}>
-                    <Link>
-                      <Image alt="" src={creator.profile_pic} />
-                    </Link>
-                  </NextLink>
-                  <VStack>
-                    <Text>@{creator.twitter_handle}</Text>
-                  </VStack>
-                </Flex>
-              </WrapItem>
+              <Box key={creator.id}>
+                <CreatorPreview creator={creator} />
+              </Box>
             ) : null
           )}
-        </Wrap>
+        </SimpleGrid>
       ) : null}
     </VStack>
   );
