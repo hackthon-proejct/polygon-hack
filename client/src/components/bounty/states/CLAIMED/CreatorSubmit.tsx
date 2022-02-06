@@ -95,7 +95,8 @@ export default function CreatorSubmit({
         You&apos;ll be able to submit again when the vote is finished!
       </Text>
       <Image
-        src={currSubmission?.metadata?.image_url}
+        alt=""
+        src={currSubmission?.metadata?.image_url || ""}
         width="100%"
         boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
         px={{ sm: "32px", md: "80px" }}

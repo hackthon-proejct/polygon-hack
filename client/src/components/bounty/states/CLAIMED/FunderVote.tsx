@@ -132,7 +132,11 @@ export default function FunderVote(props: Props) {
               isReadOnly
               defaultValue={Number(votingState.currentYeas)}
               min={0}
-              max={bountyState?.totalContribution}
+              max={
+                bountyState?.totalContribution
+                  ? Number(bountyState.totalContribution)
+                  : 0
+              }
               step={1}
             >
               <SliderTrack bg="red.100">
