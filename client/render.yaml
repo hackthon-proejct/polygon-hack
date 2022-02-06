@@ -3,3 +3,14 @@
   env: static
   buildCommand: cd client && yarn && yarn build && yarn next export
   staticPublishPath: client/out
+  envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_REACT_APP_SERV_PROTOCOL
+        value: https://
+      - key: NEXT_PUBLIC_REACT_APP_WS_PROTOCOL
+        value: wss://
+      - key: NEXT_PUBLIC_REACT_APP_SERV_HOSTNAME
+        value: https://polygon-hax.herokuapp.com/
+      - key: NEXT_PUBLIC_REACT_APP_JWT_KEY
+        value: polyhaxjwt
