@@ -4,7 +4,7 @@ import { NextPageWithLayout } from "@utils/types";
 import bountyContract, {
   getVotingStatus,
   joinBounty,
-  vote,
+  voteBounty,
   getEquity,
   getBalance,
 } from "@utils/bounty";
@@ -23,9 +23,9 @@ const join = async (val: string) => {
   console.log("result", result);
   return result;
 };
-const voteBounty = async (milestone: number, yeaOrNay: boolean) => {
+const vote = async (milestone: number, yeaOrNay: boolean) => {
   const accounts = await web3.eth.getAccounts();
-  const result = await vote(contract, milestone, yeaOrNay, accounts[0]);
+  const result = await voteBounty(contract, milestone, yeaOrNay, accounts[0]);
   console.log("result", result);
   return result;
 };
@@ -70,10 +70,10 @@ const DebugPage: NextPageWithLayout = () => {
           <button onClick={() => join("10000000000000000")}>Join</button>
         </div>
         <div>
-          <button onClick={() => voteBounty(0, true)}>Vote Yes</button>
+          <button onClick={() => vote(0, true)}>Vote Yes</button>
         </div>
         <div>
-          <button onClick={() => voteBounty(1, false)}>Vote No</button>
+          <button onClick={() => vote(1, false)}>Vote No</button>
         </div>
         <div>
           <button onClick={_getEquity}>Equity</button>
