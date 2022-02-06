@@ -12,6 +12,7 @@ import {
 } from "@gqlt/UserQuery";
 import {
   Button,
+  Box,
   Flex,
   Heading,
   HStack,
@@ -106,7 +107,7 @@ function Bounty({ bountyId }: Props) {
   }, [breakpointSize]);
 
   return bounty != null ? (
-    <>
+    <Box mt={{ base: "52px", md: "80px" }}>
       <VStack>
         <Flex width="100%">
           <Flex direction="column">
@@ -204,7 +205,7 @@ function Bounty({ bountyId }: Props) {
       ) : null}
 
       <BountyState bounty={bounty} />
-    </>
+    </Box>
   ) : (
     <Text>No bounty found.</Text>
   );
@@ -214,7 +215,9 @@ const styles = {
   bountyWrap: {
     width: "100%",
   },
-  specs: {},
+  specs: {
+    fontSize: "32px",
+  },
   funderCount: {
     alignItems: "center",
     "& > .chakra-text": {
