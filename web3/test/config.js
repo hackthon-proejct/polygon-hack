@@ -4,7 +4,7 @@ const BN = require("bn.js");
 const FIFTEEN_ZEROS = "000000000000000";
 let bounty;
 const maxValue = new BN("10" + FIFTEEN_ZEROS);
-const reservePrice = new BN("8" + FIFTEEN_ZEROS);
+const reservePrice = new BN("2" + FIFTEEN_ZEROS);
 const bonusTargets = [20, 20];
 const bonusPctYeasNeeded = [40, 60];
 const bonusFailureThresholds = [1, 1];
@@ -121,71 +121,125 @@ contract("Bounty", (accounts) => {
     data = await bounty.balanceOf(otherWallet);
     console.log("other balance", data.toString());
 
-    // Claim
-    console.log("Claim creator");
-    await bounty.claim({
-      from: creatorWallet,
-    });
-    data = await bounty.voteStatus();
-    printVoteStatus(data);
-
-    // Vote
-    console.log("Vote 0 yea");
-    await bounty.vote(0, true, {
-      from: otherWallet,
-    });
-    data = await bounty.voteStatus();
-    printVoteStatus(data);
-    data = await web3.eth.getBalance(bounty.address);
-    console.log("bounty balance", data.toString());
-    data = await web3.eth.getBalance(creatorWallet);
-    console.log("creator wallet", data.toString());
+    // Negotiate
+    console.log("Negotiate creator");
+    await bounty.negotiate(
+      maxValue,
+      reservePrice,
+      bonusTargets,
+      bonusPctYeasNeeded,
+      bonusFailureThresholds,
+      timeLimit,
+      {
+        from: ourWallet,
+      }
+    );
+    data = await bounty.negotiationStatus();
+    console.log("data", data);
     data = await bounty.balanceOf(ourWallet);
     console.log("our balance", data.toString());
-    data = await bounty.balanceOf(otherWallet);
-    console.log("other balance", data.toString());
 
-    // Vote again nay (should trigger withdrawal)
-    console.log("Vote 1 nay");
-    await bounty.vote(1, false, {
-      from: otherWallet,
-    });
-    data = await bounty.voteStatus();
-    printVoteStatus(data);
-    data = await web3.eth.getBalance(bounty.address);
-    console.log("bounty balance", data.toString());
-    data = await web3.eth.getBalance(creatorWallet);
-    console.log("creator wallet", data.toString());
+    console.log("Can leave and withdraw");
+    await bounty.negotiateLeave({ from: ourWallet });
     data = await web3.eth.getBalance(ourWallet);
     console.log("our wallet", data.toString());
-    data = await bounty.balanceOf(ourWallet);
-    console.log("our balance", data.toString());
-    data = await web3.eth.getBalance(otherWallet);
-    console.log("other wallet", data.toString());
+    data = await bounty.bountyStatus();
+    console.log("data", data);
+
+    console.log("Can rejoin");
+    await bounty.negotiateRejoin(otherWallet, { from: ourWallet });
     data = await bounty.balanceOf(otherWallet);
     console.log("other balance", data.toString());
-
-    // Withdraw (not precipitating event, should no-op)
-    console.log("Withdraw no-op");
-    await bounty.withdraw({
-      from: ourWallet,
-    });
-    data = await web3.eth.getBalance(bounty.address);
-    console.log("bounty balance", data.toString());
-    data = await bounty.balanceOf(ourWallet);
-    console.log("our balance", data.toString());
-
-    // Withdraw (should withdraw 80% of equity)
-    console.log("Withdraw working");
-    await bounty.precipitatingEvent(true, {
-      from: ourWallet,
-    });
-    await bounty.withdraw({
-      from: ourWallet,
-    });
-    data = await web3.eth.getBalance(bounty.address);
-    console.log("bounty balance", data.toString());
-    data = await bounty.balanceOf(ourWallet);
-    console.log("our balance", data.toString());
+    data = await bounty.bountyStatus();
+    console.log("data", data);
   });
+
+  //   it("...can be voted on", async () => {
+  //     // Join the first time
+  //     console.log("Join owner 3");
+  //     await bounty.join({
+  //       from: ourWallet,
+  //       value: new BN("3" + FIFTEEN_ZEROS),
+  //     });
+  //     console.log("joined", ourWallet);
+  //     let data = await bounty.balanceOf(ourWallet);
+  //     console.log("our balance", data.toString());
+
+  //     // Join with someone else
+  //     console.log("Join other 2");
+  //     await bounty.join({
+  //       from: otherWallet,
+  //       value: new BN("2" + FIFTEEN_ZEROS),
+  //     });
+  //     console.log("joined", otherWallet);
+  //     data = await bounty.balanceOf(otherWallet);
+  //     console.log("other balance", data.toString());
+
+  //     // Claim
+  //     console.log("Claim creator");
+  //     await bounty.claim({
+  //       from: creatorWallet,
+  //     });
+  //     data = await bounty.voteStatus();
+  //     printVoteStatus(data);
+
+  //     // Vote
+  //     console.log("Vote 0 yea");
+  //     await bounty.vote(0, true, {
+  //       from: otherWallet,
+  //     });
+  //     data = await bounty.voteStatus();
+  //     printVoteStatus(data);
+  //     data = await web3.eth.getBalance(bounty.address);
+  //     console.log("bounty balance", data.toString());
+  //     data = await web3.eth.getBalance(creatorWallet);
+  //     console.log("creator wallet", data.toString());
+  //     data = await bounty.balanceOf(ourWallet);
+  //     console.log("our balance", data.toString());
+  //     data = await bounty.balanceOf(otherWallet);
+  //     console.log("other balance", data.toString());
+
+  //     // Vote again nay (should trigger withdrawal)
+  //     console.log("Vote 1 nay");
+  //     await bounty.vote(1, false, {
+  //       from: otherWallet,
+  //     });
+  //     data = await bounty.voteStatus();
+  //     printVoteStatus(data);
+  //     data = await web3.eth.getBalance(bounty.address);
+  //     console.log("bounty balance", data.toString());
+  //     data = await web3.eth.getBalance(creatorWallet);
+  //     console.log("creator wallet", data.toString());
+  //     data = await web3.eth.getBalance(ourWallet);
+  //     console.log("our wallet", data.toString());
+  //     data = await bounty.balanceOf(ourWallet);
+  //     console.log("our balance", data.toString());
+  //     data = await web3.eth.getBalance(otherWallet);
+  //     console.log("other wallet", data.toString());
+  //     data = await bounty.balanceOf(otherWallet);
+  //     console.log("other balance", data.toString());
+
+  //     // Withdraw (not precipitating event, should no-op)
+  //     console.log("Withdraw no-op");
+  //     await bounty.withdraw({
+  //       from: ourWallet,
+  //     });
+  //     data = await web3.eth.getBalance(bounty.address);
+  //     console.log("bounty balance", data.toString());
+  //     data = await bounty.balanceOf(ourWallet);
+  //     console.log("our balance", data.toString());
+
+  //     // Withdraw (should withdraw 80% of equity)
+  //     console.log("Withdraw working");
+  //     await bounty.precipitatingEvent(true, {
+  //       from: ourWallet,
+  //     });
+  //     await bounty.withdraw({
+  //       from: ourWallet,
+  //     });
+  //     data = await web3.eth.getBalance(bounty.address);
+  //     console.log("bounty balance", data.toString());
+  //     data = await bounty.balanceOf(ourWallet);
+  //     console.log("our balance", data.toString());
+  //   });
 });

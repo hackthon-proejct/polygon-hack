@@ -159,6 +159,8 @@ contract Bounty is Treasury {
     using SafeMath for uint256;
 
     mapping(address => bool) votedThisRound; // whether this address has already voted
+    // snapshot of funders at time of negotiation, can be withdrawn from always
+    mapping(address => uint256) mustRejoinTreasury;
     uint64 public mustBeClaimedTime; // the time epoch at which this bounty expires if unclaimed
     uint256 public maxValue; // the max value this bounty could be
     uint256 public reservePrice; // the lowest value that this bounty can be, otherwise it expires
@@ -166,7 +168,7 @@ contract Bounty is Treasury {
     uint256 public currentYeas; // yea vote weight for the current bonus
     uint256 public currentNays; // nay vote weight for the current bonus
     uint32 public currentVotesCast; // number of discrete votes cast for the current bonus
-    uint8 public status; // [UNCLAIMED, CLAIMED, SUCCESS, FAILURE]
+    uint8 public status; // [UNCLAIMED, NEGOTIATING, CLAIMED, SUCCESS, FAILURE]
 
     error VoteOver();
     error AlreadyVoted();
@@ -231,24 +233,25 @@ contract Bounty is Treasury {
         if (address(this).balance + msg.value >= maxValue) {
             revert MaxValueReached();
         }
-        if (equity[msg.sender] == 0) {
+        if (equity[msg.sender] == 0 && mustRejoinTreasury[msg.sender] == 0) {
             // fan not added yet
             fans.push(payable(msg.sender));
             pctBalanceRemaining[msg.sender] = 100;
         }
         equity[msg.sender] += msg.value;
-
         totalContribution += msg.value;
+
+        checkReserveMetAndClaim();
         return true;
     }
 
     function checkVote() public onlyBy(owner) returns (bool success) {
-        uint8 _status = checkVoteMarginMet();
-        if (_status != 0) {
+        uint8 voteStat = checkVoteMarginMet();
+        if (voteStat != 0) {
             bool result;
-            if (_status == 1) {
+            if (voteStat == 1) {
                 result = approveAndPay();
-            } else if (_status == 2) {
+            } else if (voteStat == 2) {
                 result = failMilestone();
             }
             // result is true if we took a step forward, otherwise false
@@ -280,7 +283,7 @@ contract Bounty is Treasury {
     {
         emit Debug("vote called");
         // Not yet claimed
-        if (status == 0 || _milestone != votingOn) {
+        if (status != 2 || _milestone != votingOn) {
             revert VoteOver();
         }
         if (votedThisRound[msg.sender]) {
@@ -332,18 +335,67 @@ contract Bounty is Treasury {
         bonusFailureThresholds = _bonusFailureThresholds;
         bonusPctYeasNeeded = _bonusPctYeasNeeded;
         timeLimit = _timeLimit;
+        isPrecipitatingEvent = true;
+
+        // MAKE A SNAPSHOT OF THE TREASURY AND RESET
+        totalContribution = 0;
+        for (uint256 i = 0; i < fans.length; i += 1) {
+            mustRejoinTreasury[fans[i]] = equity[fans[i]];
+            equity[fans[i]] = 0;
+        }
+        status = 1; // NEGOTIATING
         return true;
+    }
+
+    function canRejoinTreasury(address _addr)
+        public
+        view
+        returns (bool canRejoin)
+    {
+        return mustRejoinTreasury[_addr] != 0;
+    }
+
+    function negotiateRejoin(address _addr)
+        public
+        onlyBy(owner)
+        returns (bool success)
+    {
+        equity[_addr] += mustRejoinTreasury[_addr];
+        totalContribution += mustRejoinTreasury[_addr];
+        mustRejoinTreasury[_addr] = 0;
+        checkReserveMetAndClaim();
+        return true;
+    }
+
+    function negotiateLeave() public returns (bool success) {
+        payable(msg.sender).transfer(mustRejoinTreasury[msg.sender]);
+        return true;
+    }
+
+    function checkReserveMetAndClaim() private returns (bool success) {
+        if (status == 1 && totalContribution >= reservePrice) {
+            return claimInternal();
+        }
+        return false;
+    }
+
+    function negotiationStatus() public view returns (uint256[2] memory data) {
+        return [reservePrice, totalContribution];
     }
 
     // Sets initial state and sets the end time of this bounty according to config
     function claim() public onlyBy(owner) returns (bool success) {
+        return claimInternal();
+    }
+
+    function claimInternal() private returns (bool success) {
         // Already claimed
-        if (status != 0) {
+        if (status >= 2) {
             return false;
         }
         endTime = uint64(block.timestamp + timeLimit);
         isPrecipitatingEvent = false;
-        status = 1;
+        status = 2; // CLAIMED
         return true;
     }
 
