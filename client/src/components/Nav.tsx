@@ -1,13 +1,18 @@
-import { Flex, CSSObject, Spacer } from "@chakra-ui/react";
+import { Flex, CSSObject, Spacer, Link } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import theme from "src/theme";
 import Logo from "./logo/Logo";
 import MetaMaskButton from "./MetamaskButton";
+import NextLink from "next/link";
 
 function StickyHeader({}: PropsWithChildren<{}>) {
   return (
     <Flex sx={styles.sticky}>
-      <Logo type="dynamic" />
+      <NextLink href={`/`} passHref>
+        <Link>
+          <Logo type="dynamic" />
+        </Link>
+      </NextLink>
       <Spacer />
       <MetaMaskButton />
     </Flex>
@@ -16,6 +21,7 @@ function StickyHeader({}: PropsWithChildren<{}>) {
 
 const styles = {
   sticky: {
+    zIndex: 100000,
     top: 0,
     left: 0,
     position: "fixed",

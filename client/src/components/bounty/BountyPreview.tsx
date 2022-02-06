@@ -17,7 +17,7 @@ export function BountyPreview({ bounty }: Props) {
   return (
     <Flex direction="column" sx={styles.container}>
       <Box role="group" position="relative">
-        <NextLink href={`/${bounty.creator_id}/${bounty.id}`}>
+        <NextLink href={`/${bounty.creator_id}/${bounty.id}`} passHref>
           <Link>
             <Image alt="" src={imageUrl!} />
           </Link>
