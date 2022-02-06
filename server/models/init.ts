@@ -4,6 +4,7 @@ import User from "./User.model";
 import Board from "./Board.model";
 import Web3PublicKey from "./Web3PublicKey.model";
 import Bounty from "./Bounty.model";
+import Negotiation from "./Negotiation.model";
 import Profile from "./Profile.model";
 
 export default function init() {
@@ -23,7 +24,14 @@ export default function init() {
     }
   );
 
-  sequelize.addModels([User, Bounty, Board, Web3PublicKey, Profile]);
+  sequelize.addModels([
+    User,
+    Bounty,
+    Board,
+    Web3PublicKey,
+    Profile,
+    Negotiation,
+  ]);
   postInit();
   return sequelize;
 }
@@ -34,6 +42,7 @@ function postInit() {
   Board.Profile = Board.belongsTo(Profile);
   Bounty.User = Bounty.belongsTo(User);
   Bounty.Board = Bounty.belongsTo(Board);
+  Negotiation.Bounty = Negotiation.belongsTo(Bounty);
   User.Profile = User.hasOne(Profile);
   User.PublicKey = User.hasOne(Web3PublicKey);
   User.Bounties = User.hasMany(Bounty);

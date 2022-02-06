@@ -62,13 +62,23 @@ export async function claimBounty(address: string) {
   return result.status;
 }
 
-export async function updateBounty(address: string, data: BountyData) {
-  logger.info("updateBounty: ", { address, data });
+export async function negotiateBounty(address: string, data: BountyData) {
+  logger.info("negotiateBounty: ", { address, data });
   const Contract = bountyContract(address);
   const transaction = Contract.methods.negotiate(...bountyDataToArgs(data));
 
   const result = await sendTxAndLog(transaction, account);
-  logger.info("updateBounty: ", { result });
+  logger.info("negotiateBounty: ", { result });
+  return result.status;
+}
+
+export async function precipitatingEvent(address: string, toggle: boolean) {
+  logger.info("precipitatingEvent: ", { address, toggle });
+  const Contract = bountyContract(address);
+  const transaction = Contract.methods.precipitatingEvent(toggle);
+
+  const result = await sendTxAndLog(transaction, account);
+  logger.info("precipitatingEvent: ", { result });
   return result.status;
 }
 

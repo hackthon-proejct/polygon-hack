@@ -190,7 +190,7 @@ contract Bounty is Treasury {
         bonusFailureThresholds = _bonusFailureThresholds;
         mustBeClaimedTime = _mustBeClaimedTime;
         owner = _owner;
-        isPrecipitatingEvent = true;
+        isPrecipitatingEvent = false;
         timeLimit = _timeLimit;
         bonusFailures = new uint8[](bonusTargets.length);
     }

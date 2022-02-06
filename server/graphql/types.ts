@@ -119,6 +119,28 @@ export const BoardType = new GraphQLObjectType({
   },
 });
 
+export const NegotiationType = new GraphQLObjectType({
+  name: "Negotiation",
+  fields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    metadata: {
+      type: GraphQLJSONObject,
+      description: "The metadata of this negotiation",
+    },
+    status: {
+      type: new GraphQLNonNull(GraphQLInt),
+    },
+    bounty: {
+      type: new GraphQLNonNull(BountyType),
+      resolve: async (parent, args, ctx, info) => {
+        return await parent.$get("bounty");
+      },
+    },
+  },
+});
+
 export const ProfileType = new GraphQLObjectType({
   name: "Profile",
   description: "The profile attached to a user",
