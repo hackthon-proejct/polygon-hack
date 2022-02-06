@@ -49,9 +49,6 @@ export interface LookupTwitterHandle_lookupTwitterHandle_board_bounties {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  /**
-   * The creator who can claim this bounty
-   */
   creator_id: string;
   id: string;
   /**
@@ -67,6 +64,10 @@ export interface LookupTwitterHandle_lookupTwitterHandle_board_bounties {
    * The contract address for this bounty
    */
   address: string | null;
+  /**
+   * The twitter handle of the creator
+   */
+  creator_handle: string;
 }
 
 export interface LookupTwitterHandle_lookupTwitterHandle_board {

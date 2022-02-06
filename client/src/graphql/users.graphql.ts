@@ -53,6 +53,8 @@ export const LOOKUP_TWITTER_HANDLE = gql`
           status
           metadata
           address
+          creator_handle
+          creator_id
         }
       }
       user_id

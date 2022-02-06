@@ -16,15 +16,21 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { web3 } from "@utils/constants";
-import bountyContract, { voteBounty, VotingState } from "@utils/bounty";
+import bountyContract, {
+  stringNumToJS,
+  voteBounty,
+  VotingState,
+} from "@utils/bounty";
 import { useState } from "react";
 import { RadioCard } from "@components/RadioCard";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import theme from "src/theme";
+import { SubmissionsForBounty_submissionsForBounty } from "@gql/__generated__/SubmissionsForBounty";
 
 type Props = {
   votingState: VotingState;
   bounty: BountyQuery_bounty;
+  currSubmission: SubmissionsForBounty_submissionsForBounty | null;
 };
 
 export default function FunderVote(props: Props) {
@@ -51,18 +57,6 @@ export default function FunderVote(props: Props) {
     },
   });
 
-  // for testing only
-  votingState = {
-    currentNays: "10",
-    currentVotes: "30",
-    currentYeas: "4",
-    maxFailures: "240",
-    timesFailed: "12",
-    votingOn: "32",
-    pctYeasNeeded: "32",
-  };
-  console.log(votingState);
-
   return (
     <VStack
       direction="column"
@@ -71,13 +65,21 @@ export default function FunderVote(props: Props) {
       maxWidth="80%"
       margin="auto"
     >
-      <Heading my="12px">
-        Submission #{Number(votingState.timesFailed) + 1}
-      </Heading>
-      <Text textAlign="center" fontSize="24px" pb="12px">
-        @{bounty.creator_handle} submitted a new revision! You have 48 hours to
-        vote and decide whether the submission is worthy of a bonus!
-      </Text>
+      {props.currSubmission ? (
+        <>
+          <Heading my="12px">
+            Submission #{Number(votingState.timesFailed) + 1}
+          </Heading>
+          <Text textAlign="center" fontSize="24px" pb="12px">
+            @{bounty.creator_handle} submitted a new revision! You have 48 hours
+            to vote and decide whether the submission is worthy of a bonus!
+          </Text>
+        </>
+      ) : (
+        <Text textAlign="center" fontSize="24px" pb="12px">
+          Waiting for @{bounty.creator_handle} to submit for this milestone
+        </Text>
+      )}
 
       <VStack
         direction="column"
@@ -93,7 +95,8 @@ export default function FunderVote(props: Props) {
           </Text>
 
           <Text variant="metadataLabelLg" fontSize="36px">
-            0.15 ETH (20%)
+            {stringNumToJS(props.votingState.bonusValue)} MATIC (
+            {props.votingState.bonusPct}%)
           </Text>
         </Flex>
       </VStack>
@@ -121,14 +124,18 @@ export default function FunderVote(props: Props) {
             mt="5"
             ml="-15px"
           >
-            {votingState.pctYeasNeeded}% needed
+            {votingState.pctYeasNeeded} % needed
           </SliderMark>
         </Slider>
       </Box>
       <Flex width="100%">
-        <Text variant="metadataLabelLg">{votingState.currentYeas} Yeas</Text>
+        <Text variant="metadataLabelLg">
+          {stringNumToJS(votingState.currentYeas)} Yeas
+        </Text>
         <Spacer />
-        <Text variant="metadataLabelLg">{votingState.currentNays} Nays</Text>
+        <Text variant="metadataLabelLg">
+          {stringNumToJS(votingState.currentNays)} Nays
+        </Text>
       </Flex>
 
       <Flex>
@@ -142,18 +149,11 @@ export default function FunderVote(props: Props) {
       </Flex>
       <Flex>
         <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
-          {Math.ceil(
-            (Number(votingState.pctYeasNeeded) / 100) *
-              Number(votingState.currentVotes)
-          )}{" "}
-          more people
-        </Text>
-        <Text fontSize="24px" pb="12px" mr="8px">
-          need to vote &apos;Yea&apos; to succeed
+          {stringNumToJS(votingState.yeasNeeded)} more &apos;Yea&apos; votes
+          needed to succeed
         </Text>
       </Flex>
 
-      <Text>votingOn: {votingState.votingOn}</Text>
       <FormLabel variant="metadataLabelLg">What will you choose?</FormLabel>
       <HStack {...getRootProps()}>
         {[0, 1].map((value) => {

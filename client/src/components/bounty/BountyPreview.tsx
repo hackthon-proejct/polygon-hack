@@ -31,7 +31,10 @@ export function BountyPreview({ bounty }: Props) {
       </Box>
       <Flex sx={styles.metadata}>
         <Box sx={styles.image}>
-          <Image src={`https://unavatar.io/twitter/${bounty.creator_handle}`} />
+          <Image
+            alt=""
+            src={`https://unavatar.io/twitter/${bounty.creator_handle}`}
+          />
         </Box>
         <Flex
           direction="column"

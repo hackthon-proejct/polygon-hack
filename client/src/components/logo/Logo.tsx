@@ -1,5 +1,4 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { cx } from "@chakra-ui/react";
 import SVGLogo from "./SVGLogo";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { useEffect, useState } from "react";

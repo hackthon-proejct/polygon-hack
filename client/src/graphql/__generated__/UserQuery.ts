@@ -49,9 +49,6 @@ export interface UserQuery_user_profile_board_bounties {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  /**
-   * The creator who can claim this bounty
-   */
   creator_id: string;
   id: string;
   /**

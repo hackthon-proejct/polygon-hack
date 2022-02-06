@@ -58,9 +58,6 @@ export interface BountiesByUser_bounties_by_user {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  /**
-   * The creator who can claim this bounty
-   */
   creator_id: string;
   /**
    * The twitter handle of the creator

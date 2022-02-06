@@ -21,3 +21,15 @@ export const CREATE_SUBMISSION = gql`
     }
   }
 `;
+
+export const SUBMISSIONS = gql`
+  query SubmissionsForBounty($bounty_id: String!) {
+    submissionsForBounty(bounty_id: $bounty_id) {
+      metadata {
+        image_url
+        description
+        milestone
+      }
+    }
+  }
+`;

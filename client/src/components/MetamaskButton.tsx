@@ -17,6 +17,7 @@ export default function MetaMaskButton() {
   const address = useAppSelector(selectAddress);
   const dispatch = useAppDispatch();
   const [hasProvider, setHasProvider] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     async function updateAddressAndUserIfAvailable() {
@@ -29,6 +30,9 @@ export default function MetaMaskButton() {
         const user = await currentUser();
         //We take the first address in the array of addresses and display it
         dispatch(setUserIdTo(user?.id));
+        if (user?.id) {
+          setLoggedIn(true);
+        }
         dispatch(setTwitterHandleTo(user?.profile?.twitter_handle));
       }
     }
@@ -83,7 +87,7 @@ export default function MetaMaskButton() {
         }
       }}
     >
-      {address !== ""
+      {address !== "" && loggedIn
         ? "Connected"
         : hasProvider
         ? "Connect MetaMask"

@@ -20,22 +20,29 @@ import { selectUserId } from "@redux/slices/userSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IS_SERVER } from "@utils/constants";
 import SubmitButton from "./SubmitButton";
+import { stringNumToJS, VotingState } from "@utils/bounty";
+import { SubmissionsForBounty_submissionsForBounty } from "@gql/__generated__/SubmissionsForBounty";
 
-type Props = { bounty: BountyQuery_bounty };
+type Props = {
+  bounty: BountyQuery_bounty;
+  votingState: VotingState;
+  currSubmission: SubmissionsForBounty_submissionsForBounty | null;
+};
 
 const fr = IS_SERVER ? null : new FileReader();
 
-export default function CreatorSubmit({ bounty }: Props) {
+export default function CreatorSubmit({
+  bounty,
+  votingState,
+  currSubmission,
+}: Props) {
   const uploadRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const loggedInUserId = useAppSelector(selectUserId);
-  // TODO: for testing only
-  const isCreator = false;
-  // const isCreator = bounty.creator_id === loggedInUserId;
-  //
+  const isCreator = bounty.creator_id === loggedInUserId;
 
   useEffect(() => {
     function handleImageLoaded() {}
@@ -62,7 +69,15 @@ export default function CreatorSubmit({ bounty }: Props) {
     },
     [setFile]
   );
-  return (
+  return currSubmission?.metadata?.milestone ===
+    Number(votingState.votingOn) ? (
+    <VStack>
+      <Heading my="12px">Ongoing vote</Heading>
+      <Text textAlign="center" fontSize="24px" pb="12px">
+        {`Funders are currently voting on your submission for milestone ${votingState.votingOn} - you'll be able to submit again when the vote is finished!`}
+      </Text>
+    </VStack>
+  ) : (
     <VStack
       direction="column"
       mt="36px"
@@ -73,8 +88,8 @@ export default function CreatorSubmit({ bounty }: Props) {
       <Heading my="12px">Submit a revision</Heading>
       <Text textAlign="center" fontSize="24px" pb="12px">
         Ready to get your next bonus? Submit a new revision below for review!
-        Funders will have 48 hours to vote and decide whether your submission is
-        worthy of a bonus!
+        Funders will have <b>48 hours</b> to vote and decide whether your
+        submission is worthy of a bonus.
       </Text>
       <VStack
         direction="column"
@@ -84,14 +99,21 @@ export default function CreatorSubmit({ bounty }: Props) {
         maxWidth="80%"
         margin="auto"
       >
-        <Flex alignItems="center" py="24px">
-          <Text variant="metadataLabelLg" mr="12px">
-            Next Bonus Target:
-          </Text>
-
-          <Text variant="metadataLabelLg" fontSize="36px">
-            0.15 ETH (20%)
-          </Text>
+        <Flex alignItems="center" py="18px">
+          <VStack>
+            <Text variant="metadataLabelLg" mr="12px">
+              Milestone {votingState.votingOn}
+            </Text>
+            <HStack>
+              <Text variant="metadataLabelLg" mr="12px">
+                Next Bonus Target:
+              </Text>
+              <Text variant="metadataLabelLg" fontSize="36px">
+                {stringNumToJS(votingState.bonusValue)} MATIC (
+                {votingState.bonusPct}%)
+              </Text>
+            </HStack>
+          </VStack>
         </Flex>
         <Box sx={styles.upload}>
           <FormLabel
@@ -131,7 +153,7 @@ export default function CreatorSubmit({ bounty }: Props) {
       </VStack>
       <SubmitButton
         disabled={file == null}
-        milestone={0}
+        milestone={Number(votingState.votingOn)}
         bountyId={bounty.id}
         description={description}
         imageFile={file!}

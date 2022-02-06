@@ -20,16 +20,18 @@ import {
   RejoinBountyVariables,
 } from "@gql/__generated__/RejoinBounty";
 import bountyContract, {
-  canRejoinTreasury,
+  amountRejoinTreasury,
   negotiateLeave,
+  stringNumToJS,
 } from "@utils/bounty";
 import { web3 } from "@utils/constants";
 import { TimeSecondsType, TimeStringType } from "@utils/types";
 import { useEffect, useState } from "react";
+import BountyJoin from "../BountyJoin";
 
-type Props = { bounty: BountyQuery_bounty };
+type Props = { bounty: BountyQuery_bounty; isCreator: boolean };
 
-export default function Funder({ bounty }: Props) {
+export default function Funder({ bounty, isCreator }: Props) {
   const { data, loading, error } = useQuery<NegotiationForBounty>(NEGOTIATION, {
     variables: {
       bounty_id: bounty.id,
@@ -38,40 +40,29 @@ export default function Funder({ bounty }: Props) {
   const [rejoinBounty, _] = useMutation<RejoinBounty, RejoinBountyVariables>(
     REJOIN_BOUNTY
   );
-  const [canRejoin, setCanRejoin] = useState<boolean>(true);
+  const [canRejoin, setCanRejoin] = useState<string>("0");
 
   let negotiation = data?.negotiationForBounty;
   const exitBounty = async () => {
     const accounts = await web3.eth.getAccounts();
     const contract = bountyContract(bounty.address!);
-    negotiateLeave(contract, accounts[0]);
+    await negotiateLeave(contract, accounts[0]);
   };
 
   useEffect(() => {
     const canRejoin = async function () {
       const accounts = await web3.eth.getAccounts();
       const contract = bountyContract(bounty.address!);
-      const can = await canRejoinTreasury(contract, accounts[0]);
-      setCanRejoin(can);
+      const can = await amountRejoinTreasury(contract, accounts[0]);
+      setCanRejoin(stringNumToJS(can));
     };
     canRejoin();
   });
-
-  // @ts-ignore
-  // negotiation = {
-  //   metadata: {
-  //     timeLimit: 1000,
-  //     description: "joiwjoeijf",
-  //     reservePrice: 100,
-  //   },
-  // };
 
   let hasNegotiations =
     negotiation?.metadata?.timeLimit != null &&
     negotiation?.metadata?.description != null &&
     negotiation?.metadata?.reservePrice != null;
-
-  // hasNegotiations = true;
 
   return negotiation ? (
     <VStack
@@ -129,17 +120,22 @@ export default function Funder({ bounty }: Props) {
         ) : null}
       </VStack>
 
-      {canRejoin ? (
-        <HStack>
-          <Button
-            onClick={() =>
-              rejoinBounty({ variables: { bounty_id: bounty.id } })
-            }
-          >
-            Join Bounty
-          </Button>
-          <Button onClick={exitBounty}>Withdraw Funds</Button>
-        </HStack>
+      {canRejoin !== "0" ? (
+        <>
+          <Text>You have {canRejoin} MATIC staked</Text>
+          <HStack>
+            <Button
+              onClick={() =>
+                rejoinBounty({ variables: { bounty_id: bounty.id } })
+              }
+            >
+              Rejoin Bounty
+            </Button>
+            <Button onClick={exitBounty}>Withdraw Funds</Button>
+          </HStack>
+        </>
+      ) : !isCreator ? (
+        <BountyJoin address={bounty.address} />
       ) : null}
     </VStack>
   ) : null;

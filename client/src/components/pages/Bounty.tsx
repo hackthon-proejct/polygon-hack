@@ -42,6 +42,8 @@ import bountyContract, {
   getEquity,
   getBountyStatus,
   getBalance,
+  getUniqueFans,
+  stringNumToJS,
 } from "@utils/bounty";
 import { IS_SERVER, web3 } from "@utils/constants";
 import { useWindowResize } from "@utils/hooks";
@@ -62,9 +64,10 @@ function Bounty({ bountyId }: Props) {
       },
     }
   );
-  const [bountyState, setBountyState] = useState<BountyBlockState | null>(null);
+  const [bountyState, setBountyState] = useState<BountyBlockState>();
   const [equity, setEquity] = useState<string>("0");
   const [totalFund, setTotalFund] = useState<string>("0");
+  const [funders, setFunders] = useState<string>("0");
 
   useEffect(() => {
     async function getBounty(contract: any) {
@@ -74,17 +77,23 @@ function Bounty({ bountyId }: Props) {
     async function totalFund(contract: any) {
       const accounts = await web3.eth.getAccounts();
       const result = await getBalance(contract, accounts[0]);
-      setTotalFund(result);
+      setTotalFund(stringNumToJS(result));
     }
     async function equity(contract: any) {
       const accounts = await web3.eth.getAccounts();
       const equity = await getEquity(contract, accounts[0]);
-      setEquity(equity);
+      setEquity(stringNumToJS(equity));
+    }
+    async function uniqueFans(contract: any) {
+      const funders = await getUniqueFans(contract);
+      setFunders(funders);
     }
     if (data?.bounty?.address) {
       const contract = bountyContract(data.bounty.address);
       equity(contract);
+      totalFund(contract);
       getBounty(contract);
+      uniqueFans(contract);
     }
   }, [data]);
 
@@ -105,17 +114,26 @@ function Bounty({ bountyId }: Props) {
               <Link>{metadata.pitch}</Link>
             )}
             <HStack alignItems="center" my="12px">
-              <HStack>
-                <Text variant="metadataLabelLg">Current Funding:</Text>
-                <Text variant="metadataValueLg">
-                  {totalFund} MATIC (
-                  {(Number(totalFund) / block_metadata!.maxValue).toFixed(2)}%
-                  of max)
-                </Text>
-              </HStack>
+              <VStack>
+                <HStack>
+                  <Text variant="metadataLabelLg">Current Funding:</Text>
+                  <Text variant="metadataValueLg">
+                    {stringNumToJS(bountyState?.totalContribution!)} MATIC (
+                    {(
+                      Number(stringNumToJS(bountyState?.totalContribution!)) /
+                      block_metadata!.maxValue
+                    ).toFixed(2)}
+                    % of max)
+                  </Text>
+                </HStack>
+                <HStack>
+                  <Text variant="metadataLabelLg">Balance remaining:</Text>
+                  <Text variant="metadataValueLg">{totalFund} MATIC</Text>
+                </HStack>
+              </VStack>
               <Spacer />
               <Flex sx={styles.funderCount}>
-                <Text variant="metadataValueLg">6</Text>
+                <Text variant="metadataValueLg">{funders}</Text>
                 <User />
               </Flex>
             </HStack>
@@ -129,7 +147,9 @@ function Bounty({ bountyId }: Props) {
             <Heading sx={styles.specs}>Specs</Heading>
             <Flex direction="column">
               <Text variant="metadataLabel">Status:</Text>
-              <Text variant="metadataValue">{getReadableStatus(status)}</Text>
+              <Text variant="metadataValue">
+                {getReadableStatus(status, bountyState?.status)}
+              </Text>
             </Flex>
             <Flex direction="column">
               <Text variant="metadataLabel">Expiration: </Text>
@@ -175,15 +195,7 @@ function Bounty({ bountyId }: Props) {
       </VStack>
 
       <Divider my="80px" />
-
-      {bountyState ? (
-        <>
-          <Text>isPrecipitatingEvent: {bountyState.isPrecipitatingEvent} </Text>
-          <Text>totalContribution: {bountyState.totalContribution}</Text>
-        </>
-      ) : null}
-
-      <BountyState bounty={bounty} />
+      <BountyState bounty={bounty} blockState={bountyState} />
     </Box>
   ) : (
     <Text>No bounty found.</Text>

@@ -61,9 +61,6 @@ export interface RejoinBounty_rejoinBounty {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  /**
-   * The creator who can claim this bounty
-   */
   creator_id: string;
 }
 

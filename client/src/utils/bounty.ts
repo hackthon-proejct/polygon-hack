@@ -4,6 +4,7 @@ import bountyJSON from "../contracts/polygon-contracts/Bounty.json";
 
 import { TimeSecondsType, TimeStringType } from "@utils/types";
 import { swapKeys } from "@utils/helpers";
+import BN from "bn.js";
 
 const abi = bountyJSON.abi;
 
@@ -14,7 +15,10 @@ export default function bountyContract(addr: string) {
 
 export interface VotingState {
   votingOn: string;
+  bonusPct: string;
+  bonusValue: string;
   pctYeasNeeded: string;
+  yeasNeeded: string;
   currentYeas: string;
   currentNays: string;
   timesFailed: string;
@@ -33,7 +37,10 @@ export async function getVotingStatus(contract: any): Promise<VotingState> {
   console.log("getVotingStatus", result);
   const [
     votingOn,
+    bonusPct,
+    bonusValue,
     pctYeasNeeded,
+    yeasNeeded,
     currentYeas,
     currentNays,
     timesFailed,
@@ -42,7 +49,10 @@ export async function getVotingStatus(contract: any): Promise<VotingState> {
   ] = result;
   return {
     votingOn,
+    bonusPct,
+    bonusValue,
     pctYeasNeeded,
+    yeasNeeded,
     currentYeas,
     currentNays,
     timesFailed,
@@ -70,6 +80,12 @@ export async function getEquity(contract: any, account: any): Promise<string> {
   return result;
 }
 
+export async function getUniqueFans(contract: any): Promise<string> {
+  const result = await contract.methods.uniqueFans().call();
+  console.log("result", result);
+  return result;
+}
+
 export async function getBalance(contract: any, account: any): Promise<string> {
   const result = await contract.methods.balanceOf(account).call();
   console.log("result", result);
@@ -93,9 +109,12 @@ export async function negotiateLeave(contract: any, account: any) {
   return result;
 }
 
-export async function canRejoinTreasury(contract: any, account: any) {
-  const result = await contract.methods.canRejoinTreasury(account).call();
-  console.log("canRejoinTreasury", result);
+export async function amountRejoinTreasury(
+  contract: any,
+  account: any
+): Promise<string> {
+  const result = await contract.methods.amountRejoinTreasury(account).call();
+  console.log("amountRejoinTreasury", result);
   return result;
 }
 
@@ -125,9 +144,25 @@ const BountyStatusReadableMap: {
   [BountyStatus.REJECTED]: "Rejected",
 };
 
-export function getReadableStatus(status?: BountyStatus) {
+export function getReadableStatus(status?: BountyStatus, blockStatus?: string) {
   if (status == null) {
     return BountyStatusReadableMap[BountyStatus.UNKNOWN];
+  }
+  if (blockStatus) {
+    switch (blockStatus) {
+      case "0":
+        return "Unclaimed";
+      case "1":
+        return "Negotiating";
+      case "2":
+        return "Claimed";
+      case "3":
+        return "Success";
+      case "4":
+        return "Failure";
+      default:
+        console.log("no status");
+    }
   }
   return BountyStatusReadableMap[status];
 }
@@ -164,4 +199,10 @@ export function getSecondsFromTimeString(timeString: TimeStringType) {
 
 export function getTimeStringFromSeconds(seconds: TimeSecondsType) {
   return secondsToStringTimeMap[seconds];
+}
+
+export function stringNumToJS(bn: string): string {
+  const num = new BN(bn);
+  const converted = num.div(new BN(10 ** 9)).toNumber() / 10 ** 9;
+  return converted.toString();
 }

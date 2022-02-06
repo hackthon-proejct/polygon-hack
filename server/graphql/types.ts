@@ -8,6 +8,7 @@ import {
   GraphQLString,
 } from "graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
+import Board from "../models/Board.model";
 import Profile from "../models/Profile.model";
 
 export const BountyData = new GraphQLObjectType({
@@ -92,15 +93,11 @@ export const BountyType = new GraphQLObjectType({
     // todo: cleanup
     creator_id: {
       type: new GraphQLNonNull(GraphQLString),
-      description: "The creator who can claim this bounty",
       resolve: async (parent, args, ctx, info) => {
-        const board = await parent.$get("board");
-        const profile = await Profile.findOne({
-          where: {
-            id: board.profile_id,
-          },
+        const board = await Board.findByPk(parent.board_id, {
+          include: [Profile],
         });
-        return profile.user_id;
+        return board.profile.user_id;
       },
     },
     // todo: cleanup
@@ -108,13 +105,10 @@ export const BountyType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: "The twitter handle of the creator",
       resolve: async (parent, args, ctx, info) => {
-        const board = await parent.$get("board");
-        const profile = await Profile.findOne({
-          where: {
-            id: board.profile_id,
-          },
+        const board = await Board.findByPk(parent.board_id, {
+          include: [Profile],
         });
-        return profile.twitter_handle;
+        return board.profile.twitter_handle;
       },
     },
   },

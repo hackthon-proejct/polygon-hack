@@ -11,9 +11,10 @@ type Props = { bounty: BountyQuery_bounty };
 export default function BountyNegotiating({ bounty }: Props) {
   const loggedInUserId = useAppSelector(selectUserId);
   // TODO: for testing only
-  const isCreator = false;
-  // const isCreator = bounty.creator_id === loggedInUserId;
+  const isCreator = bounty.creator_id === loggedInUserId;
   return (
-    <Box>{!isCreator ? <FunderJoinOrWithdraw bounty={bounty} /> : null}</Box>
+    <Box>
+      <FunderJoinOrWithdraw bounty={bounty} isCreator={isCreator} />
+    </Box>
   );
 }

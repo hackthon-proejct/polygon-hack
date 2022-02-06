@@ -18,13 +18,16 @@ let ourWallet;
 function printVoteStatus(data) {
   console.log("**************VOTE STATUS***************");
   const keys = [
-    "milestone",
+    "votingOn",
+    "bonusPct",
+    "bonusValue",
     "pctYeasNeeded",
-    "yeas",
-    "nays",
+    "yeasNeeded",
+    "currentYeas",
+    "currentNays",
     "timesFailed",
-    "failureThreshold",
-    "totalVoters",
+    "maxFailures",
+    "currentVotes",
   ];
   data.forEach((d, i) => {
     console.log(`${keys[i]}: ${d.toString()}`);

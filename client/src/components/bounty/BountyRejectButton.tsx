@@ -6,7 +6,7 @@ import { X } from "react-feather";
 import bounty from "@utils/bounty";
 import { CSSObject } from "@emotion/react";
 
-type Props = { bounty: BountyQuery_bounty; full?: boolean; sx?: CSSObject };
+type Props = { bounty: BountyQuery_bounty; full?: boolean; sx?: any };
 export default function BountyReject({
   sx,
   bounty,

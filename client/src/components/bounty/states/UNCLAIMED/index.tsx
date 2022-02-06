@@ -18,21 +18,39 @@ import { useAppSelector, useAppDispatch } from "@redux/hooks";
 
 import { selectUserId } from "@redux/slices/userSlice";
 import { RadioCard } from "@components/RadioCard";
-import {
+import bountyContract, {
   bountyDeliverableOptions,
+  getEquity,
   getTimeStringFromSeconds,
+  stringNumToJS,
 } from "@utils/bounty";
 import { TimeSecondsType, TimeStringType } from "@utils/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Creator from "./CreatorNegotiate";
+import { web3 } from "@utils/constants";
 
 type Props = { bounty: BountyQuery_bounty };
 
 export default function BountyUnclaimed({ bounty }: Props) {
   const loggedInUserId = useAppSelector(selectUserId);
   // TODO: for testing only
-  let isCreator = bounty.creator_id === loggedInUserId;
   // isCreator = false;
+  let isCreator = bounty.creator_id === loggedInUserId;
+
+  const [equity, setEquity] = useState<string>();
+
+  useEffect(() => {
+    async function equity(contract: any) {
+      const accounts = await web3.eth.getAccounts();
+      const equity = await getEquity(contract, accounts[0]);
+      setEquity(stringNumToJS(equity));
+    }
+    if (bounty.address) {
+      const contract = bountyContract(bounty.address);
+      equity(contract);
+    }
+  }, []);
+
   return (
     <Box>
       {isCreator ? (

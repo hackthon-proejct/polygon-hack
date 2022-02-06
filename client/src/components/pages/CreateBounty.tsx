@@ -93,6 +93,9 @@ function CreateBounty({ twitterHandle }: Props) {
   const [resY, setResY] = useState(2000);
   const [max, setMax] = useState(1);
   const [reserve, setReserve] = useState(0);
+  const [initial, setInitial] = useState(20);
+  const [final, setFinal] = useState(40);
+  const [bonus, setBonus] = useState(20);
 
   return loading ? (
     <Text>Loading...</Text>
@@ -196,6 +199,34 @@ function CreateBounty({ twitterHandle }: Props) {
         })}
       </HStack>
 
+      <FormLabel htmlFor="initialPct">Initial Payout</FormLabel>
+      <Input
+        id="initialPct"
+        type="number"
+        value={initial}
+        onChange={(e) => {
+          setReserve(Math.round(e.currentTarget.valueAsNumber));
+        }}
+      />
+      <FormLabel htmlFor="finalPct">Final Payout</FormLabel>
+      <Input
+        id="finalPct"
+        type="number"
+        value={final}
+        onChange={(e) => {
+          setReserve(Math.round(e.currentTarget.valueAsNumber));
+        }}
+      />
+      <FormLabel htmlFor="bonusPct">Bonus Structure</FormLabel>
+      <Input
+        id="bonusPct"
+        type="number"
+        value={bonus}
+        onChange={(e) => {
+          setReserve(Math.round(e.currentTarget.valueAsNumber));
+        }}
+      />
+
       <Button
         isLoading={isCreatingBounty}
         loadingText="Submitting"
@@ -218,9 +249,11 @@ function CreateBounty({ twitterHandle }: Props) {
               block_metadata: {
                 maxValue: max,
                 reservePrice: reserve,
-                bonusTargets: [20, 20, 40],
-                bonusPctYeasNeeded: [50, 50, 50],
-                bonusFailureThresholds: [2, 2, 2],
+                pctCreatorInitialDisbursement: initial,
+                pctCreatorFinalDisbursement: final,
+                bonusTargets: [bonus, bonus],
+                bonusPctYeasNeeded: [50, 50],
+                bonusFailureThresholds: [2, 2],
                 mustBeClaimedTime:
                   Math.floor(Date.now() / 1000) +
                   getSecondsFromTimeString(expirationString),

@@ -102,7 +102,7 @@ abstract contract Treasury {
         if (bonusFailures[votingOn] == bonusFailureThresholds[votingOn]) {
             return failAndWithdraw();
         }
-        return false;
+        return true;
     }
 
     function failAndWithdraw() internal returns (bool success) {
@@ -225,11 +225,14 @@ contract Bounty is Treasury, IERC721Receiver {
         return [totalContribution, isPrecipitatingEventNum, uint256(status)];
     }
 
-    // Returns [milestone, yeasNeeded, yeas, nays, timesFailed, failureThreshold, totalVoters]
-    function voteStatus() public view returns (uint256[7] memory stats) {
+    // Returns [milestone, bonusTargetPct, bonusTargetEth, pctYeas, yeasNeeded, yeas, nays, timesFailed, failureThreshold, totalVoters]
+    function voteStatus() public view returns (uint256[10] memory stats) {
         return [
             votingOn,
+            bonusTargets[votingOn],
+            totalContribution.mul(bonusTargets[votingOn]).div(100),
             bonusPctYeasNeeded[votingOn],
+            totalContribution.mul(bonusPctYeasNeeded[votingOn]).div(100),
             currentYeas,
             currentNays,
             uint256(bonusFailures[votingOn]),
@@ -377,12 +380,12 @@ contract Bounty is Treasury, IERC721Receiver {
         return true;
     }
 
-    function canRejoinTreasury(address _addr)
+    function amountRejoinTreasury(address _addr)
         public
         view
-        returns (bool canRejoin)
+        returns (uint256 canRejoin)
     {
-        return mustRejoinTreasury[_addr] != 0;
+        return mustRejoinTreasury[_addr];
     }
 
     function negotiateRejoin(address _addr)
@@ -399,6 +402,7 @@ contract Bounty is Treasury, IERC721Receiver {
 
     function negotiateLeave() public returns (bool success) {
         payable(msg.sender).transfer(mustRejoinTreasury[msg.sender]);
+        mustRejoinTreasury[msg.sender] = 0;
         return true;
     }
 
