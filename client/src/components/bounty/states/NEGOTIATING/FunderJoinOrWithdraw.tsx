@@ -5,6 +5,7 @@ import {
   Heading,
   FormLabel,
   HStack,
+  VStack,
   Textarea,
   Input,
   Button,
@@ -37,9 +38,9 @@ export default function Funder({ bounty }: Props) {
   const [rejoinBounty, _] = useMutation<RejoinBounty, RejoinBountyVariables>(
     REJOIN_BOUNTY
   );
-  const [canRejoin, setCanRejoin] = useState<boolean>(false);
+  const [canRejoin, setCanRejoin] = useState<boolean>(true);
 
-  const negotiation = data?.negotiationForBounty;
+  let negotiation = data?.negotiationForBounty;
   const exitBounty = async () => {
     const accounts = await web3.eth.getAccounts();
     const contract = bountyContract(bounty.address!);
@@ -56,20 +57,72 @@ export default function Funder({ bounty }: Props) {
     canRejoin();
   });
 
+  // @ts-ignore
+  // negotiation = {
+  //   metadata: {
+  //     timeLimit: 1000,
+  //     description: "joiwjoeijf",
+  //     reservePrice: 100,
+  //   },
+  // };
+
+  let hasNegotiations =
+    negotiation?.metadata?.timeLimit != null &&
+    negotiation?.metadata?.description != null &&
+    negotiation?.metadata?.reservePrice != null;
+
+  // hasNegotiations = true;
+
   return negotiation ? (
-    <Flex direction="column">
-      <Heading>Bounty Negotiations</Heading>
-      <FormLabel>Deliverable Date</FormLabel>
-      <Text>{negotiation.metadata.timeLimit}</Text>
+    <VStack
+      direction="column"
+      mt="36px"
+      spacing="12px"
+      maxWidth="80%"
+      margin="auto"
+    >
+      <Heading my="12px">Creator Negotiation</Heading>
+      <Text htmlFor="bounty-joinContribution" fontSize="24px" pb="12px">
+        @{bounty.creator_handle} is interested in your bounty!{" "}
+        {hasNegotiations
+          ? "Before they can get started, they have a few requests."
+          : null}
+      </Text>
 
-      <FormLabel>Demands</FormLabel>
-      <Text>{negotiation.metadata.description}</Text>
+      <VStack
+        direction="column"
+        pb="36px"
+        alignItems="flex-start"
+        maxWidth="80%"
+        display="block"
+      >
+        {negotiation.metadata.timeLimit != null ? (
+          <>
+            <Text variant="metadataLabelLg">Deliverable Date</Text>
+            <Text variant="metadataValueLg">
+              {negotiation.metadata.timeLimit}
+            </Text>
+          </>
+        ) : null}
 
-      <FormLabel>Minimum Bounty</FormLabel>
-      <Text>{negotiation.metadata.reservePrice}</Text>
+        {negotiation.metadata.description != null ? (
+          <>
+            <Text variant="metadataLabelLg">Demands</Text>
+            <Text variant="metadataValueLg">
+              {negotiation.metadata.description}
+            </Text>
+          </>
+        ) : null}
 
-      <FormLabel>Can Rejoin or Withdraw</FormLabel>
-      <Text>{canRejoin.toString()}</Text>
+        {negotiation.metadata.reservePrice != null ? (
+          <>
+            <Text variant="metadataLabelLg">Minimum Reserve Price</Text>
+            <Text variant="metadataValueLg">
+              {negotiation.metadata.reservePrice}
+            </Text>
+          </>
+        ) : null}
+      </VStack>
 
       {canRejoin ? (
         <HStack>
@@ -83,7 +136,7 @@ export default function Funder({ bounty }: Props) {
           <Button onClick={exitBounty}>Withdraw Funds</Button>
         </HStack>
       ) : null}
-    </Flex>
+    </VStack>
   ) : null;
 }
 

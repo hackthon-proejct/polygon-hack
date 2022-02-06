@@ -40,7 +40,13 @@ export default function BountyJoin({ address }: Props) {
   // const hasJoinedBounty = userId === bounty?.initiator_id;
 
   return (
-    <VStack direction="column" mt="36px" spacing="12px">
+    <VStack
+      direction="column"
+      mt="36px"
+      spacing="12px"
+      maxWidth="80%"
+      margin="auto"
+    >
       <Heading my="12px">Join this bounty</Heading>
       <FormLabel htmlFor="bounty-joinContribution" fontSize="24px" pb="12px">
         Interested? Set up a contribution below so you don't miss out on the
