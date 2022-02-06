@@ -12,8 +12,8 @@ export function setJwtHeaderOnLogin(ctx: RouterContext, user: User) {
     maxAge: 86400000 * 30,
     overwrite: true,
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
     path: "/",
   });
   console.log("token set");
