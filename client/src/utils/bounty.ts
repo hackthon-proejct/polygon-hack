@@ -102,7 +102,7 @@ const BountyStatusReadableMap: {
   [BountyStatus.UNKNOWN]: "Unknown",
   [BountyStatus.DRAFT]: "Draft",
   [BountyStatus.UNCLAIMED]: "Unclaimed",
-  [BountyStatus.NEGOTIATING]: "Unclaimed",
+  [BountyStatus.NEGOTIATING]: "Negotiating",
   [BountyStatus.CLAIMED]: "Claimed",
   [BountyStatus.SUCCEEDED]: "Succeeded",
   [BountyStatus.FAILED]: "Failed",

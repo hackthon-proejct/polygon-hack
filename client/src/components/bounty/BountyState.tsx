@@ -6,6 +6,7 @@ import BountyNegotiate from "./BountyNegotiate";
 import BountySubmit from "./BountySubmit";
 import BountyUnclaimed from "./states/UNCLAIMED";
 import BountyDraft from "./states/DRAFT";
+import BountyNegotiating from "./states/NEGOTIATING";
 
 type Props = { bounty: BountyQuery_bounty };
 
@@ -16,7 +17,7 @@ export default function BountyState({ bounty }: Props) {
     case BountyStatus.UNCLAIMED:
       return <BountyUnclaimed bounty={bounty} />;
     case BountyStatus.NEGOTIATING:
-      return <BountyUnclaimed bounty={bounty} />;
+      return <BountyNegotiating bounty={bounty} />;
     case BountyStatus.CLAIMED:
       return <BountySubmit bounty={bounty} />;
     default:

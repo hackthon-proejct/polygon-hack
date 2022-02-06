@@ -19,7 +19,6 @@ import {
 import { getEmbedUrlFromYoutube } from "@utils/youtube";
 import { useAppSelector } from "@redux/hooks";
 import { selectUserId } from "@redux/slices/userSlice";
-import BountyJoin from "@components/bounty/BountyJoin";
 import BountyVote from "@components/bounty/BountyVote";
 import BountyState from "@components/bounty/BountyState";
 
