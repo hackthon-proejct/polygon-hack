@@ -23,6 +23,7 @@ import {
   WrapItem,
   VStack,
   useBreakpointValue,
+  Divider,
 } from "@chakra-ui/react";
 import { BountyPreview } from "@components/bounty/BountyPreview";
 import { BOUNTY } from "@gql/bounties.graphql";
@@ -188,19 +189,18 @@ function Bounty({ bountyId }: Props) {
             ) : null}
           </VStack>
         </Flex>
-        <Flex>
-          <Flex direction="column">
-            <Heading variant="titleLg">{metadata.title}</Heading>
-            <Text variant="descriptionLg">{metadata.description}</Text>
-          </Flex>
+        <Flex direction="column" alignSelf="flex-start">
+          <Heading variant="titleLg">{metadata.title}</Heading>
+          <Text variant="descriptionLg">{metadata.description}</Text>
         </Flex>
       </VStack>
+
+      <Divider my="80px" />
 
       {bountyState ? (
         <>
           <Text>isPrecipitatingEvent: {bountyState.isPrecipitatingEvent} </Text>
           <Text>totalContribution: {bountyState.totalContribution}</Text>
-          <Text>status: {bountyState.status}</Text>
         </>
       ) : null}
 

@@ -57,70 +57,85 @@ export default function Creator({ bounty }: Props) {
 
   const deliverableGroup = getDeliverableRootProps();
   return (
-    <VStack alignItems="flex-start" mt="14px" direction="column" spacing="12px">
+    <VStack
+      direction="column"
+      mt="36px"
+      spacing="12px"
+      maxWidth="80%"
+      margin="auto"
+    >
       <Heading my="12px">Negotiate this bounty</Heading>
-      <Text fontSize="20px" pb="12px">
+      <Text textAlign="center" fontSize="24px" pb="12px">
         Interested in this bounty? You can declare your terms of service, and
         deliverable timelines below!
       </Text>
-      <Text variant="metadataLabel">Deliverable Date</Text>
-      <HStack {...deliverableGroup}>
-        {bountyDeliverableOptions.map((value) => {
-          const radio = getDeliverableRadioProps({ value });
-          return (
-            <Flex direction="column" key={value}>
-              <RadioCard value={deliverable} {...radio}>
-                {value}
-              </RadioCard>
-              <Text sx={styles.deliverableCurrent}>
-                {value === currentTimeOnBlockcchain
-                  ? "Current Time"
-                  : deliverable === value
-                  ? "New Time"
-                  : null}
-              </Text>
-            </Flex>
-          );
-        })}
-      </HStack>
-      <FormLabel variant="metadataLabel" htmlFor="bountyChangesDescription">
-        Describe your proposed changes
-      </FormLabel>
-      <Textarea
-        id="bountyChangesDescription"
-        placeholder="Description of Changes"
-        value={description}
-        onChange={(e) => {
-          setDescription(e.currentTarget.value);
-        }}
-      />
-      <Flex>
-        <FormLabel
-          variant="metadataLabel"
-          htmlFor="bountyChangesDescription"
-          mr="4px"
-        >
-          Minimum Reserve Price
+      <VStack
+        direction="column"
+        alignItems="flex-start"
+        mt="36px"
+        spacing="12px"
+        maxWidth="80%"
+        margin="auto"
+      >
+        <Text variant="metadataLabel">Deliverable Date</Text>
+        <HStack {...deliverableGroup}>
+          {bountyDeliverableOptions.map((value) => {
+            const radio = getDeliverableRadioProps({ value });
+            return (
+              <Flex direction="column" key={value}>
+                <RadioCard value={deliverable} {...radio}>
+                  {value}
+                </RadioCard>
+                <Text sx={styles.deliverableCurrent}>
+                  {value === currentTimeOnBlockcchain
+                    ? "Current Time"
+                    : deliverable === value
+                    ? "New Time"
+                    : null}
+                </Text>
+              </Flex>
+            );
+          })}
+        </HStack>
+        <FormLabel variant="metadataLabel" htmlFor="bountyChangesDescription">
+          Describe your proposed changes
         </FormLabel>
-        <Text variant="metadataLabel" fontWeight="400" mr="4px">
-          (currently
-        </Text>
-        <Text variant="metadataLabel">
-          {bounty.block_metadata.reservePrice} MATIC
-        </Text>
-        <Text variant="metadataLabel" fontWeight="400" mr="4px">
-          )
-        </Text>
-      </Flex>
-      <Input
-        id="bountyMin"
-        type="number"
-        placeholder="Mininum bounty size"
-        value={bountyMin}
-        onChange={(e) => {
-          setBountyMin(e.currentTarget.valueAsNumber);
-        }}
-      />
+        <Textarea
+          id="bountyChangesDescription"
+          placeholder="Description of Changes"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.currentTarget.value);
+          }}
+        />
+        <Flex>
+          <FormLabel
+            variant="metadataLabel"
+            htmlFor="bountyChangesDescription"
+            mr="4px"
+          >
+            Minimum Reserve Price
+          </FormLabel>
+          <Text variant="metadataLabel" fontWeight="400" mr="4px">
+            (currently
+          </Text>
+          <Text variant="metadataLabel">
+            {bounty.block_metadata.reservePrice} MATIC
+          </Text>
+          <Text variant="metadataLabel" fontWeight="400" mr="4px">
+            )
+          </Text>
+        </Flex>
+        <Input
+          id="bountyMin"
+          type="number"
+          placeholder="Mininum bounty size"
+          value={bountyMin}
+          onChange={(e) => {
+            setBountyMin(e.currentTarget.valueAsNumber);
+          }}
+        />
+      </VStack>
 
       <Button
         onClick={async () => {

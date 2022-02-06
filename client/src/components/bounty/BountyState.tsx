@@ -16,8 +16,8 @@ export default function BountyState({ bounty }: Props) {
   switch (bounty.status) {
     case BountyStatus.DRAFT:
       // return <BountyUnclaimed bounty={bounty} />;
-      return <BountyNegotiating bounty={bounty} />;
-      // return <BountyClaimed bounty={bounty} />;
+      // return <BountyNegotiating bounty={bounty} />;
+      return <BountyClaimed bounty={bounty} />;
       // return <BountySucceeded bounty={bounty} />;
       return <BountyDraft bounty={bounty} />;
     case BountyStatus.UNCLAIMED:

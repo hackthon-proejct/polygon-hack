@@ -32,7 +32,7 @@ export default function BountyUnclaimed({ bounty }: Props) {
   const loggedInUserId = useAppSelector(selectUserId);
   // TODO: for testing only
   let isCreator = bounty.creator_id === loggedInUserId;
-  isCreator = false;
+  // isCreator = false;
   return (
     <Box>
       {isCreator ? (

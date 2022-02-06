@@ -82,7 +82,12 @@ export default function Funder({ bounty }: Props) {
       margin="auto"
     >
       <Heading my="12px">Creator Negotiation</Heading>
-      <Text htmlFor="bounty-joinContribution" fontSize="24px" pb="12px">
+      <Text
+        textAlign="center"
+        htmlFor="bounty-joinContribution"
+        fontSize="24px"
+        pb="12px"
+      >
         @{bounty.creator_handle} is interested in your bounty!{" "}
         {hasNegotiations
           ? "Before they can get started, they have a few requests."
