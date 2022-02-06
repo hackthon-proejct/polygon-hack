@@ -62,9 +62,7 @@ app.use(async (ctx, next) => {
   if (ctx.path.indexOf("/graphql") === -1 && ctx.path.indexOf("/api") === -1) {
     return next();
   }
-  console.log("auth_token", ctx.cookies.get("auth_token"));
   if (ctx.cookies.get("auth_token")) {
-    console.log("here");
     ctx.request.headers["authorization"] =
       "Bearer " + ctx.cookies.get("auth_token");
   }
