@@ -270,7 +270,15 @@ contract Bounty is Treasury, IERC721Receiver {
                 creatorWallet.transfer(disbursement);
             }
             // fan not added yet
-            fans.push(payable(msg.sender));
+            bool fanExists = false;
+            for (uint8 i = 0; i < fans.length; i++) {
+                if (fans[i] == payable(msg.sender)) {
+                    fanExists = true;
+                }
+            }
+            if (!fanExists) {
+                fans.push(payable(msg.sender));
+            }
             pctBalanceRemaining[msg.sender] = pctRemaining;
         }
         equity[msg.sender] += msg.value;
