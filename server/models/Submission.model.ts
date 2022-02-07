@@ -81,7 +81,6 @@ export default class Submission extends Model {
     );
 
     const tokenAddr = await mintSubmission(bounty.address, result.link);
-    await mintSubmission(bounty.address, this.metadata.image_url);
     bounty.metadata = {
       ...bounty.metadata,
       ipfs_manifest: result.link,
