@@ -27,28 +27,35 @@ import bountyContract, {
 } from "@utils/bounty";
 import { web3 } from "@utils/constants";
 import { TimeSecondsType, TimeStringType } from "@utils/types";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import BountyJoin from "../BountyJoin";
 
 type Props = { bounty: BountyQuery_bounty; isCreator: boolean };
 
 export default function Funder({ bounty, isCreator }: Props) {
+  const router = useRouter();
   const { data, loading, error } = useQuery<NegotiationForBounty>(NEGOTIATION, {
     variables: {
       bounty_id: bounty.id,
     },
   });
-  const [rejoinBounty, _] = useMutation<RejoinBounty, RejoinBountyVariables>(
-    REJOIN_BOUNTY
-  );
+  const [rejoinBounty, { loading: rejoinLoading }] = useMutation<
+    RejoinBounty,
+    RejoinBountyVariables
+  >(REJOIN_BOUNTY);
+  const [withdrawLoading, setWithdrawLoading] = useState(false);
   const [canRejoin, setCanRejoin] = useState<string>("0");
   console.log("iscr", isCreator);
 
   let negotiation = data?.negotiationForBounty;
   const exitBounty = async () => {
+    setWithdrawLoading(true);
     const accounts = await web3.eth.getAccounts();
     const contract = bountyContract(bounty.address!);
     await negotiateLeave(contract, accounts[0]);
+    setWithdrawLoading(false);
+    router.reload();
   };
 
   useEffect(() => {
@@ -158,15 +165,22 @@ export default function Funder({ bounty, isCreator }: Props) {
           <Text>You have {canRejoin} MATIC staked</Text>
           <HStack>
             <Button
-              isLoading={loading}
-              disabled={loading}
-              onClick={() =>
-                rejoinBounty({ variables: { bounty_id: bounty.id } })
-              }
+              isLoading={rejoinLoading}
+              disabled={rejoinLoading}
+              onClick={() => {
+                rejoinBounty({ variables: { bounty_id: bounty.id } });
+                router.reload();
+              }}
             >
               Rejoin Bounty
             </Button>
-            <Button onClick={exitBounty}>Withdraw Funds</Button>
+            <Button
+              isLoading={withdrawLoading}
+              disabled={withdrawLoading}
+              onClick={exitBounty}
+            >
+              Withdraw Funds
+            </Button>
           </HStack>
         </>
       )}

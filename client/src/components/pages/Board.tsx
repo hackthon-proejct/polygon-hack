@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
 
-import { Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import { Heading, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { BountyPreview } from "@components/bounty/BountyPreview";
 import { LOOKUP_TWITTER_HANDLE } from "@gql/users.graphql";
 import {
@@ -32,9 +32,13 @@ function Board({ twitterHandle }: Props) {
   const { board } = profile || {};
   const { bounties = [] } = board || {};
   return profile != null ? (
-    <>
-      <Heading>@{profile.twitter_handle}&apos;s Board</Heading>
-      <Text>Bounties</Text>
+    <VStack>
+      <Heading my="80px" fontSize="50px">
+        @{profile.twitter_handle}&apos;s Board
+      </Heading>
+      <Heading alignSelf="flex-start" variant="metadataValueLg">
+        Bounties
+      </Heading>
       {bounties?.length ? (
         <Wrap sx={styles.bountyWrap} spacing="30px">
           {bounties.map((bounty) =>
@@ -51,15 +55,17 @@ function Board({ twitterHandle }: Props) {
         </>
       )}
       <CreateBounty twitterHandle={twitterHandle} />
-    </>
+    </VStack>
   ) : (
-    <>
+    <VStack>
       <Heading>
         @{twitterHandle} {"isn't on Bounty yet"}
       </Heading>
-      <Text>but you can create one for them when they join!</Text>
+      <Text variant="metadataValueLg">
+        but you can create one for them when they join!
+      </Text>
       <CreateBounty twitterHandle={twitterHandle} />
-    </>
+    </VStack>
   );
 }
 

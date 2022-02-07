@@ -36,7 +36,7 @@ export default function MintButton({
             },
           });
 
-          if (submissionResp?.data?.createSubmission) {
+          if (submissionResp?.data?.mintSubmission) {
             onSuccess(submissionResp?.data?.mintSubmission);
           }
         } catch (e: any) {

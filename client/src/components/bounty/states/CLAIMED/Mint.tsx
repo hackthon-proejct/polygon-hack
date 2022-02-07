@@ -102,7 +102,7 @@ export default function Mint({
           />
           <MintButton
             mt="40px"
-            submissionId={currSubmission?.id}
+            submissionId={currSubmission?.id!}
             onSuccess={(data) => {
               router.reload();
             }}
