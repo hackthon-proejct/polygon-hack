@@ -83,28 +83,48 @@ export default function Mint({
       margin="auto"
       alignItems="center"
     >
-      <Heading my="12px">Mint your NFT</Heading>
-      <Text textAlign="center" fontSize="24px">
-        You&apos;ve made it to the final step!
-      </Text>
-      <Text textAlign="center" fontSize="24px" pb="12px">
-        Mint your NFT below to receive your final bonus
-      </Text>
-      <Image
-        mt="24px"
-        py="80px"
-        src={currSubmission?.metadata?.image_url}
-        width="100%"
-        boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
-        px={{ sm: "32px", md: "80px" }}
-      />
-      <MintButton
-        mt="40px"
-        submissionId={currSubmission?.id}
-        onSuccess={(data) => {
-          router.reload();
-        }}
-      />
+      {isCreator ? (
+        <>
+          <Heading my="12px">Mint your NFT</Heading>
+          <Text textAlign="center" fontSize="24px">
+            You&apos;ve made it to the final step!
+          </Text>
+          <Text textAlign="center" fontSize="24px" pb="12px">
+            Mint your NFT below to receive your final bonus
+          </Text>
+          <Image
+            mt="24px"
+            py="80px"
+            src={currSubmission?.metadata?.image_url}
+            width="100%"
+            boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
+            px={{ sm: "32px", md: "80px" }}
+          />
+          <MintButton
+            mt="40px"
+            submissionId={currSubmission?.id}
+            onSuccess={(data) => {
+              router.reload();
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Heading my="12px">Awaiting NFT...</Heading>
+          <Text textAlign="center" fontSize="24px">
+            The NFT is ready to mint! We&apos;re still waiting on the creator to
+            mint their artwork.
+          </Text>
+          <Image
+            mt="24px"
+            py="80px"
+            src={currSubmission?.metadata?.image_url}
+            width="100%"
+            boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
+            px={{ sm: "32px", md: "80px" }}
+          />
+        </>
+      )}
     </Flex>
   );
 }
