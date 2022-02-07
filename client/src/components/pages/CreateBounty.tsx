@@ -8,6 +8,7 @@ import {
   Input,
   Textarea,
   useRadioGroup,
+  VStack,
 } from "@chakra-ui/react";
 import { RadioCard } from "@components/RadioCard";
 import { CREATE_BOUNTY } from "@gql/bounties.graphql";
@@ -100,8 +101,10 @@ function CreateBounty({ twitterHandle }: Props) {
   return loading ? (
     <Text>Loading...</Text>
   ) : (
-    <Flex direction="column">
-      <FormLabel htmlFor="bountyTitle">Title</FormLabel>
+    <VStack direction="column" alignItems="flex-start">
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyTitle">
+        Title
+      </FormLabel>
       <Input
         id="bountyTitle"
         placeholder="Title of Bounty"
@@ -111,7 +114,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyDescription">Description</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyDescription">
+        Description
+      </FormLabel>
       <Textarea
         id="bountyDescription"
         placeholder="Description of Bounty"
@@ -121,7 +126,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyPitch">Pitch</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyPitch">
+        Pitch
+      </FormLabel>
       <Input
         id="bountyPitch"
         placeholder="youtube link"
@@ -131,7 +138,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyResX">Resolution (Width)</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyResX">
+        Resolution (Width)
+      </FormLabel>
       <Input
         id="bountyResX"
         type="number"
@@ -142,7 +151,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyResY">Resolution (Height)</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyResY">
+        Resolution (Height)
+      </FormLabel>
       <Input
         id="bountyResY"
         type="number"
@@ -153,7 +164,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyMax">Maximum Bounty</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyMax">
+        Maximum Bounty
+      </FormLabel>
       <Input
         id="bountyMax"
         type="number"
@@ -164,7 +177,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyReserve">Reserve Price</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyReserve">
+        Reserve Price
+      </FormLabel>
       <Input
         id="bountyReserve"
         type="number"
@@ -175,7 +190,9 @@ function CreateBounty({ twitterHandle }: Props) {
         }}
       />
 
-      <FormLabel htmlFor="bountyResY">Expiration Date</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyResY">
+        Expiration Date
+      </FormLabel>
       <HStack {...expirationGroup}>
         {bountyExpirationOptions.map((value) => {
           const radio = getExpirationRadioProps({ value });
@@ -187,7 +204,9 @@ function CreateBounty({ twitterHandle }: Props) {
         })}
       </HStack>
 
-      <FormLabel htmlFor="bountyResY">Deliverable Date</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bountyResY">
+        Deliverable Date
+      </FormLabel>
       <HStack {...deliverableGroup}>
         {bountyDeliverableOptions.map((value) => {
           const radio = getDeliverableRadioProps({ value });
@@ -199,7 +218,9 @@ function CreateBounty({ twitterHandle }: Props) {
         })}
       </HStack>
 
-      <FormLabel htmlFor="initialPct">Initial Payout</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="initialPct">
+        Initial Payout
+      </FormLabel>
       <Input
         id="initialPct"
         type="number"
@@ -208,7 +229,9 @@ function CreateBounty({ twitterHandle }: Props) {
           setReserve(Math.round(e.currentTarget.valueAsNumber));
         }}
       />
-      <FormLabel htmlFor="finalPct">Final Payout</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="finalPct">
+        Final Payout
+      </FormLabel>
       <Input
         id="finalPct"
         type="number"
@@ -217,7 +240,9 @@ function CreateBounty({ twitterHandle }: Props) {
           setReserve(Math.round(e.currentTarget.valueAsNumber));
         }}
       />
-      <FormLabel htmlFor="bonusPct">Bonus Structure</FormLabel>
+      <FormLabel variant="metadataLabelLg" htmlFor="bonusPct">
+        Bonus Structure
+      </FormLabel>
       <Input
         id="bonusPct"
         type="number"
@@ -265,7 +290,7 @@ function CreateBounty({ twitterHandle }: Props) {
       >
         {isCreatingBounty ? "Creating..." : "Create"}
       </Button>
-    </Flex>
+    </VStack>
   );
 }
 
