@@ -3,7 +3,12 @@ export const PolygonLogo = (props: any) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 507.91 446.91"
-      style={{ height: props.size, display: "inline-flex", padding: "2px" }}
+      style={{
+        height: props.size,
+        display: "inline-flex",
+        marginLeft: "12px",
+        position: "absolute",
+      }}
     >
       <path
         style={{ fill: "#8247e5" }}

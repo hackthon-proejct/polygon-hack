@@ -193,7 +193,7 @@ function Bounty({ bountyId }: Props) {
         </Flex>
       </VStack>
 
-      <Divider my="80px" />
+      <Divider mt="30px" mb="60px" />
       <BountyState bounty={bounty} blockState={bountyState} />
     </Box>
   ) : (

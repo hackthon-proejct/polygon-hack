@@ -21,7 +21,8 @@ function Home() {
             invert crowdfunding & pitch to creators
           </Text>
           <Text color="white" sx={styles.subtitle}>
-            powered by <Icon size={45} as={PolygonLogo} />
+            powered by
+            <Icon size={45} as={PolygonLogo} />
           </Text>
         </Flex>
       </Flex>
