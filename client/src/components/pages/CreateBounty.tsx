@@ -31,6 +31,7 @@ import {
   getSecondsFromTimeString,
 } from "@utils/bounty";
 import { TimeStringType } from "@utils/types";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 type Props = {
@@ -38,6 +39,7 @@ type Props = {
 };
 
 function CreateBounty({ twitterHandle }: Props) {
+  const router = useRouter();
   const [expirationString, setExpirationString] =
     useState<TimeStringType>("48 hours");
   const [deliverableString, setDeliverableString] =
@@ -93,7 +95,7 @@ function CreateBounty({ twitterHandle }: Props) {
   const [resX, setResX] = useState(2000);
   const [resY, setResY] = useState(2000);
   const [max, setMax] = useState(1);
-  const [reserve, setReserve] = useState(0);
+  const [reserve, setReserve] = useState(0.1);
   const [initial, setInitial] = useState(20);
   const [final, setFinal] = useState(40);
   const [bonus, setBonus] = useState(20);
@@ -258,34 +260,43 @@ function CreateBounty({ twitterHandle }: Props) {
         colorScheme="teal"
         variant="outline"
         onClick={async () => {
-          const bountyResp = await createBounty({
-            variables: {
-              board_id,
-              twitter_handle,
-              metadata: {
-                title,
-                description,
-                pitch,
-                specs: {
-                  resX,
-                  resY,
+          try {
+            const bountyResp = await createBounty({
+              variables: {
+                board_id,
+                twitter_handle,
+                metadata: {
+                  title,
+                  description,
+                  pitch,
+                  specs: {
+                    resX,
+                    resY,
+                  },
+                },
+                block_metadata: {
+                  maxValue: max,
+                  reservePrice: reserve,
+                  pctCreatorInitialDisbursement: initial,
+                  pctCreatorFinalDisbursement: final,
+                  bonusTargets: [bonus, bonus],
+                  bonusPctYeasNeeded: [50, 50],
+                  bonusFailureThresholds: [2, 2],
+                  mustBeClaimedTime:
+                    Math.floor(Date.now() / 1000) +
+                    getSecondsFromTimeString(expirationString),
+                  timeLimit: getSecondsFromTimeString(deliverableString),
                 },
               },
-              block_metadata: {
-                maxValue: max,
-                reservePrice: reserve,
-                pctCreatorInitialDisbursement: initial,
-                pctCreatorFinalDisbursement: final,
-                bonusTargets: [bonus, bonus],
-                bonusPctYeasNeeded: [50, 50],
-                bonusFailureThresholds: [2, 2],
-                mustBeClaimedTime:
-                  Math.floor(Date.now() / 1000) +
-                  getSecondsFromTimeString(expirationString),
-                timeLimit: getSecondsFromTimeString(deliverableString),
-              },
-            },
-          });
+            });
+            if (bountyResp.data?.createBounty) {
+              router.push(
+                `/${twitter_handle}/${bountyResp.data?.createBounty?.id}`
+              );
+            }
+          } catch (e: any) {
+            alert("Something went wrong!");
+          }
         }}
       >
         {isCreatingBounty ? "Creating..." : "Create"}
