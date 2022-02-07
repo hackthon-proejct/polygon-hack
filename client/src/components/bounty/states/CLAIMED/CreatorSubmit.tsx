@@ -29,6 +29,7 @@ type Props = {
   votingState: VotingState;
   currSubmission: SubmissionsForBounty_submissionsForBounty | null;
   allSubmissions: any[];
+  isVotingCurrently: boolean;
 };
 
 const fr = IS_SERVER ? null : new FileReader();
@@ -38,6 +39,7 @@ export default function CreatorSubmit({
   votingState,
   currSubmission,
   allSubmissions,
+  isVotingCurrently,
 }: Props) {
   const router = useRouter();
   const uploadRef = useRef<HTMLInputElement>(null);
@@ -76,10 +78,9 @@ export default function CreatorSubmit({
     },
     [setFile]
   );
-  console.log(currSubmission);
-  return currSubmission?.metadata?.milestone ===
-    Number(votingState.votingOn) ? (
-    <VStack mb="80px">
+  return currSubmission?.metadata?.milestone === Number(votingState.votingOn) &&
+    isVotingCurrently ? (
+    <VStack mb="40px">
       <Heading my="12px">
         Vote in progress:{" "}
         <Heading as="span" variant="metadataLabelLg" mr="12px">
@@ -93,16 +94,9 @@ export default function CreatorSubmit({
           Bonus Target {bonusTarget}.
         </Text>
       </Text>
-      <Text textAlign="center" fontSize="24px" pb="12px">
+      <Text textAlign="center" fontSize="24px">
         You&apos;ll be able to submit again when the vote is finished!
       </Text>
-      <Image
-        alt=""
-        src={currSubmission?.metadata?.image_url || ""}
-        width="100%"
-        boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
-        px={{ sm: "32px", md: "80px" }}
-      />
     </VStack>
   ) : (
     <VStack
@@ -132,8 +126,16 @@ export default function CreatorSubmit({
         maxWidth="80%"
         margin="auto"
       >
-        <Flex alignItems="center" py="18px">
+        <Flex alignSelf="center" alignItems="center" py="18px">
           <VStack>
+            <Text fontSize="24px" pb="12px" mr="8px">
+              This bounty can fail{" "}
+              <Text as="span" fontSize="24px" fontWeight="700" pb="12px">
+                {Number(votingState.maxFailures) -
+                  Number(votingState.timesFailed)}{" "}
+                more times
+              </Text>
+            </Text>
             <HStack>
               <Text variant="metadataLabelLg" mr="12px">
                 Bonus Target {bonusTarget}:

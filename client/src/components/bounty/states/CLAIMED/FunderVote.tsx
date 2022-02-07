@@ -4,6 +4,7 @@ import {
   Flex,
   FormLabel,
   Heading,
+  Image,
   HStack,
   Slider,
   SliderFilledTrack,
@@ -35,6 +36,7 @@ type Props = {
   bounty: BountyQuery_bounty;
   currSubmission: SubmissionsForBounty_submissionsForBounty | null;
   isCreator: boolean;
+  isVotingCurrently: boolean;
   equity: number;
 };
 
@@ -43,7 +45,14 @@ export default function FunderVote(props: Props) {
   const [bountyState, setBountyState] = useState<BountyBlockState>();
   const [yea, setYea] = useState<number>(-1);
   const [isLoading, setLoading] = useState<boolean>(false);
-  let { votingState, bounty, equity, isCreator } = props;
+  let {
+    isVotingCurrently,
+    votingState,
+    bounty,
+    equity,
+    isCreator,
+    currSubmission,
+  } = props;
 
   const vote = async (val: number) => {
     const contract = bountyContract(bounty.address!);
@@ -54,7 +63,6 @@ export default function FunderVote(props: Props) {
       yea === 1,
       accounts[0]
     );
-    console.log("result", result);
     return result;
   };
 
@@ -77,7 +85,6 @@ export default function FunderVote(props: Props) {
   const bonusTarget = Number(votingState.votingOn) + 1;
 
   const currOngoingSubmission = props.currSubmission;
-  console.log(votingState);
 
   return (
     <VStack
@@ -87,55 +94,65 @@ export default function FunderVote(props: Props) {
       maxWidth="80%"
       margin="auto"
     >
-      {!isCreator &&
-        (props.currSubmission ? (
-          <>
-            <Heading my="12px">
-              Submission #{Number(votingState.timesFailed) + 1}
-            </Heading>
-            <Text textAlign="center" fontSize="24px" pb="12px">
-              @{bounty.creator_handle} submitted a new revision! You have 48
-              hours to vote and decide whether the submission is worthy of a
-              bonus!
-            </Text>
-          </>
-        ) : (
-          <Text textAlign="center" fontSize="24px" pb="12px">
-            Waiting for @{bounty.creator_handle} to submit for{" "}
-            <b>Bonus Target {bonusTarget}</b>
-          </Text>
-        ))}
-
-      <Text fontSize="24px" pb="12px" mr="8px">
-        This bounty can fail{" "}
-        <Text as="span" fontSize="24px" fontWeight="700" pb="12px">
-          {Number(votingState.maxFailures) - Number(votingState.timesFailed)}{" "}
-          more times
-        </Text>
-      </Text>
-      <VStack
-        direction="column"
-        alignItems="flex-start"
-        mt="36px"
-        spacing="12px"
-        maxWidth="80%"
-        margin="auto"
-      >
-        <Flex alignItems="center" pb="18px">
-          <Text variant="metadataLabelLg" mr="12px">
-            Bonus Target {bonusTarget}:
-          </Text>
-
-          <Text variant="metadataLabelLg" fontSize="36px">
-            {stringNumToJS(props.votingState.bonusValue)} MATIC (
-            {props.votingState.bonusPct}%)
-          </Text>
-        </Flex>
-      </VStack>
-
-      {props.currSubmission != null && (
+      {!isCreator && (
         <>
-          <Box pb="48px" width="100%">
+          {props.currSubmission && isVotingCurrently ? (
+            <>
+              <Heading my="12px">
+                Submission #{Number(votingState.timesFailed) + 1}
+              </Heading>
+              <Text textAlign="center" fontSize="24px" pb="12px">
+                @{bounty.creator_handle} submitted a new revision! You have 48
+                hours to vote and decide whether the submission is worthy of a
+                bonus!
+              </Text>
+            </>
+          ) : (
+            <Text textAlign="center" fontSize="24px" pb="12px">
+              Waiting for @{bounty.creator_handle} to submit for{" "}
+              <b>Bonus Target {bonusTarget}</b>
+            </Text>
+          )}
+          <Text fontSize="24px" pb="12px" mr="8px">
+            This bounty can fail{" "}
+            <Text as="span" fontSize="24px" fontWeight="700" pb="12px">
+              {Number(votingState.maxFailures) -
+                Number(votingState.timesFailed)}{" "}
+              more times
+            </Text>
+          </Text>
+          <VStack
+            direction="column"
+            alignItems="flex-start"
+            pt="36px"
+            spacing="12px"
+            maxWidth="80%"
+            margin="auto"
+          >
+            <Flex alignItems="center" pb="18px">
+              <Text variant="metadataLabelLg" mr="12px">
+                Bonus Target {bonusTarget}:
+              </Text>
+
+              <Text variant="metadataLabelLg" fontSize="36px">
+                {stringNumToJS(props.votingState.bonusValue)} MATIC (
+                {props.votingState.bonusPct}%)
+              </Text>
+            </Flex>
+          </VStack>
+        </>
+      )}
+
+      {props.currSubmission != null && isVotingCurrently && (
+        <>
+          <Image
+            alt=""
+            src={currSubmission?.metadata?.image_url || ""}
+            width="100%"
+            boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
+            px={{ sm: "32px", md: "80px" }}
+          />
+          <Box py="48px" width="100%">
             <Slider
               isReadOnly
               defaultValue={Number(votingState.currentYeas)}

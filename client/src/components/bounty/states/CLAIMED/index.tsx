@@ -60,6 +60,11 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
         )
       : [];
   const currSubmission = filtered.length > 0 ? filtered[0] : null;
+  const timesAttempedOnCurrentMilestone = filtered.length;
+
+  const isVotingCurrently =
+    timesAttempedOnCurrentMilestone !== 0 &&
+    timesAttempedOnCurrentMilestone !== Number(votingState?.timesFailed);
 
   let isCreator = bounty.creator_id === loggedInUserId;
   let shouldShowFunderVote =
@@ -76,6 +81,7 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
     <Box>
       {isCreator && votingState && (
         <CreatorSubmit
+          isVotingCurrently={isVotingCurrently}
           bounty={bounty}
           votingState={votingState!}
           currSubmission={currSubmission}
@@ -85,6 +91,7 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
 
       {shouldShowFunderVote ? (
         <FunderVote
+          isVotingCurrently={isVotingCurrently}
           equity={Number(equity)}
           bounty={bounty}
           votingState={votingState!}
