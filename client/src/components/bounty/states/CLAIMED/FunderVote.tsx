@@ -28,19 +28,22 @@ import { RadioCard } from "@components/RadioCard";
 import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
 import theme from "src/theme";
 import { SubmissionsForBounty_submissionsForBounty } from "@gql/__generated__/SubmissionsForBounty";
+import { useRouter } from "next/router";
 
 type Props = {
   votingState: VotingState;
   bounty: BountyQuery_bounty;
   currSubmission: SubmissionsForBounty_submissionsForBounty | null;
+  isCreator: boolean;
   equity: number;
 };
 
 export default function FunderVote(props: Props) {
+  const router = useRouter();
   const [bountyState, setBountyState] = useState<BountyBlockState>();
   const [yea, setYea] = useState<number>(-1);
   const [isLoading, setLoading] = useState<boolean>(false);
-  let { votingState, bounty, equity } = props;
+  let { votingState, bounty, equity, isCreator } = props;
 
   const vote = async (val: number) => {
     const contract = bountyContract(bounty.address!);
@@ -73,6 +76,9 @@ export default function FunderVote(props: Props) {
   });
   const bonusTarget = Number(votingState.votingOn) + 1;
 
+  const currOngoingSubmission = props.currSubmission;
+  console.log(votingState);
+
   return (
     <VStack
       direction="column"
@@ -81,22 +87,24 @@ export default function FunderVote(props: Props) {
       maxWidth="80%"
       margin="auto"
     >
-      {props.currSubmission ? (
-        <>
-          <Heading my="12px">
-            Submission #{Number(votingState.timesFailed) + 1}
-          </Heading>
+      {!isCreator &&
+        (props.currSubmission ? (
+          <>
+            <Heading my="12px">
+              Submission #{Number(votingState.timesFailed) + 1}
+            </Heading>
+            <Text textAlign="center" fontSize="24px" pb="12px">
+              @{bounty.creator_handle} submitted a new revision! You have 48
+              hours to vote and decide whether the submission is worthy of a
+              bonus!
+            </Text>
+          </>
+        ) : (
           <Text textAlign="center" fontSize="24px" pb="12px">
-            @{bounty.creator_handle} submitted a new revision! You have 48 hours
-            to vote and decide whether the submission is worthy of a bonus!
+            Waiting for @{bounty.creator_handle} to submit for{" "}
+            <b>Bonus Target {bonusTarget}</b>
           </Text>
-        </>
-      ) : (
-        <Text textAlign="center" fontSize="24px" pb="12px">
-          Waiting for @{bounty.creator_handle} to submit for{" "}
-          <b>Bonus Target {bonusTarget}</b>
-        </Text>
-      )}
+        ))}
 
       <Text fontSize="24px" pb="12px" mr="8px">
         This bounty can fail{" "}
@@ -146,8 +154,8 @@ export default function FunderVote(props: Props) {
               <SliderThumb boxSize={6} />
               <SliderMark
                 value={
-                  (Number(votingState.pctYeasNeeded) / 100) *
-                  Number(votingState.currentVotes)
+                  Number(votingState.pctYeasNeeded) *
+                  Number(votingState.yeasNeeded)
                 }
                 textAlign="center"
                 color={theme.colors.bountyBrown}
@@ -182,36 +190,50 @@ export default function FunderVote(props: Props) {
               </Text>
             </Text>
           </Flex>
-          <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
-            <Text as="span" fontSize="24px" fontWeight="500" pb="12px" mr="8px">
-              You have
-            </Text>
-            {equity} MATIC
-          </Text>
 
-          <FormLabel variant="metadataLabelLg">What will you choose?</FormLabel>
-          <HStack {...getRootProps()}>
-            {[0, 1].map((value) => {
-              const radio = getRadioProps({ value });
-              return (
-                <RadioCard key={value} value={yea} {...radio}>
-                  {value === 0 ? "Nay" : "Yea"}
-                </RadioCard>
-              );
-            })}
-          </HStack>
-          <Button
-            isLoading={isLoading}
-            disabled={yea === -1 && !isLoading}
-            onClick={async () => {
-              setLoading(true);
+          {!isCreator ? (
+            <>
+              <Text fontSize="24px" fontWeight="700" pb="12px" mr="8px">
+                <Text
+                  as="span"
+                  fontSize="24px"
+                  fontWeight="500"
+                  pb="12px"
+                  mr="8px"
+                >
+                  You have
+                </Text>
+                {equity} MATIC
+              </Text>
 
-              await vote(yea);
-              setLoading(false);
-            }}
-          >
-            Vote
-          </Button>
+              <FormLabel variant="metadataLabelLg">
+                What will you choose?
+              </FormLabel>
+              <HStack {...getRootProps()}>
+                {[0, 1].map((value) => {
+                  const radio = getRadioProps({ value });
+                  return (
+                    <RadioCard key={value} value={yea} {...radio}>
+                      {value === 0 ? "Nay" : "Yea"}
+                    </RadioCard>
+                  );
+                })}
+              </HStack>
+              <Button
+                isLoading={isLoading}
+                disabled={yea === -1 && !isLoading}
+                onClick={async () => {
+                  setLoading(true);
+
+                  await vote(yea);
+                  setLoading(false);
+                  router.reload();
+                }}
+              >
+                Vote
+              </Button>
+            </>
+          ) : null}
         </>
       )}
     </VStack>

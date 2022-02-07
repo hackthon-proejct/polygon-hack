@@ -1,6 +1,17 @@
 import { gql } from "@apollo/client";
 import { BountyData } from "./bounties.graphql";
 
+export const MINT_SUBMISSION = gql`
+  mutation MintSubmission($id: String!) {
+    mintSubmission(id: $id) {
+      metadata {
+        image_url
+        description
+      }
+    }
+  }
+`;
+
 export const CREATE_SUBMISSION = gql`
   mutation CreateSubmission(
     $bounty_id: String!
@@ -27,6 +38,7 @@ export const CREATE_SUBMISSION = gql`
 export const SUBMISSIONS = gql`
   query SubmissionsForBounty($bounty_id: String!) {
     submissionsForBounty(bounty_id: $bounty_id) {
+      id
       metadata {
         image_url
         description

@@ -61,7 +61,7 @@ export interface NegotiationForBounty_negotiationForBounty_bounty {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  creator_id: string;
+  creator_id: string | null;
 }
 
 export interface NegotiationForBounty_negotiationForBounty {

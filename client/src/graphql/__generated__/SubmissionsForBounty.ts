@@ -16,6 +16,7 @@ export interface SubmissionsForBounty_submissionsForBounty_metadata {
 
 export interface SubmissionsForBounty_submissionsForBounty {
   __typename: "Submission";
+  id: string;
   metadata: SubmissionsForBounty_submissionsForBounty_metadata | null;
 }
 

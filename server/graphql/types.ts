@@ -199,6 +199,9 @@ export const SubmissionMetadata = new GraphQLObjectType({
 export const SubmissionType = new GraphQLObjectType({
   name: "Submission",
   fields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
     metadata: {
       type: SubmissionMetadata,
     },

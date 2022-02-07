@@ -20,6 +20,7 @@ import BountyJoin from "../BountyJoin";
 import Creator from "../UNCLAIMED/CreatorNegotiate";
 import CreatorSubmit from "./CreatorSubmit";
 import FunderVote from "./FunderVote";
+import Mint from "./Mint";
 
 type Props = { bounty: BountyQuery_bounty; readyToMint?: boolean };
 export default function BountyDraft({ bounty, readyToMint }: Props) {
@@ -66,23 +67,31 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
   let shouldShowFunderJoin = bounty.address != null && equity == null;
 
   return readyToMint ? (
-    <div>READY TO MINT</div>
+    <Mint
+      bounty={bounty}
+      currSubmission={currSubmission}
+      allSubmissions={data?.submissionsForBounty || []}
+    />
   ) : (
     <Box>
-      {isCreator && votingState ? (
+      {isCreator && votingState && (
         <CreatorSubmit
           bounty={bounty}
           votingState={votingState!}
           currSubmission={currSubmission}
+          allSubmissions={data?.submissionsForBounty || []}
         />
-      ) : shouldShowFunderVote ? (
+      )}
+
+      {shouldShowFunderVote ? (
         <FunderVote
           equity={Number(equity)}
           bounty={bounty}
           votingState={votingState!}
           currSubmission={currSubmission}
+          isCreator={isCreator}
         />
-      ) : shouldShowFunderJoin ? (
+      ) : !isCreator && shouldShowFunderJoin ? (
         <BountyJoin address={bounty.address} />
       ) : null}
     </Box>

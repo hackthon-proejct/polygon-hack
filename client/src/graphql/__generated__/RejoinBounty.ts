@@ -61,7 +61,7 @@ export interface RejoinBounty_rejoinBounty {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  creator_id: string;
+  creator_id: string | null;
 }
 
 export interface RejoinBounty {

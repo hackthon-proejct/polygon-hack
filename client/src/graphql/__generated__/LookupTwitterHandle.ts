@@ -49,7 +49,7 @@ export interface LookupTwitterHandle_lookupTwitterHandle_board_bounties {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  creator_id: string;
+  creator_id: string | null;
   id: string;
   /**
    * The blockchain metadata attached to this bounty

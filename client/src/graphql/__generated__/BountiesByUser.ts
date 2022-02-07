@@ -58,7 +58,7 @@ export interface BountiesByUser_bounties_by_user {
    * The funder that initiated this bounty
    */
   initiator_id: string;
-  creator_id: string;
+  creator_id: string | null;
   /**
    * The twitter handle of the creator
    */
