@@ -95,7 +95,7 @@ export default function Mint({
           <Image
             mt="24px"
             py="80px"
-            src={currSubmission?.metadata?.image_url}
+            src={currSubmission?.metadata?.image_url || ""}
             width="100%"
             boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
             px={{ sm: "32px", md: "80px" }}
@@ -118,7 +118,7 @@ export default function Mint({
           <Image
             mt="24px"
             py="80px"
-            src={currSubmission?.metadata?.image_url}
+            src={currSubmission?.metadata?.image_url || ""}
             width="100%"
             boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
             px={{ sm: "32px", md: "80px" }}

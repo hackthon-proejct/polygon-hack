@@ -158,6 +158,8 @@ export default function Funder({ bounty, isCreator }: Props) {
           <Text>You have {canRejoin} MATIC staked</Text>
           <HStack>
             <Button
+              isLoading={loading}
+              disabled={loading}
               onClick={() =>
                 rejoinBounty({ variables: { bounty_id: bounty.id } })
               }

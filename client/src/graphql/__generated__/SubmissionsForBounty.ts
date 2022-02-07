@@ -21,7 +21,9 @@ export interface SubmissionsForBounty_submissionsForBounty {
 }
 
 export interface SubmissionsForBounty {
-  submissionsForBounty: (SubmissionsForBounty_submissionsForBounty | null)[] | null;
+  submissionsForBounty:
+    | (SubmissionsForBounty_submissionsForBounty | null)[]
+    | null;
 }
 
 export interface SubmissionsForBountyVariables {

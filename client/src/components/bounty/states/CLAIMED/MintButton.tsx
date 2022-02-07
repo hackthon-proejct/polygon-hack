@@ -10,7 +10,7 @@ import { Upload } from "react-feather";
 
 type Props = {
   submissionId: string;
-  onSuccess: (mutationResp: MintSubmission["createSubmission"]) => void;
+  onSuccess: (mutationResp: MintSubmission["mintSubmission"]) => void;
   [x: string]: any;
 };
 
