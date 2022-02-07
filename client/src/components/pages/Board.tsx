@@ -72,7 +72,6 @@ function Board({ twitterHandle }: Props) {
           <Text>No bounties found</Text>
         </>
       )}
-      <CreateBounty twitterHandle={twitterHandle} />
     </VStack>
   ) : (
     <VStack>
