@@ -3,7 +3,7 @@ import { useWindowResize } from "@utils/hooks";
 import { useState } from "react";
 
 type Props = { embedURL: string };
-export default function YoutubeIframVideo({ embedURL }: Props) {
+export default function YoutubeIframeVideo({ embedURL }: Props) {
   const [iframeSizeMultiplier, setIframeSizeMultipler] = useState(1);
   const breakpointSize = useBreakpointValue({
     base: 0.25,
