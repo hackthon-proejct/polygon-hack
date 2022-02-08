@@ -113,7 +113,8 @@ export default function Funder({ bounty, isCreator }: Props) {
                 htmlFor="bounty-joinContribution"
                 fontSize="24px"
               >
-                @{bounty.creator_handle} submitted their Terms of Service! You
+                @{bounty.creator_handle} is interested in this bounty! @
+                {bounty.creator_handle} submitted their Terms of Service! You
                 have one more chance to leave the bounty.
               </Text>
               <Text
@@ -136,7 +137,8 @@ export default function Funder({ bounty, isCreator }: Props) {
               htmlFor="bounty-joinContribution"
               fontSize="24px"
             >
-              @{bounty.creator_handle} is interested in this bounty!
+              @{bounty.creator_handle} has not expressed interest in this bounty
+              yet.
             </Text>
           </>
         )
