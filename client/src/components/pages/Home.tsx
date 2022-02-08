@@ -28,10 +28,10 @@ function Home() {
       </Flex>
       <VStack sx={styles.content}>
         <Heading sx={styles.featuredTitle}>Featured Content</Heading>
-        <HStack spacing="80px" alignItems="flex-start" sx={styles.featured}>
-          <Bounties />
+        <VStack spacing="80px" alignItems="flex-start" sx={styles.featured}>
           <Creators />
-        </HStack>
+          <Bounties />
+        </VStack>
       </VStack>
     </VStack>
   );

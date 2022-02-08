@@ -31,7 +31,7 @@ function Bounties() {
   const { bounties = [] } = data || {};
   return (
     <VStack alignItems="flex-start">
-      <Heading alignSelf="center">Bounties</Heading>
+      <Heading mb="14px">Bounties</Heading>
       {bounties?.length ? (
         <SimpleGrid sx={styles.bountyWrap} columns={3} spacing="30px">
           {bounties.map((bounty) =>

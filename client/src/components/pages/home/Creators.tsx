@@ -35,7 +35,7 @@ function Creators() {
   const creators = data?.creators;
   return (
     <VStack alignItems="flex-start">
-      <Heading alignSelf="center">Creators</Heading>
+      <Heading mb="14px">Creators</Heading>
       {creators?.length ? (
         <SimpleGrid sx={styles.bountyWrap} columns={2} spacing="30px">
           {creators.map((creator) =>
