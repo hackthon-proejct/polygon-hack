@@ -1,4 +1,12 @@
-import { Text, Flex, CSSObject, Spacer, Link } from "@chakra-ui/react";
+import {
+  Text,
+  Flex,
+  CSSObject,
+  Spacer,
+  Link,
+  IconButton,
+  Button,
+} from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import theme from "src/theme";
 import Logo from "./logo/Logo";
@@ -6,6 +14,8 @@ import MetaMaskButton from "./MetamaskButton";
 import NextLink from "next/link";
 import { useAppSelector } from "@redux/hooks";
 import { selectTwitterHandle, selectUserId } from "@redux/slices/userSlice";
+import { Camera } from "react-feather";
+import DiscordLogo from "./DiscordLogo";
 
 function StickyHeader({}: PropsWithChildren<{}>) {
   const userId = useAppSelector(selectUserId);
@@ -23,6 +33,9 @@ function StickyHeader({}: PropsWithChildren<{}>) {
         <Text fontSize="24px">{handle ? `@${handle}` : "Anonymous User"}</Text>
       ) : null}
       <Spacer />
+      <Button mr="12px" aria-label="Reject Bounty" bg="#5865F2">
+        <DiscordLogo size={20} color="white" />
+      </Button>
       <MetaMaskButton />
     </Flex>
   );
