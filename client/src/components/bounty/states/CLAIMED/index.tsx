@@ -100,7 +100,7 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
           isCreator={isCreator}
         />
       ) : !isCreator && shouldShowFunderJoin ? (
-        <BountyJoin address={bounty.address} />
+        <BountyJoin bounty={bounty} address={bounty.address} />
       ) : null}
     </Box>
   );

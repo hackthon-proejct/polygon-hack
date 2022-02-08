@@ -19,10 +19,22 @@ import bountyContract, {
 } from "@utils/bounty";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { NEGOTIATION } from "@gql/negotiations.graphql";
+import { BountyQuery_bounty } from "@gql/__generated__/BountyQuery";
+import { NegotiationForBounty } from "@gql/__generated__/NegotiationForBounty";
+import { useQuery } from "@apollo/client";
 
-type Props = { address: string | null; hideTitle?: boolean };
+type Props = {
+  bounty: BountyQuery_bounty;
+  address: string | null;
+  hideTitle?: boolean;
+};
 
-export default function BountyJoin({ address, hideTitle = false }: Props) {
+export default function BountyJoin({
+  address,
+  bounty,
+  hideTitle = false,
+}: Props) {
   const router = useRouter();
   const [joining, setJoining] = useState(false);
   const [contribution, setContribution] = useState("");
@@ -38,7 +50,7 @@ export default function BountyJoin({ address, hideTitle = false }: Props) {
       const contract = bountyContract(address);
       equity(contract);
     }
-  }, []);
+  }, [address]);
 
   if (address == null) {
     return null;
@@ -117,7 +129,7 @@ export default function BountyJoin({ address, hideTitle = false }: Props) {
         isDisabled={contribution === "" || isNaN(Number(contribution))}
         onClick={() => join(Number(contribution))}
       >
-        {Number(equity) > 0 ? "Add to Contribution" : "Join Bounty"}
+        {"Add to Bounty"}
       </Button>
     </VStack>
   );

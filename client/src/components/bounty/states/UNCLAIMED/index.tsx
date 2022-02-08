@@ -57,7 +57,7 @@ export default function BountyUnclaimed({ bounty }: Props) {
       {isCreator ? (
         <Creator bounty={bounty} />
       ) : (
-        <BountyJoin address={bounty.address} />
+        <BountyJoin bounty={bounty} address={bounty.address} />
       )}
     </Box>
   );

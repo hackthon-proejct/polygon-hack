@@ -106,30 +106,28 @@ export default function Funder({ bounty, isCreator }: Props) {
 
       {!isCreator ? (
         hasNegotiations ? (
-          Number(equity) === 0 ? (
-            <>
-              <Text
-                textAlign="center"
-                htmlFor="bounty-joinContribution"
-                fontSize="24px"
-              >
-                @{bounty.creator_handle} is interested in this bounty! @
-                {bounty.creator_handle} submitted their Terms of Service! You
-                have one more chance to leave the bounty.
-              </Text>
-              <Text
-                textAlign="center"
-                htmlFor="bounty-joinContribution"
-                fontSize="24px"
-                mt="0px !important"
-                pb="12px"
-              >
-                {hasNegotiations
-                  ? "Before they can get started, they have a few requests."
-                  : null}
-              </Text>
-            </>
-          ) : null
+          <>
+            <Text
+              textAlign="center"
+              htmlFor="bounty-joinContribution"
+              fontSize="24px"
+            >
+              @{bounty.creator_handle} is interested in this bounty! @
+              {bounty.creator_handle} submitted their Terms of Service! You have
+              one more chance to leave the bounty.
+            </Text>
+            <Text
+              textAlign="center"
+              htmlFor="bounty-joinContribution"
+              fontSize="24px"
+              mt="0px !important"
+              pb="12px"
+            >
+              {hasNegotiations
+                ? "Before they can get started, they have a few requests."
+                : null}
+            </Text>
+          </>
         ) : (
           <>
             <Text
@@ -224,7 +222,11 @@ export default function Funder({ bounty, isCreator }: Props) {
       {
         // only show it at the end if you're not committed
         !isCreator && (
-          <BountyJoin hideTitle={Number(equity) > 0} address={bounty.address} />
+          <BountyJoin
+            bounty={bounty}
+            hideTitle={Number(equity) > 0}
+            address={bounty.address}
+          />
         )
       }
     </VStack>
