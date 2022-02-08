@@ -126,7 +126,7 @@ function Bounty({ bountyId }: Props) {
                   </Text>
                 </HStack>
                 <HStack>
-                  <Text variant="metadataLabelLg">Your remaining balance:</Text>
+                  <Text variant="metadataLabelLg">Remaining balance:</Text>
                   <Text variant="metadataValueLg">{totalFund} MATIC</Text>
                 </HStack>
               </Flex>
