@@ -34,7 +34,13 @@ function StickyHeader({}: PropsWithChildren<{}>) {
       ) : null}
       <Spacer />
       <Button mr="12px" aria-label="Reject Bounty" bg="#5865F2">
-        <DiscordLogo size={20} color="white" />
+        <DiscordLogo
+          size={20}
+          color="white"
+          onClick={() => {
+            window.location.assign("https://discord.gg/bwBk4G5E");
+          }}
+        />
       </Button>
       <MetaMaskButton />
     </Flex>
