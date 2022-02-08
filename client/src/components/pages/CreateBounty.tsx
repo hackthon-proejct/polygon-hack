@@ -281,7 +281,7 @@ function CreateBounty({ twitterHandle }: Props) {
                   pctCreatorFinalDisbursement: final,
                   bonusTargets: [bonus, bonus],
                   bonusPctYeasNeeded: [50, 50],
-                  bonusFailureThresholds: [2, 2],
+                  bonusFailureThresholds: [1, 1],
                   mustBeClaimedTime:
                     Math.floor(Date.now() / 1000) +
                     getSecondsFromTimeString(expirationString),
