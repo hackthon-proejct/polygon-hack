@@ -74,13 +74,14 @@ function Board({ twitterHandle }: Props) {
       )}
     </VStack>
   ) : (
-    <VStack>
+    <VStack mt="80px">
       <Heading>
         @{twitterHandle} {"isn't on Bounty yet"}
       </Heading>
       <Text variant="metadataValueLg">
         but you can create one for them when they join!
       </Text>
+      <CreateBounty twitterHandle={twitterHandle} />
     </VStack>
   );
 }
