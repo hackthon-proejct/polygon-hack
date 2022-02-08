@@ -1,11 +1,16 @@
-import { Flex, CSSObject, Spacer, Link } from "@chakra-ui/react";
+import { Text, Flex, CSSObject, Spacer, Link } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import theme from "src/theme";
 import Logo from "./logo/Logo";
 import MetaMaskButton from "./MetamaskButton";
 import NextLink from "next/link";
+import { useAppSelector } from "@redux/hooks";
+import { selectTwitterHandle, selectUserId } from "@redux/slices/userSlice";
 
 function StickyHeader({}: PropsWithChildren<{}>) {
+  const userId = useAppSelector(selectUserId);
+  console.log(userId);
+  const handle = useAppSelector(selectTwitterHandle);
   return (
     <Flex sx={styles.sticky}>
       <NextLink href={`/`} passHref>
@@ -13,6 +18,10 @@ function StickyHeader({}: PropsWithChildren<{}>) {
           <Logo type="dynamic" />
         </Link>
       </NextLink>
+      <Spacer />
+      {userId ? (
+        <Text fontSize="24px">{handle ? `@${handle}` : "Anonymous User"}</Text>
+      ) : null}
       <Spacer />
       <MetaMaskButton />
     </Flex>

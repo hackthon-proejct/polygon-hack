@@ -79,6 +79,7 @@ export default function MetaMaskButton() {
             //We take the first address in the array of addresses and display it
             dispatch(setAddressTo(accounts[0]));
             dispatch(setUserIdTo(user?.id));
+            console.log("WEOIFJOWEIJFEOIW", user);
             dispatch(setTwitterHandleTo(user?.profile?.twitter_handle));
           } catch (error) {
             console.error(error);
