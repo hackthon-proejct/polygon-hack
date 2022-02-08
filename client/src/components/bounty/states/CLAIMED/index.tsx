@@ -59,7 +59,8 @@ export default function BountyDraft({ bounty, readyToMint }: Props) {
           (s: any) => s?.metadata?.milestone === Number(votingState?.votingOn)
         )
       : [];
-  const currSubmission = filtered.length > 0 ? filtered[0] : null;
+  const currSubmission =
+    filtered.length > 0 ? filtered[filtered.length - 1] : null;
   const timesAttempedOnCurrentMilestone = filtered.length;
 
   const isVotingCurrently =

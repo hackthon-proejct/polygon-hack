@@ -152,6 +152,9 @@ export default function FunderVote(props: Props) {
             boxShadow="rgb(0 0 0 / 8%) 0px 1px 12px !important"
             px={{ sm: "32px", md: "80px" }}
           />
+          <Heading pt="24px">
+            &quot;{currSubmission?.metadata?.description}&quot;
+          </Heading>
           <Box py="48px" width="100%">
             <Slider
               isReadOnly
