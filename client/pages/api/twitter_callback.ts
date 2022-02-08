@@ -16,8 +16,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<{}>) => {
     return;
   }
   getPassport().authenticate("twitter", async (err: Error, data: any) => {
-    // await mergeUser(data.handle, data.image_url);
-    res.redirect("/");
+    await mergeUser(data.handle, data.image_url, auth_token);
+    res.redirect("http://localhost:3000");
   })(req, res);
 };
 

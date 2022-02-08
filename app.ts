@@ -62,10 +62,6 @@ app.use(async (ctx, next) => {
   if (ctx.path.indexOf("/graphql") === -1 && ctx.path.indexOf("/api") === -1) {
     return next();
   }
-  if (ctx.cookies.get("auth_token")) {
-    ctx.request.headers["authorization"] =
-      "Bearer " + ctx.cookies.get("auth_token");
-  }
   await apiPassport.authenticate("jwt", (err, user) => {
     ctx.state.user = user;
   })(ctx, next);
