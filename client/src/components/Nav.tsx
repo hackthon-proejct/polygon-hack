@@ -38,7 +38,7 @@ function StickyHeader({}: PropsWithChildren<{}>) {
           size={20}
           color="white"
           onClick={() => {
-            window.location.assign("https://discord.gg/bwBk4G5E");
+            window.open("https://discord.gg/rFghjfWMKY", "_blank");
           }}
         />
       </Button>
