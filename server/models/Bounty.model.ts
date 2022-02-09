@@ -129,4 +129,21 @@ export default class Bounty extends Model {
     await this.save();
     return this;
   }
+
+  async creatorAddress(): Promise<string> {
+    const board = await Board.findByPk(this.board_id, {
+      include: [
+        {
+          model: Profile,
+          include: [
+            {
+              model: User,
+              include: [Web3PublicKey],
+            },
+          ],
+        },
+      ],
+    });
+    return board?.profile?.user?.public_key?.key;
+  }
 }
