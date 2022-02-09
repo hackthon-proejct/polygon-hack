@@ -75,7 +75,7 @@ export default class Submission extends Model {
       .map((fan, idx) => {
         return `${fan} owns ${equity[idx] * 0.5}%`;
       })
-      .concat(`${bounty.creatorAddress} owns 50%`)
+      .concat(`${await bounty.creatorAddress()} owns 50%`)
       .join("\n");
 
     const metadata = {
