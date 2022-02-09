@@ -16,6 +16,8 @@ import Board from "./Board.model";
 import {
   claimBounty,
   createBounty,
+  getEquityList,
+  getFansList,
 } from "../utils/smart_contracts/toolbox/bounty";
 import { BountyData } from "../utils/smart_contracts/toolbox/types";
 import Profile from "./Profile.model";
@@ -77,6 +79,13 @@ export default class Bounty extends Model {
   user: User;
   @BelongsTo(() => Board, "board_id")
   board: Board;
+
+  async blockchainStatus(): Promise<any> {
+    return {
+      fans: await getFansList(this.address),
+      equity: await getEquityList(this.address),
+    };
+  }
 
   // Publishes to blockchain and returns address as well as saves to db
   async publish(): Promise<Bounty> {

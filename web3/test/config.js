@@ -182,6 +182,11 @@ contract("Bounty", (accounts) => {
     data = await bounty.balanceOf(otherWallet);
     console.log("other balance", data.toString());
 
+    data = await bounty.getFansList();
+    console.log("fans list", data);
+    data = await bounty.getEquityList();
+    console.log("equity list", data);
+
     // Claim
     console.log("Claim owner");
     await bounty.claim({

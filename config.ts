@@ -54,6 +54,11 @@ const Config = {
     KEY: env.PINATA_KEY,
     SECRET: env.PINATA_SECRET,
   },
+  twitter: {
+    CONSUMER_KEY: env.TWITTER_CONSUMER_KEY,
+    CONSUMER_SECRET: env.TWITTER_CONSUMER_SECRET,
+    CALLBACK_URL: env.TWITTER_CALLBACK_URL,
+  },
 };
 
 export default Config;

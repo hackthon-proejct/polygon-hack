@@ -936,7 +936,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-02-06T05:43:30.415Z",
+  "updatedAt": "2022-02-09T00:55:01.917Z",
   "devdoc": {
     "details": "See https://eips.ethereum.org/EIPS/eip-721",
     "kind": "dev",
@@ -997,7 +997,7 @@
       "id": "0x2cdc5c5f756f555319272af6740217ecb0d9451b44e748689b42eb518eb5ef1b"
     },
     "contract": {
-      "id": "0xd90f7092ea37d873ce6332c23b7196a177a35c751f1f01d7a8392616047028b5"
+      "id": "0xdc43c4df6e0d683f484cf81d508b9be3e71d739beb2533c44a7cf56a866b7065"
     }
   }
 }

@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 import Koa, { Context } from "koa";
+import session from "koa-session";
 import cors from "@koa/cors";
 import morgan from "koa-morgan";
 import passport from "koa-passport";
@@ -27,7 +28,23 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 const app = new Koa();
+app.keys = [config.auth.JWT_SECRET];
 app.proxy = true;
+
+app.use(
+  session(
+    {
+      key: "koa.sess",
+      maxAge: 86400000,
+      autoCommit: true,
+      overwrite: true,
+      httpOnly: true,
+      secure: config.app.IS_PROD,
+      sameSite: config.app.IS_PROD ? "none" : "lax",
+    },
+    app
+  )
+);
 app.use(bodyParser());
 export class LoggerStream {
   write(message: string) {
@@ -56,7 +73,11 @@ app.use(
 );
 // This does JWT auth on every POST request to the API and graphql API
 app.use(async (ctx, next) => {
-  if (ctx.request.method !== "POST") {
+  if (ctx.cookies.get("auth_token")) {
+    ctx.request.headers["authorization"] =
+      "Bearer " + ctx.cookies.get("auth_token");
+  }
+  if (ctx.request.method == "OPTIONS") {
     return next();
   }
   if (ctx.path.indexOf("/graphql") === -1 && ctx.path.indexOf("/api") === -1) {

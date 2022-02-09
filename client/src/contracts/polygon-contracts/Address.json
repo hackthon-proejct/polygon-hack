@@ -8049,7 +8049,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-02-06T05:43:30.420Z",
+  "updatedAt": "2022-02-09T00:55:01.920Z",
   "devdoc": {
     "details": "Collection of functions related to the address type",
     "kind": "dev",
@@ -8069,7 +8069,7 @@
       "id": "0x6dc2bb98e7b578c5da2e43ac1e07d457e7acb4b0e9e87868597faf752e361f08"
     },
     "contract": {
-      "id": "0x619cc52291f32af13a217ca23c2f9412e18bb8b4f3f8ba2d5988859fa09fc24c"
+      "id": "0xf09e7524d1fed1846e8c5b6f085c8e39572d4b42568de51c43ed2f379b583771"
     }
   }
 }

@@ -77,6 +77,18 @@ const BountyQueries = {
       });
     },
   },
+  getBountyDetails: {
+    type: new GraphQLNonNull(GraphQLJSONObject),
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLString),
+      },
+    },
+    resolve: async (parent, args, ctx, info) => {
+      const bounty = await Bounty.findByPk(args.id);
+      return await bounty.blockchainStatus();
+    },
+  },
 };
 
 const BountyMutations = {

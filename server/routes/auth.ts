@@ -9,6 +9,7 @@ import { web3 } from "../utils/smart_contracts/web3";
 import Web3PublicKey from "../models/Web3PublicKey.model";
 import logger from "../utils/logger";
 import Profile from "../models/Profile.model";
+import config from "../../config";
 
 const authRouter = new Router({
   prefix: "/auth",
@@ -70,44 +71,49 @@ authRouter.post("/create", async (ctx, next) => {
     ctx.throw(401);
   }
 });
-authRouter.post("/twitter/merge", async (ctx, next) => {
-  const { handle, image_url } = ctx.request.body;
-  const largeImgUrl = image_url.replace("_normal.jpg", ".jpg");
-  let maybeProfile = await Profile.findOne({
-    where: {
-      twitter_handle: handle,
-    },
-  });
-  if (!maybeProfile) {
-    const user = await User.findByPk(ctx.state.user.id, {
-      include: Profile,
-    });
-    if (user.profile) {
-      maybeProfile = user.profile;
-      maybeProfile.twitter_handle = handle;
-      maybeProfile.image_url = largeImgUrl;
-      await maybeProfile.save();
-    } else {
-      maybeProfile = await Profile.create({
-        user_id: ctx.state.user.id,
-        twitter_handle: handle,
-        image_url: largeImgUrl,
+authRouter.get("/twitter", passport.authenticate("twitter"));
+authRouter.get("/twitter_callback", async (ctx: RouterContext, next: Next) => {
+  return passport.authenticate(
+    "twitter",
+    async (err: Error, { handle, image_url }) => {
+      const largeImgUrl = image_url.replace("_normal.jpg", ".jpg");
+      let maybeProfile = await Profile.findOne({
+        where: {
+          twitter_handle: handle,
+        },
       });
+      if (!maybeProfile) {
+        const user = await User.findByPk(ctx.state.user.id, {
+          include: Profile,
+        });
+        if (user.profile) {
+          maybeProfile = user.profile;
+          maybeProfile.twitter_handle = handle;
+          maybeProfile.image_url = largeImgUrl;
+          await maybeProfile.save();
+        } else {
+          maybeProfile = await Profile.create({
+            user_id: ctx.state.user.id,
+            twitter_handle: handle,
+            image_url: largeImgUrl,
+          });
+        }
+      } else if (!maybeProfile.user_id) {
+        maybeProfile.user_id = ctx.state.user.id;
+        maybeProfile.image_url = largeImgUrl;
+        await maybeProfile.save();
+      } else {
+        maybeProfile.image_url = largeImgUrl;
+        await maybeProfile.save();
+      }
+      const board = await maybeProfile.$get("board");
+      if (board) {
+        board.claimed = true;
+        await board.save();
+      }
+      ctx.redirect(config.app.CLIENT_HOSTNAME);
     }
-  } else if (!maybeProfile.user_id) {
-    maybeProfile.user_id = ctx.state.user.id;
-    maybeProfile.image_url = largeImgUrl;
-    await maybeProfile.save();
-  } else {
-    maybeProfile.image_url = largeImgUrl;
-    await maybeProfile.save();
-  }
-  const board = await maybeProfile.$get("board");
-  if (board) {
-    board.claimed = true;
-    await board.save();
-  }
-  ctx.status = 200;
+  )(ctx, next);
 });
 
 export default authRouter;

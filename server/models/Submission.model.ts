@@ -15,6 +15,10 @@ import { v4 } from "uuid";
 import { uploadToCloudFS } from "../utils/smart_contracts/upload/helpers";
 import Bounty from "./Bounty.model";
 import { mintSubmission } from "../utils/smart_contracts/toolbox/mint";
+import {
+  getFansList,
+  getEquityList,
+} from "../utils/smart_contracts/toolbox/bounty";
 
 export enum SubmissionStatus {
   UNKNOWN = 0,
@@ -64,8 +68,17 @@ export default class Submission extends Model {
 
   async mint() {
     const bounty = await this.$get("bounty");
+    const fans = await getFansList(bounty.address);
+    const equity = await getEquityList(bounty.address);
+
+    const equityStr = fans
+      .map((fan, idx) => {
+        return `${fan} owns ${equity[idx] * 0.5}%`;
+      })
+      .join("\n");
+
     const metadata = {
-      description: this.metadata.description,
+      description: `${this.metadata.description}\n${equityStr}`,
       name: this.metadata.name,
       background_color: this.metadata.background_color,
       external_url: this.metadata.external_url,

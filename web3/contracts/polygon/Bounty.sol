@@ -1,4 +1,5 @@
 pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
@@ -59,6 +60,24 @@ abstract contract Treasury {
 
     function equityOf(address _owner) public view returns (uint256 balance) {
         return equity[_owner];
+    }
+
+    function getEquityList() public view returns (uint8[] memory _pctEquity) {
+        uint8[] memory pctEquity = new uint8[](fans.length);
+        for (uint8 i = 0; i < fans.length; i++) {
+            pctEquity[i] = uint8(
+                equityOf(fans[i]).mul(100).div(totalContribution)
+            );
+        }
+        return pctEquity;
+    }
+
+    function getFansList()
+        public
+        view
+        returns (address payable[] memory _fans)
+    {
+        return fans;
     }
 
     function withdraw() public onlyWithEquity returns (bool success) {

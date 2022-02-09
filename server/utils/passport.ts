@@ -2,6 +2,7 @@
 import passport from "koa-passport";
 import { Strategy as PassportLocal } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
+import { Strategy as PassportTwitter } from "passport-twitter";
 
 import config from "../../config";
 import User from "../models/User.model";
@@ -42,6 +43,22 @@ passport.use(
     },
     (payload, done) => {
       deserializeAccount(payload.userId, done);
+    }
+  )
+);
+passport.use(
+  "twitter",
+  new PassportTwitter(
+    {
+      consumerKey: config.twitter.CONSUMER_KEY,
+      consumerSecret: config.twitter.CONSUMER_SECRET,
+      callbackURL: config.twitter.CALLBACK_URL,
+    },
+    (token, tokenSecret, profile, cb) => {
+      cb(null, {
+        handle: profile.username,
+        image_url: profile.photos[0].value,
+      });
     }
   )
 );

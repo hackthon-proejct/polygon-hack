@@ -94,14 +94,31 @@ export async function precipitatingEvent(address: string, toggle: boolean) {
   return result.status;
 }
 
-export async function canRejoinTreasury(address: string, walletAddr: string) {
-  logger.info("canRejoinTreasury: ", { address, walletAddr });
+export async function amountRejoinTreasury(
+  address: string,
+  walletAddr: string
+): Promise<string> {
+  logger.info("amountRejoinTreasury: ", { address, walletAddr });
   const Contract = bountyContract(address);
-  const transaction = Contract.methods.canRejoinTreasury(walletAddr);
+  const result = Contract.methods.amountRejoinTreasury(walletAddr).call();
+  logger.info("amountRejoinTreasury: ", { result });
+  return result.toString();
+}
 
-  const result = await sendTxAndLog(transaction, account);
-  logger.info("canRejoinTreasury: ", { result });
-  return result.status;
+export async function getFansList(address: string): Promise<string[]> {
+  logger.info("getFansList: ", { address });
+  const Contract = bountyContract(address);
+  const results = await Contract.methods.getFansList().call();
+  logger.info("getFansList: ", { results });
+  return results;
+}
+
+export async function getEquityList(address: string): Promise<number[]> {
+  logger.info("getEquityList: ", { address });
+  const Contract = bountyContract(address);
+  const results = await Contract.methods.getEquityList().call();
+  logger.info("getEquityList: ", { results });
+  return results.map((r) => Number(r));
 }
 
 function bountyDataToArgs(
